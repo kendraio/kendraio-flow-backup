@@ -1,0 +1,28 @@
+{
+    "blocks": [
+        {
+            "type": "graphql",
+            "endpoint": "https://whenwemeet.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  profiles {\n    first_name\n    desired_gender\n    last_name\n  }\n}\n",
+            "variables": {},
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "whenWeMeet",
+    "workflowId": "whenWeMeet",
+    "adapterName": "when_we_meet",
+    "created": "2021-06-25T09:59:38.606Z",
+    "tags": [
+        "deleted"
+    ],
+    "updated": "2021-06-25T09:59:38.606Z",
+    "modified": "2021-06-25T09:59:38.606Z",
+    "title": "when_we_meet"
+}

@@ -1,0 +1,29 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "\n    {\n  \"display_artist\": 'Patient Pacifist',\n  \"display_title\": 'Green Juices',\n  \"url\": 'https://dsp1-track-uploads.s3.amazonaws.com/auth0|5fa9852a2576900076396b60/ef8a7302-39a3-4378-8652-b9bb9b383a47'\n}\n"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "player",
+            "mapping": "data.url",
+            "titleMapping": "data && data.join(' - ', [display_artist, display_title])"
+        }
+    ],
+    "id": "basicPlayer",
+    "workflowId": "basicPlayer",
+    "adapterName": "examples",
+    "created": "2021-01-15T14:37:26.892Z",
+    "tags": [],
+    "updated": "2021-01-15T14:37:26.892Z",
+    "modified": "2021-01-15T14:37:26.892Z",
+    "title": "Basic Player"
+}

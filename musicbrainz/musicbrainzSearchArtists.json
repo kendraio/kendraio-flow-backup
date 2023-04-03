@@ -1,0 +1,77 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "MusicBrainz Artists",
+                "label": "Search",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "musicbrainz.org",
+                "pathname": "/ws/2/artist/",
+                "query": {
+                    "query": "artist:fred"
+                },
+                "valueGetters": {
+                    "query": "data.{ fmt: 'json', query: join('', ['artist:', name]) }"
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.artists"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "id",
+                    "field": "id"
+                },
+                {
+                    "headerName": "name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "type",
+                    "field": "type"
+                },
+                {
+                    "headerName": "score",
+                    "field": "score"
+                },
+                {
+                    "headerName": "country",
+                    "field": "country"
+                },
+                {
+                    "headerName": "disambiguation",
+                    "field": "disambiguation"
+                }
+            ]
+        }
+    ],
+    "id": "musicbrainzSearchArtists",
+    "adapter": "musicbrainz",
+    "org": "kendraio",
+    "workflowId": "musicbrainzSearchArtists",
+    "adapterName": "musicbrainz",
+    "created": "2019-11-14T12:08:20.031Z",
+    "updated": "2019-11-14T12:08:20.031Z",
+    "modified": "2019-11-14T12:08:20.031Z",
+    "title": "MusicBrainz Search Artists"
+}

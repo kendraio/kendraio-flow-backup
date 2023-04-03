@@ -1,0 +1,58 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "schemas"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.schemas.schemas",
+            "valueGetter": "{count:`0`, defined:[]}",
+            "blockTitle": "Reset state",
+            "blockComment": "Initialise state"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.schemas.schemas.defined",
+            "blockTitle": "Defined schemas",
+            "blockComment": "save defined schemas"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.schemas.schemas.count",
+            "valueGetter": "state.global.schemas.schemas.defined && length(state.global.schemas.schemas.defined) || `0`",
+            "blockTitle": "Schema count",
+            "blockComment": "schema count"
+        },
+        {
+            "type": "context-save",
+            "key": "state.flags.schemaCount",
+            "valueGetter": "state.global.schemas.schemas.count",
+            "blockComment": "schema count flag"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.schemas.schemas.dependencies",
+            "valueGetter": "data[*].{parent: name, children: properties[?type==`Object` || type==`List` || type==`ObjectReference` || type==`ListReference`].[config][]}",
+            "blockComment": "Schema dependencies"
+        }
+    ],
+    "id": "schemas",
+    "workflowId": "schemas",
+    "adapterName": "schemas",
+    "created": "2022-06-10T14:22:35.331Z",
+    "tags": [
+        "schemas",
+        "sub",
+        "noui",
+        "hidden"
+    ],
+    "updated": "2022-06-10T14:22:35.330Z",
+    "modified": "2022-06-10T14:22:35.330Z",
+    "title": "Load Schemas - noui"
+}

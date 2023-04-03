@@ -1,0 +1,115 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "gigs",
+            "schema": "gigs",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "headline_artist": {
+                        "type": "string",
+                        "title": "Headline Artist"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "title": "Start Date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "default": "12:00:00",
+                        "description": "Format: 14:24:00",
+                        "title": "Start Time"
+                    },
+                    "venue": {
+                        "type": "string",
+                        "title": "Venue"
+                    }
+                },
+                "required": []
+            },
+            "uiSchema": {
+                "uuid": {
+                    "ui:widget": "readonly"
+                },
+                "start_date": {
+                    "ui:widget": "date"
+                },
+                "headline_artist": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "gigs",
+                                "workflowId": "selectArtist"
+                            }
+                        ]
+                    }
+                },
+                "venue": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "gigs",
+                                "workflowId": "selectVenue"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Save",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "gigs",
+                            "schema": "gigs"
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "gigs",
+                            "workflowId": "gigList"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "editGig",
+    "workflowId": "editGig",
+    "adapterName": "gigs",
+    "created": "2020-05-27T12:56:32.760Z",
+    "updated": "2020-05-27T12:56:32.760Z",
+    "modified": "2020-05-27T12:56:32.760Z",
+    "title": "Edit Gig"
+}

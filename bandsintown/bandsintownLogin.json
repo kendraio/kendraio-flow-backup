@@ -1,0 +1,34 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "app_id": {
+                        "type": "string",
+                        "title": "App ID"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.app_id"
+        },
+        {
+            "type": "variable-set",
+            "name": "app_id"
+        }
+    ],
+    "id": "bandsintownLogin",
+    "adapter": "bandsintown",
+    "org": "kendraio",
+    "workflowId": "bandsintownLogin",
+    "adapterName": "bandsintown",
+    "created": "2019-11-14T12:07:24.745Z",
+    "updated": "2019-11-14T12:07:24.745Z",
+    "modified": "2019-11-14T12:07:24.745Z",
+    "title": "Bandsintown Connect"
+}

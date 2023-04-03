@@ -1,0 +1,120 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "<h3>Create a new file import preset</h3><p>Different types of input files are mapped to specific database schemas. Once you have defined your database schema, each different type of data file you wish to import needs to be mapped as a 'preset'. <hr> "
+        },
+        {
+            "type": "message",
+            "message": "1. Select target schema"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "pick"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "message",
+            "message": "2. Import a sample of source data"
+        },
+        {
+            "type": "file-input",
+            "label": "Import",
+            "accept": [
+                "xlsx",
+                "csv"
+            ],
+            "binary": true,
+            "arrayBuffer": false
+        },
+        {
+            "type": "context-save",
+            "contextKey": "fileName",
+            "valueGetter": "data.name"
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.Sheet1"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 5,
+                "defaultColDef": {
+                    "sortable": false,
+                    "resizable": true
+                }
+            },
+            "passThrough": true,
+            "firstRowHeaders": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0][*]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && { inputFile: context.fileName, form: set(`{\n    \"type\": \"form\",\n    \"jsonSchema\": {\n        \"type\": \"object\",\n        \"properties\": {\n            \"inputFile\": {\n                \"title\": \"Example source file\",\n                \"type\": \"string\"\n            },\n            \"targetSchema\": {\n                \"title\": \"Target schema\",\n                \"type\": \"string\"\n            },\n            \"presetName\": {\n\"title\": \"Preset name\",\n\"description\": \"A name for this mapping preset so it can be identified during import operations.\",\n\"type\": \"string\"\n            },\n            \"fieldMappings\": {\n                \"title\": \"Mapping\",\n                \"type\": \"array\",\n                \"items\": {\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"target\": {\n                            \"title\": \"Destination\",\n                            \"type\": \"string\",\n                            \"enum\": [                            ]\n                        },\n                        \"source\": {\n                            \"title\": \"Source\",\n                            \"type\": \"string\",\n                            \"enum\": [\n                            ]\n                        }\n                        \n                    }\n                }\n            }\n        }\n    },\n    \"uiSchema\": {\n        \"targetSchema\": {\n            \"ui:widget\":  \"readonly\"\n        },\n        \"inputFile\": {\n            \"ui:widget\":  \"readonly\"\n        }\n    }\n}`, 'jsonSchema.properties.fieldMappings.items.properties.source.enum', data) }"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.form && { targetSchema: context.saved.uuid, inputFile: data.inputFile, form: set(data.form, 'jsonSchema.properties.fieldMappings.items.properties.target.enum', context.saved.properties[*].key)}"
+        },
+        {
+            "type": "form",
+            "label": "Save Preset",
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "data.form"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "db",
+            "operation": "add",
+            "adapterName": "importer",
+            "schema": "presets"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "listPresets"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "addMappingPreset",
+    "workflowId": "addMappingPreset",
+    "adapterName": "importer",
+    "created": "2021-10-22T14:29:46.369Z",
+    "tags": [
+        "importer"
+    ],
+    "updated": "2021-10-22T14:29:46.368Z",
+    "modified": "2021-10-22T14:29:46.368Z",
+    "title": "Add Mapping Preset"
+}

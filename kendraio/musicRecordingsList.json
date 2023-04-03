@@ -1,0 +1,30 @@
+{
+    "blocks": [
+        {
+            "type": "gsheet",
+            "key": "https://docs.google.com/spreadsheets/d/1FNFdfnfQqz81igvokIwxdcOoK59NRSZ00KAm0xyIVE8/edit?usp=sharing"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.\"music-recording\".elements"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "musicRecordingsList",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "musicRecordingsList",
+    "adapterName": "kendraio",
+    "created": "2020-03-20T08:22:30.565Z",
+    "updated": "2020-03-20T08:22:30.565Z",
+    "modified": "2020-03-20T08:22:30.565Z",
+    "title": "Music Recordings (Google Sheet data source)"
+}

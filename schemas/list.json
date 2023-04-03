@@ -1,0 +1,206 @@
+{
+    "blocks": [
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockTitle": "Load Schemas",
+            "blockComment": "Load schemas"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Data Schemas</h2>",
+            "blockComment": "Header"
+        },
+        {
+            "type": "grid",
+            "enabledGetter": "state.flags.schemaCount",
+            "gridOptions": {
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "edit",
+                                                "context": {
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Items",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "itemsFromSchemaId",
+                                                "context": {
+                                                    "schemaId": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Properties",
+                    "valueGetter": "properties[].key"
+                },
+                {
+                    "headerName": "ID",
+                    "field": "uuid"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Import",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "import"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Create",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "edit",
+                            "context": {
+                                "id": "uuid()"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Export",
+                    "enabledGetter": "length(data)>`0`",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "dialog",
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "message": "Export selected schemas as JSON"
+                                },
+                                {
+                                    "type": "debug"
+                                },
+                                {
+                                    "type": "file-export"
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": false
+                },
+                {
+                    "label": "Delete",
+                    "enabledGetter": "length(data)>`0`",
+                    "color": "warn",
+                    "blocks": [
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "db",
+                                    "operation": "delete",
+                                    "adapterName": "schemas",
+                                    "schema": "schemas",
+                                    "uuidGetter": "data.uuid",
+                                    "skipFirst": false
+                                }
+                            ]
+                        },
+                        {
+                            "type": "dispatch",
+                            "action": "refreshWorkflow"
+                        }
+                    ],
+                    "enabled": false
+                },
+                {
+                    "label": "List Meta Schemas",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "metaschemaList"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "importer",
+            "workflowId": "footer",
+            "blockComment": "Footer"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "dependenciesMermaid",
+            "blockComment": "Mermaid dependencies"
+        }
+    ],
+    "id": "list",
+    "workflowId": "list",
+    "adapterName": "schemas",
+    "created": "2022-09-05T21:50:40.653Z",
+    "tags": [
+        "importer",
+        "\u2b50"
+    ],
+    "updated": "2022-09-05T21:50:40.652Z",
+    "modified": "2022-09-05T21:50:40.652Z",
+    "title": "List Schemas"
+}

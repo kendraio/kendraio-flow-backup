@@ -1,0 +1,116 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "transparence-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "validator",
+            "test": "not_null(context.saved.access_token)",
+            "message": "Access Token Not Found - Please Login"
+        },
+        {
+            "type": "file-input",
+            "label": "1. Load Excel",
+            "binary": true,
+            "arrayBuffer": false,
+            "accept": [
+                "xlsx"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.Sheet1[6:].[$.data.Sheet1[5], @].map(&fromPairs(zip([0], [1])), @)[?not_null(\"LICENSOR NAME\")]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && {  \n    licensor: uniqBy(data[].{      id: uuid(), name: \"LICENSOR NAME\"     }, 'name'), \nparties: uniqBy(data[].{    id: uuid(),  first_name: \"FIRST NAME\",    \n  last_name: \"LAST NAME\", fullName: join(' ', [\"FIRST NAME\", \"LAST NAME\"])     }, 'fullName'),  \n   album: uniq(data[].\"ALBUM\")[].{ name: @,  id: uuid() },   label: uniq(data[].\"DISTRIBUTING LABEL\")[].{ name: @, id: uuid() },  \n    country: uniq(data[].split(\"RELEASE COUNTRY\" || '', `/`)[].trim(@))[?@], \n      artist: uniq(data[].[\"ALBUM ARTIST\", \"TRACK ARTIST\"][][].trim(@))[].{ name: @, id: uuid() },   \n      track: data[]}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.{ licensor, album, parties, label, country, artist, data: uniqBy($.data.track[*].merge(@, { key: join('|', map(&to_string(@), [\"TRACK TITLE\", \"TRACK ARTIST\", \"ISRC\"])) }), 'key'), track: $.data.track[].{ id: uuid(), key: join('|', map(&to_string(@), [\"TRACK TITLE\", \"TRACK ARTIST\", \"ISRC\"])), licensor_uuid: find($.data.licensor, 'name', \"LICENSOR NAME\").id,   track_title: \"TRACK TITLE\",  track_artist_uuid: find($.data.artist, 'name', \"TRACK ARTIST\").id,  album_uuid: find($.data.album, 'name', \"ALBUM\").id,  distributing_label_uuid: find($.data.label, 'name', \"DISTRIBUTING LABEL\").id,   isrc: \"ISRC\",   upc: to_string(\"UPC\"),   release_country: \"RELEASE COUNTRY\",   album_uuid: find($.data.album, 'name', \"ALBUM\").id,  initial_release_date: parseDate(\"INITIAL RELEASE DATE \")} }\n"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && merge(data, {track: uniqBy(data.track, 'key')})"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, { contributions: $.data.data[].{\n     party_uuid: find($.data.parties, 'fullName',  join(' ', [\"FIRST NAME\", \"LAST NAME\"])).id,\n     rightsholder_percent: product(\"%\", `100`),\n     backing_vocals: trim(\"BCK VOCALS\") == 'Yes',\n     musician:  trim(\"MUSICIAN\") == 'Yes',\n     role: \"ROLE (PERFORMED)\",\n     instrument: \"INSTRUMENT\",\n     track_uuid: find($.data.track, 'key',  join('|', map(&to_string(@), [\"TRACK TITLE\", \"TRACK ARTIST\", \"ISRC\"]))).id\n  },\n  track: $.data.track[].omit(@, ['key']),\n  parties: $.data.parties[].omit(@, ['fullName'])\n})"
+        },
+        {
+            "type": "message",
+            "title": "Data extracted for import:"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "validator",
+            "test": "not_null(data.licensor)",
+            "message": "Validation Failed"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://transparence.hasura.app/v1/graphql",
+            "query": "mutation MyMutation(\n  $licensors: [licensors_insert_input!]!, \n  $albums: [albums_insert_input!]!,\n  $artists: [artists_insert_input!]!,\n  $labels: [labels_insert_input!]!,\n  $parties: [parties_insert_input!]!,\n  $tracks: [tracks_insert_input!]!,\n  $contributions: [contributions_insert_input!]!\n) {\n  insert_licensors(objects: $licensors) {\n    affected_rows\n  }\n  insert_albums(objects: $albums) {\n      affected_rows\n  }\n  insert_artists(objects: $artists) {\n      affected_rows\n  }\n  insert_labels(objects: $labels) {\n      affected_rows\n  }\n  insert_parties(objects: $parties) {\n      affected_rows\n  }\n  insert_tracks(objects: $tracks) {\n      affected_rows\n  }\n  insert_contributions(objects: $contributions) {\n      affected_rows\n  }\n}",
+            "variables": {
+                "licensors": "data.licensor",
+                "albums": "data.album",
+                "artists": "data.artist",
+                "parties": "data.parties",
+                "labels": "data.label",
+                "tracks": "data.track",
+                "contributions": "data.contributions"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.[\n    {type: 'licensors', count: insert_licensors.affected_rows},\n    {type: 'albums', count: insert_albums.affected_rows},\n    {type: 'artists', count: insert_artists.affected_rows},\n    {type: 'labels', count: insert_labels.affected_rows},\n    {type: 'parties', count: insert_parties.affected_rows},\n    {type: 'tracks', count: insert_tracks.affected_rows},\n    {type: 'contributions', count: insert_contributions.affected_rows}\n]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "importToApi",
+    "workflowId": "importToApi",
+    "adapterName": "transparence",
+    "created": "2021-02-05T08:49:48.186Z",
+    "tags": [],
+    "updated": "2021-02-05T08:49:48.186Z",
+    "modified": "2021-02-05T08:49:48.186Z",
+    "title": "Transparence: Import to API"
+}

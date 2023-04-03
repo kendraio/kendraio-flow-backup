@@ -1,0 +1,323 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "ddex",
+            "schema": "batches",
+            "uuidGetter": "context.queryParams.uuid"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "batchName": {
+                        "type": "string",
+                        "title": "Batch name"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "NewReleaseMessage": {
+                                "type": "object",
+                                "properties": {
+                                    "ResourceList": {
+                                        "type": "object",
+                                        "properties": {
+                                            "SoundRecording": {
+                                                "title": "Sound Recordings",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "SoundRecordingId": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "ISRC": {
+                                                                    "type": "string",
+                                                                    "title": "ISRC"
+                                                                }
+                                                            }
+                                                        },
+                                                        "ReferenceTitle": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "TitleText": {
+                                                                    "type": "string",
+                                                                    "title": "ReferenceTitle.TitleText"
+                                                                }
+                                                            }
+                                                        },
+                                                        "LanguageOfPerformance": {
+                                                            "type": "string",
+                                                            "title": "LanguageOfPerformance"
+                                                        },
+                                                        "Duration": {
+                                                            "type": "string",
+                                                            "title": "Duration"
+                                                        },
+                                                        "SoundRecordingDetailsByTerritory": {
+                                                            "type": "array",
+                                                            "title": "SoundRecordingDetailsByTerritory",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "TerritoryCode": {
+                                                                        "type": "string",
+                                                                        "title": "TerritoryCode"
+                                                                    },
+                                                                    "Title": {
+                                                                        "title": "Title",
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "_TitleType": {
+                                                                                    "type": "string",
+                                                                                    "title": "Type",
+                                                                                    "enum": [
+                                                                                        "FormalTitle",
+                                                                                        "DisplayTitle"
+                                                                                    ]
+                                                                                },
+                                                                                "TitleText": {
+                                                                                    "type": "string",
+                                                                                    "title": "Text"
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "DisplayArtist": {
+                                                                        "title": "DisplayArtist",
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "PartyName": {
+                                                                                    "type": "object",
+                                                                                    "properties": {
+                                                                                        "FullName": {
+                                                                                            "title": "FullName",
+                                                                                            "type": "string"
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                "ArtistRole": {
+                                                                                    "type": "string",
+                                                                                    "title": "ArtistRole"
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    "ResourceContributor": {
+                                                                        "title": "ResourceContributor",
+                                                                        "type": "array",
+                                                                        "items": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "PartyName": {
+                                                                                    "type": "object",
+                                                                                    "properties": {
+                                                                                        "FullName": {
+                                                                                            "type": "string",
+                                                                                            "title": "FullName"
+                                                                                        }
+                                                                                    }
+                                                                                },
+                                                                                "ResourceContributorRole": {
+                                                                                    "title": "Role",
+                                                                                    "type": "array",
+                                                                                    "items": {
+                                                                                        "type": "object",
+                                                                                        "properties": {
+                                                                                            "_Namespace": {
+                                                                                                "type": "string",
+                                                                                                "title": "Namespace"
+                                                                                            },
+                                                                                            "_UserDefinedValue": {
+                                                                                                "type": "string",
+                                                                                                "title": "Value"
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "data": {
+                    "NewReleaseMessage": {
+                        "ResourceList": {
+                            "SoundRecording": {
+                                "ui:widget": "paginated",
+                                "titleGetter": "ReferenceTitle.TitleText",
+                                "items": {
+                                    "SoundRecordingDetailsByTerritory": {
+                                        "ui:widget": "paginated",
+                                        "titleGetter": "TerritoryCode",
+                                        "items": {
+                                            "Title": {
+                                                "ui:widget": "table",
+                                                "colHeadings": [
+                                                    "Title Type",
+                                                    "Text"
+                                                ]
+                                            },
+                                            "DisplayArtist": {
+                                                "ui:widget": "table",
+                                                "colHeadings": [
+                                                    "Full Name",
+                                                    "Artist Role"
+                                                ]
+                                            },
+                                            "ResourceContributor": {
+                                                "ui:widget": "paginated",
+                                                "titleGetter": "PartyName.FullName",
+                                                "items": {
+                                                    "ResourceContributorRole": {
+                                                        "ui:widget": "table",
+                                                        "colHeadings": [
+                                                            "Namespace",
+                                                            "Value"
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Save",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                },
+                {
+                    "label": "Cancel",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                },
+                {
+                    "label": "Delete",
+                    "color": "warn",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "delete",
+                            "uuidGetter": "context.queryParams.uuid"
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                },
+                {
+                    "label": "Export",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "dialog",
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "data.data"
+                                },
+                                {
+                                    "type": "debug"
+                                },
+                                {
+                                    "type": "file-export",
+                                    "label": "Export",
+                                    "fileName": "exported",
+                                    "format": "xml",
+                                    "xmlOptions": {
+                                        "arrayAccessForm": "none",
+                                        "emptyNodeForm": "text",
+                                        "attributeConverters": [],
+                                        "datetimeAccessFormPaths": [],
+                                        "arrayAccessFormPaths": [],
+                                        "xmldomOptions": {},
+                                        "enableToStringFunc": true,
+                                        "skipEmptyTextNodesForObj": true,
+                                        "stripWhitespaces": true,
+                                        "useDoubleQuotes": true,
+                                        "ignoreRoot": false,
+                                        "escapeMode": true,
+                                        "attributePrefix": "_",
+                                        "selfClosingElements": true,
+                                        "keepCData": false,
+                                        "keepText": false,
+                                        "jsDateUTC": false
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "editBatch",
+    "workflowId": "editBatch",
+    "adapterName": "ddex",
+    "created": "2021-03-26T14:46:49.963Z",
+    "tags": [],
+    "updated": "2021-03-26T14:46:49.963Z",
+    "modified": "2021-03-26T14:46:49.963Z",
+    "title": "Edit Batch"
+}

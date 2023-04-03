@@ -1,0 +1,108 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ page: `1`}"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "type": "number",
+                        "title": "Page"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query ($token: String, $id: Int, $page: Int) {  viewer(token: $token) {   agent(id: $id) {  agentCommitments(page: $page) {    id  action   plannedStart   committedOn  due  committedQuantity {  numericValue  unit {  name   }  }  note  resourceClassifiedAs { name  category  } involves {  id  resourceClassifiedAs {   name  category  }  trackingIdentifier  }  provider {  id   name   } receiver {   id name  }  inputOf {  id   name }  outputOf {  id   name  } scope {  id  name } plan {  id  name  }  isPlanDeliverable forPlanDeliverable {  id   action outputOf { name } } isDeletable}}}}",
+            "variables": {
+                "token": "context.vfAuth",
+                "page": "data.page",
+                "id": "context.queryParams.scopeId"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.agent.agentCommitments"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Action",
+                    "field": "action"
+                },
+                {
+                    "headerName": "Committed on",
+                    "field": "committedOn"
+                },
+                {
+                    "headerName": "Due",
+                    "field": "due"
+                },
+                {
+                    "headerName": "Quantity",
+                    "valueGetter": "join(' ', [to_string(committedQuantity.numericValue), committedQuantity.unit.name])"
+                },
+                {
+                    "headerName": "Note",
+                    "field": "node"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "resourceClassifiedAs.name"
+                },
+                {
+                    "headerName": "Category",
+                    "field": "resourceClassifiedAs.category"
+                },
+                {
+                    "headerName": "Scope",
+                    "field": "scope.name"
+                },
+                {
+                    "headerName": "Plan",
+                    "field": "plan.name"
+                }
+            ]
+        }
+    ],
+    "id": "listCommitments",
+    "adapter": "valueflows",
+    "org": "kendraio",
+    "workflowId": "listCommitments",
+    "adapterName": "valueflows",
+    "created": "2020-04-06T08:54:09.102Z",
+    "updated": "2020-04-08T10:57:09.754Z",
+    "modified": "2020-04-08T10:57:09.754Z",
+    "title": "ValueFlows List Commitments"
+}

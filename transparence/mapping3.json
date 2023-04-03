@@ -1,0 +1,63 @@
+{
+    "id": "mapping3",
+    "modified": "2021-02-12T12:21:22.190Z",
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "1. Load Excel (SWISSPERFORM)",
+            "binary": true,
+            "arrayBuffer": false,
+            "accept": [
+                "xlsx"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && [data.Discography[3][0], data.Discography[7:] | [?not_null([0]) && not_null([1])].{\n\n      \"Title (music piece/song/track)\": [0],\n      \"Main artist/formation\": [1],\n      \"Instrument(s)\": [2],\n      \"Role(s)\\r\\nFA/S, FA/D, FA/FM \\r\\nor\\r\\nNFA/StM, NFA/StS, NFA/FM\\r\\nand/or\\r\\nAP\": [3],\n      \"Country of recording\": [4],\n      \"Year of recording\": [5],\n      \"Country of publication\": [6],\n      \"Year of publication\": [7],\n      \"Album\": [8],\n      \"Label\": [9],\n      \"Evidence\\r\\n(obligatory for AP)\": [10]\n}]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && {  \n    licensor: uniqBy(data[1][].{      id: uuid(), name: \"Label\"     }, 'name'), \n    parties: uniqBy(data[1][].{    id: uuid(),  first_name: $.data[0], fullName: $.data[0] }, 'fullName'),  \n    album: uniq(data[1][].\"Album\")[].{ name: @,  id: uuid() },   \n    label: uniq(data[1][].\"Label\")[].{ name: @, id: uuid() },  \n    country: uniq(data[1][].split(\"Country of publication\" || '', `/`)[].trim(@))[?@], \n    artist: uniq(data[1][].[\"Main artist/formation\"][][].trim(@))[].{ name: @, id: uuid() },   \n    track: data[1][].merge(@, { contributor: $.data[0] })\n}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.{ licensor, album, parties, label, country, artist,\n data: uniqBy($.data.track[*].merge(@, { key: join('|', map(&to_string(@), [\"Title (music piece/song/track)\", \"Main artist/formation\", \"ISRC\"])) }), 'key'),\n track: $.data.track[].{ id: uuid(), key: join('|', map(&to_string(@), [\"Title (music piece/song/track)\", \"Main artist/formation\", \"ISRC\"])),\n  licensor_uuid: find($.data.licensor, 'name', \"Label\").id,   track_title: \"Title (music piece/song/track)\", \n   track_artist_uuid: find($.data.artist, 'name', \"Main artist/formation\").id,  album_uuid: find($.data.album, 'name', \"Album\").id,  \n   distributing_label_uuid: find($.data.label, 'name', \"Label\").id,  \n    release_country: \"Country of publication\",   album_uuid: find($.data.album, 'name', \"Album\").id,  initial_release_date: parseDate(\"Year of publication\")} }\n"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && merge(data, {track: uniqBy(data.track, 'key')})"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, { contributions: $.data.data[].{\n     party_uuid: find($.data.parties, 'fullName',  contributor).id,\n     role: \"Role(s)\\r\\nFA/S, FA/D, FA/FM \\r\\nor\\r\\nNFA/StM, NFA/StS, NFA/FM\\r\\nand/or\\r\\nAP\",\n     instrument: \"Instrument(s)\",\n     track_uuid: find($.data.track, 'key',  join('|', map(&to_string(@), [\"Title (music piece/song/track)\", \"Main artist/formation\", \"ISRC\"]))).id\n  },\n  track: $.data.track[].omit(@, ['key']),\n  parties: $.data.parties[].omit(@, ['fullName'])\n})"
+        },
+        {
+            "type": "message",
+            "title": "Data extracted for import:"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        }
+    ],
+    "workflowId": "mapping3",
+    "adapterName": "transparence",
+    "created": "2021-02-11T12:34:04.314Z",
+    "tags": [],
+    "updated": "2021-02-12T12:21:22.190Z",
+    "title": "Transparence (Mapping SWISSPERFORM)"
+}

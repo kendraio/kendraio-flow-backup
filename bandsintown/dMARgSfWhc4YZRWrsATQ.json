@@ -1,0 +1,111 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "formgroup": {
+                        "properties": {
+                            "artistName": {
+                                "type": "string",
+                                "title": "Artist name",
+                                "default": "the cure"
+                            },
+                            "appId": {
+                                "type": "string",
+                                "title": "App ID"
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "rest.bandsintown.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/artists/', data.formgroup.artistName])",
+                    "query": "{ app_id: data.formgroup.appId }"
+                }
+            }
+        },
+        {
+            "type": "debug"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "title": "Artist Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "thumb_url": {
+                        "title": ""
+                    },
+                    "id": {
+                        "title": "Artist ID"
+                    },
+                    "name": {
+                        "title": "Artist Name ",
+                        "description": "This is test text"
+                    },
+                    "tracker_count": {
+                        "title": "Tracker count ",
+                        "description": ""
+                    },
+                    "upcoming_event_count": {
+                        "title": "Upcoming event count",
+                        "description": ""
+                    },
+                    "facebook_page_url": {
+                        "title": "FaceBook page: "
+                    },
+                    "url": {
+                        "title": "More Info: "
+                    }
+                }
+            },
+            "uiSchema": {
+                "thumb_url": {
+                    "ui:widget": "k-image"
+                },
+                "name": {
+                    "ui:widget": "null"
+                },
+                "id": {
+                    "ui:widget": "null"
+                },
+                "facebook_page_url": {
+                    "ui:widget": "null"
+                },
+                "upcoming_event_count": {
+                    "ui:widget": "null"
+                },
+                "tracker_count": {
+                    "ui:widget": "null"
+                },
+                "url": {
+                    "ui:widget": "null"
+                }
+            }
+        }
+    ],
+    "id": "dMARgSfWhc4YZRWrsATQ",
+    "adapter": "bandsintown",
+    "org": "kendraio",
+    "workflowId": "dMARgSfWhc4YZRWrsATQ",
+    "adapterName": "bandsintown",
+    "created": "2019-11-19T12:47:03.380Z",
+    "updated": "2019-12-05T08:25:46.815Z",
+    "modified": "2019-12-05T08:25:46.815Z",
+    "title": "Bandsintown Artist Search "
+}

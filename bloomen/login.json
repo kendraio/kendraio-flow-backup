@@ -1,0 +1,69 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Login",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                }
+            },
+            "uiSchema": {
+                "password": {
+                    "ui:widget": "password"
+                }
+            }
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": "https://bloomen.herokuapp.com/auth/login"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.token"
+        },
+        {
+            "type": "switch",
+            "eval": "data",
+            "cases": [
+                {
+                    "value": "",
+                    "blocks": []
+                },
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "variable-set",
+                        "name": "bloomenAuth",
+                        "firstChange": true
+                    }
+                ]
+            }
+        }
+    ],
+    "id": "login",
+    "workflowId": "login",
+    "adapterName": "bloomen",
+    "created": "2020-07-01T09:25:41.771Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2020-07-01T09:25:41.770Z",
+    "modified": "2020-07-01T09:25:41.770Z",
+    "title": "Login"
+}

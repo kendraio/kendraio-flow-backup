@@ -1,0 +1,147 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Local Database Update</h2>"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "flowSearch",
+            "schema": "none",
+            "uuidGetter": "context.saved.uuid"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].uuid"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsExisting"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsSavedCount"
+        },
+        {
+            "type": "template",
+            "template": "Flows in local DB {{context.flowsSavedCount}}"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://app.kendra.io/api"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@,{\r\n    uri:join('/',['https://app.kendra.io/api',@.adapterName,@.workflowId]),    \r\n    exists:contains($.context.flowsExisting || [''], join('-',[@.adapterName,@.workflowId]))\r\n    })"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsAll"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsAllCount"
+        },
+        {
+            "type": "template",
+            "template": "Flows available via API {{context.flowsAllCount}}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flowsAll"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?exists]"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsUpdate"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flowsAll"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?!exists]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0:50]"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsAdd"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsAddCount"
+        },
+        {
+            "type": "template",
+            "template": "Flows added in this batch: {{context.flowsAddCount}}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flowsAdd"
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "data.uri"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "valueGetter": "data"
+                    }
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data && merge(data,{blockTypes:join(',',data.blocks[*].type || ['']) })"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data && merge(data,{uuid:join('-',[data.adapterName,data.workflowId]) })"
+                },
+                {
+                    "type": "db",
+                    "operation": "add",
+                    "adapterName": "flowSearch",
+                    "schema": "none"
+                }
+            ]
+        }
+    ],
+    "id": "searchAllFlows",
+    "workflowId": "searchAllFlows",
+    "adapterName": "experiements",
+    "created": "2021-07-09T15:54:56.056Z",
+    "tags": [
+        "deleted"
+    ],
+    "updated": "2021-07-09T15:54:56.056Z",
+    "modified": "2021-07-09T15:54:56.056Z",
+    "title": "Workflow"
+}

@@ -1,0 +1,63 @@
+{
+    "id": "mapping2",
+    "modified": "2021-02-12T12:55:04.986Z",
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "1. Load Excel (PlayRight)",
+            "binary": true,
+            "arrayBuffer": false,
+            "accept": [
+                "xlsx"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.Repertoire[2:].{ \"Result after treatment\": [0],\n      \"Performer Full Name\": [1],\n      \"Affiliation Number\": [2],\n      \"Album Title\": [3],\n      \"Title Track\": [4],\n      \"Main Artist\": [5],\n      \"Year of Recording\": [6],\n      \"Production Company\": [7],\n      \"Country of Production\": [8],\n      \"Country of Mastering\": [9],\n      \"Recording Role 1\": [10],\n      \"Recording Role 2\": [11],\n      \"Instrument Type 1\": [12],\n      \"Intrument 1\": [13],\n      \"Instrument Type 2\": [14],\n      \"Intrument 2\": [15],\n      \"Instrument Type 3\": [16],\n      \"Intrument 3\": [17],\n      \"Instrument Type 4\": [18],\n      \"Intrument 4\": [19],\n      \"Instrument Type 5\": [20],\n      \"Intrument 5\": [21]\n      } | [?not_null(\"Performer Full Name\")]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && {  \n    licensor: uniqBy(data[].{      id: uuid(), name: \"Production Company\"     }, 'name'), \n    parties: uniqBy(data[].{    id: uuid(), first_name: trim(\"Performer Full Name\"), fullName: trim(\"Performer Full Name\")     }, 'fullName'),  \n    album: uniq(data[].\"Album Title\")[].{ name: @,  id: uuid() },\n    artist: uniq(data[].[\"Main Artist\"][][].trim(@))[].{ name: @, id: uuid() },   \n    track: data[]\n}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.{ licensor, album, parties, artist, data: uniqBy($.data.track[*].merge(@, { key: join('|', map(&to_string(@), [\"Title Track\", \"Main Artist\", \"Affiliation Number\"])) }), 'key'), track: $.data.track[].{ id: uuid(), key: join('|', map(&to_string(@), [\"Title Track\", \"Main Artist\", \"Affiliation Number\"])), licensor_uuid: find($.data.licensor, 'name', \"Production Company\").id,   track_title: \"Title Track\",  track_artist_uuid: find($.data.artist, 'name', \"Main Artist\").id,  album_uuid: find($.data.album, 'name', \"Album Title\").id, release_country: \"Country of Production\",   album_uuid: find($.data.album, 'name', \"Album Title\").id,  initial_release_date: parseDate(\"Year of Recording\")} }\n"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && merge(data, {track: uniqBy(data.track, 'key')})"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, { contributions: $.data.data[].{\n     party_uuid: find($.data.parties, 'fullName',  trim(\"Performer Full Name\")).id,\n     instrument: \"Instrument Type 1\",\n     track_uuid: find($.data.track, 'key',  join('|', map(&to_string(@), [\"Title Track\", \"Main Artist\", \"Affiliation Number\"]))).id\n  },\n  label: `[]`,\n  track: $.data.track[].omit(@, ['key']),\n  parties: $.data.parties[].omit(@, ['fullName'])\n})"
+        },
+        {
+            "type": "message",
+            "title": "Data extracted for import:"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        }
+    ],
+    "workflowId": "mapping2",
+    "adapterName": "transparence",
+    "created": "2021-02-05T14:11:49.386Z",
+    "tags": [],
+    "updated": "2021-02-12T12:55:04.986Z",
+    "title": "Transparence (Mapping PlayRight)"
+}

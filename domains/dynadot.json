@@ -1,0 +1,85 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Enter Dynadot Key",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "authkey": {
+                        "type": "string",
+                        "title": "Dynadot API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.dynadot.com",
+                "pathname": "/api3.json",
+                "query": {},
+                "valueGetters": {
+                    "query": "data.{command: 'list_domain', key: join('', [authkey]) }",
+                    "dummy": ""
+                }
+            },
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.ListDomainInfoResponse.MainDomains[*].[Name, Registration, Expiration]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Domain"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Expires"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "dynadot",
+    "workflowId": "dynadot",
+    "adapterName": "domains",
+    "created": "2023-02-12T10:58:02.387Z",
+    "tags": [],
+    "updated": "2023-02-12T10:58:02.387Z",
+    "modified": "2023-02-12T10:58:02.387Z",
+    "title": "Dynadot Domains"
+}

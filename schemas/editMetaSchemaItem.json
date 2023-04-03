@@ -1,0 +1,101 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "metaschemas",
+            "schema": "schemas",
+            "uuidGetter": "context.queryParams.schemaId",
+            "blockComment": "Load the (meta) schema"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.rawSchema",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[0] && data[0].schema",
+            "blockComment": "get the metaschema from the db item if possible"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "state.local.schema",
+            "blockComment": "Stores in state.local.schema"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "uuidGetter": "context.queryParams.id",
+            "blockComment": "get the record if it exists"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[0]",
+            "blockComment": "Get's the record itself (if possible)"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "context-save",
+            "contextKey": "state.local.record",
+            "blockComment": "Stores record in state.local.record"
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": false,
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "state.local.schema"
+                    }
+                ]
+            },
+            "injectContext": false,
+            "blockComment": "Form from the schema"
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, { uuid: $.context.queryParams.id, schemaId: $.state.local.rawSchema[0].uuid })",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Save metaschema record",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "upsert",
+                            "adapterName": "schemas",
+                            "schema": "metaschemaRecord"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Upserts metaschemaRecord"
+        }
+    ],
+    "id": "editMetaSchemaItem",
+    "workflowId": "editMetaSchemaItem",
+    "adapterName": "schemas",
+    "created": "2022-08-10T16:14:09.873Z",
+    "tags": [],
+    "updated": "2022-08-10T16:14:09.873Z",
+    "modified": "2022-08-10T16:14:09.873Z",
+    "title": "Edit Meta Schema Item"
+}

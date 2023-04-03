@@ -1,0 +1,74 @@
+{
+    "blocks": [
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "{code: context.queryParams.code}"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "form",
+            "label": "Next >",
+            "jsonSchema": {
+                "title": "Auth Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "grant_type": {
+                        "title": "grant_type",
+                        "type": "string",
+                        "default": "authorization_code"
+                    },
+                    "code": {
+                        "title": "code",
+                        "type": "string"
+                    },
+                    "redirect_uri": {
+                        "type": "string",
+                        "title": "redirect_uri",
+                        "default": "https://dev.app.kendra.io/vimeo/vimeo_auth"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "http",
+            "method": "POST",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.vimeo.com",
+                "pathname": "/oauth/access_token/"
+            },
+            "headers": {
+                "Authorization": "join('', ['basic ', btoa(join(':', ['e7c81b6aa41fe2b94200ae79465bd9e49216e1c2', 'd/9EBmQ6+f3U/Bk0DsqpXFsCdeZ5wEA0+jhKQlJ9FThsMtSRewM+uYXAPYyBB6xWpNc3mqxMK1c34h+17o90D7ccAlA1I+tdXuoW2kPLf8a6RHLvsYIcDH1QKIVAlNjX']))])",
+                "Content-Type": "join('/', ['application','json'])",
+                "Accept": "join('/', ['application', join('+',  ['vnd.vimeo.*', 'json;version=3.4'])])",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "*"
+            }
+        }
+    ],
+    "id": "vimeo_auth",
+    "adapter": "vimeo",
+    "org": "kendraio",
+    "workflowId": "vimeo_auth",
+    "adapterName": "vimeo",
+    "created": "2019-12-17T11:28:23.267Z",
+    "updated": "2019-12-18T14:49:56.546Z",
+    "modified": "2019-12-18T14:49:56.546Z",
+    "title": "Vimeo: Auth Callback"
+}

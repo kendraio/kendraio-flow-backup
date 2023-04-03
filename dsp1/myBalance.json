@@ -1,0 +1,26 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "wallet",
+            "service": "uphold",
+            "get_balance": {
+                "ILP": "$ilp-sandbox.uphold.com/Y9UDQn8UFKw6"
+            }
+        },
+        {
+            "type": "template",
+            "template": "<h3>{{#if data}}Uphold balance:<br><h4>{{data}} XRP</h4>{{else}}No data loaded yet{{/if}}</h3>"
+        }
+    ],
+    "id": "myBalance",
+    "workflowId": "myBalance",
+    "adapterName": "dsp1",
+    "created": "2021-07-29T17:50:23.392Z",
+    "tags": [],
+    "updated": "2021-07-29T17:50:23.391Z",
+    "modified": "2021-07-29T17:50:23.391Z",
+    "title": "Artist balance prototype (DSP1)"
+}

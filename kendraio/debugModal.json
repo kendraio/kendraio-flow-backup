@@ -1,0 +1,33 @@
+{
+    "blocks": [
+        {
+            "type": "dialog",
+            "blocks": [
+                {
+                    "type": "debug"
+                },
+                {
+                    "type": "actions",
+                    "buttons": [
+                        {
+                            "label": "OK",
+                            "blocks": [
+                                {
+                                    "type": "init"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "debugModal",
+    "workflowId": "debugModal",
+    "adapterName": "kendraio",
+    "created": "2020-10-29T14:09:12.975Z",
+    "tags": [],
+    "updated": "2020-10-29T14:09:12.975Z",
+    "modified": "2020-10-29T14:09:12.975Z",
+    "title": "Debug Modal"
+}

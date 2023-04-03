@@ -1,0 +1,115 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "gigs",
+            "schema": "artists"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "floatingFilter": true
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Name",
+                    "field": "name",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Bandsintown",
+                    "field": "bit_id"
+                },
+                {
+                    "width": 100,
+                    "resizable": false,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "gigs",
+                                                "workflowId": "editArtist",
+                                                "context": {
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add Artist",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "dialog",
+                            "blocks": [
+                                {
+                                    "type": "form",
+                                    "label": "Save",
+                                    "jsonSchema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "title": "Name"
+                                            },
+                                            "bit_id": {
+                                                "type": "string",
+                                                "title": "Bandsintown ID"
+                                            }
+                                        },
+                                        "required": [
+                                            "name"
+                                        ]
+                                    },
+                                    "uiSchema": {}
+                                },
+                                {
+                                    "type": "db",
+                                    "operation": "add",
+                                    "adapterName": "gigs",
+                                    "schema": "artists"
+                                },
+                                {
+                                    "type": "dispatch",
+                                    "action": "refreshWorkflow"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "artistList",
+    "workflowId": "artistList",
+    "adapterName": "gigs",
+    "created": "2020-05-27T08:14:52.026Z",
+    "updated": "2020-05-27T08:14:52.026Z",
+    "modified": "2020-05-27T08:14:52.026Z",
+    "title": "Artists"
+}

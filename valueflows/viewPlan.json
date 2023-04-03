@@ -1,0 +1,89 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query($token: String) { viewer(token: $token) { allProcesses { id name  }}}",
+            "variables": {
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ processId: context.queryParams.processId, nodeId: context.queryParams.nodeId, recipeId: context.queryParams.recipeId, title: '', wordCount: `1000`, processes: data.data.viewer.allProcesses[:6].{ name: name } }"
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Add translation title"
+                    },
+                    "wordCount": {
+                        "type": "string",
+                        "title": "Original word count"
+                    },
+                    "processes": {
+                        "type": "array",
+                        "title": "Processes",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "title": "Process"
+                                },
+                                "agent": {
+                                    "type": "string",
+                                    "title": "Agent"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "processes": {
+                    "ui:widget": "table",
+                    "allowAdd": false,
+                    "allowRemove": false,
+                    "colHeadings": [
+                        "Process",
+                        "Agent"
+                    ],
+                    "items": {
+                        "name": {
+                            "ui:widget": "readonly"
+                        },
+                        "agent": {
+                            "ui:widget": "readonly"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "id": "viewPlan",
+    "adapter": "valueflows",
+    "org": "kendraio",
+    "workflowId": "viewPlan",
+    "adapterName": "valueflows",
+    "created": "2020-04-17T08:05:47.416Z",
+    "updated": "2020-04-17T08:07:11.800Z",
+    "modified": "2020-04-17T08:07:11.800Z",
+    "title": "ValueFlows View Plan"
+}

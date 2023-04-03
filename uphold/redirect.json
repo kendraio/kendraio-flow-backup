@@ -1,0 +1,27 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "message",
+            "title": "Redirecting",
+            "message": "You should  now be redirected to the Workflow that started your Uphold authentication request."
+        },
+        {
+            "type": "wallet",
+            "redirect": "return",
+            "get_balance": {
+                "ILP": "$ilp-sandbox.uphold.com/Y9UDQn8UFKw6"
+            }
+        }
+    ],
+    "id": "redirect",
+    "workflowId": "redirect",
+    "adapterName": "uphold",
+    "created": "2021-07-28T15:43:17.865Z",
+    "tags": [],
+    "updated": "2021-07-28T15:43:17.865Z",
+    "modified": "2021-07-28T15:43:17.865Z",
+    "title": "Uphold OAuth Redirect"
+}

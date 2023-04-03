@@ -1,0 +1,120 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vimeoToken"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ searchTerm: '' }"
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "searchTerm": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.spotify.com",
+                "pathname": "/v1/search",
+                "valueGetters": {
+                    "query": "{ type: 'track', q: data.searchTerm }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyToken])"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.tracks.items"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "checkboxSelection": true
+                },
+                {
+                    "width": 100,
+                    "headerName": "Image",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<img src=\"{{data.album.images.[2].url}}\" />"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Artists",
+                    "valueGetter": "artists[].name"
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Popularity",
+                    "field": "popularity"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ tracks: data }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        }
+    ],
+    "id": "Vimeo_search_vids",
+    "adapter": "vimeo",
+    "org": "kendraio",
+    "workflowId": "Vimeo_search_vids",
+    "adapterName": "vimeo",
+    "created": "2019-12-19T10:50:24.319Z",
+    "updated": "2019-12-19T10:50:24.319Z",
+    "modified": "2019-12-19T10:50:24.319Z",
+    "title": "Search"
+}

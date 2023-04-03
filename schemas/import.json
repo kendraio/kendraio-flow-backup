@@ -1,0 +1,326 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local",
+            "valueGetter": "{importComplete:`false`, imported:[], toImport:[], selectedCount: `0`, importReady: `false`}",
+            "blockTitle": "Init local state",
+            "blockComment": "Init local state"
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showData": false,
+            "showContext": false,
+            "showState": true,
+            "enabledGetter": "state.flags.devel",
+            "blockTitle": "tests",
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockTitle": "Load Schemas",
+            "blockComment": "Load schemas"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": true,
+            "enabledGetter": "state.flags.devel",
+            "blockTitle": "This is a debug",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].uuid",
+            "blockTitle": "Extract schema UUIDs",
+            "blockComment": "get uuids"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "enabledGetter": "state.flags.devel"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "schemas",
+            "blockTitle": "UUIDs to context",
+            "blockComment": "Uuids to context"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Schema importer</h2><p>Import a new data schema.</p>",
+            "blockTitle": "heading",
+            "blockComment": "Heading\n"
+        },
+        {
+            "type": "template",
+            "template": "{{#unless state.local.importComplete}}{{#if state.flags.schemaCount}}<h3>Currently Installed Schemas</h3><ul>{{#each state.global.schemas.schemas.defined}}<li>{{name}}</li>{{/each}}</ul><hr>{{/if}}{{/unless}}",
+            "blockTitle": "Installed",
+            "blockComment": "Currently installed schemas"
+        },
+        {
+            "type": "file-input",
+            "label": "Select a schema file to import",
+            "accept": [
+                "csv",
+                "json",
+                "xml"
+            ],
+            "enabledGetter": "!(state.local.importComplete)",
+            "blockComment": ""
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@,{exists: contains($.context.schemas,uuid)})",
+            "blockTitle": "Flag existing schemas",
+            "blockComment": "set exists flag"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "importFile",
+            "blockTitle": "Save importfile"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "enabledGetter": "state.flags.devel",
+            "blockTitle": "",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "enabledGetter": "!(state.local.importComplete)",
+            "gridOptions": {
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "UUID",
+                    "field": "uuid"
+                },
+                {
+                    "headerName": "exists",
+                    "field": "exists"
+                }
+            ],
+            "passThrough": false,
+            "firstRowHeaders": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "enabledGetter": "state.flags.devel"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.selectedCount",
+            "valueGetter": "length(data)",
+            "blockTitle": "SelectedCount",
+            "blockComment": "selectedCount"
+        },
+        {
+            "type": "template",
+            "template": "{{#unless state.local.importComplete}}{{#if state.local.selectedCount}}<h4>Import review</h4><ul>{{#each data}}<li>{{name}} : {{#if exists}}Will not import as it already exists{{else}}Will be imported{{/if}} </li>{{/each}}</ul>{{/if}}{{/unless}}",
+            "blockTitle": "Selected review"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?!exists]",
+            "blockTitle": "Filter out existing ",
+            "blockComment": "filter to not exists"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.toImport",
+            "blockTitle": "toImport",
+            "blockComment": "toImport"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.importReady",
+            "valueGetter": "!(state.local.importComplete) && (state.local.toImport && length(state.local.toImport) > `0` || `false`)",
+            "blockTitle": "ImportReady",
+            "blockComment": "importReady"
+        },
+        {
+            "type": "template",
+            "template": "{{#if state.local.importComplete}}<h3>Import Complete</h3>The following schemas were imported:<ul>{{#each state.local.toImport}}<li>{{name}}</li>{{/each}}{{/if}}",
+            "blockTitle": "Complete message"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Import selected schemas",
+                    "color": "primary",
+                    "enabledGetter": "state.local.importReady",
+                    "blocks": [
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "template",
+                                    "template": "Importing: {{data.name}}"
+                                },
+                                {
+                                    "type": "db",
+                                    "operation": "add",
+                                    "adapterName": "schemas",
+                                    "schema": "schemas",
+                                    "skipFirst": false
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.imported",
+                                    "valueGetter": "[state.local.imported || [],[data]] []"
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.importComplete",
+                                    "valueGetter": "length(state.local.toImport) ==  length(state.local.imported)"
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.importReady",
+                                    "valueGetter": "!(state.local.importComplete)"
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": false
+                },
+                {
+                    "label": "Cancel / Back",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ],
+                    "enabledGetter": "!(state.local.importComplete)",
+                    "enabled": false
+                },
+                {
+                    "label": "Continue",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ],
+                    "enabledGetter": "state.local.importComplete",
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "valueGetter": "state.local",
+            "enabledGetter": "state.flags.devel",
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Key"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Value"
+                }
+            ],
+            "blockTitle": "state.local",
+            "blockComment": "Local state display"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "devel",
+            "workflowId": "flagsDisplay",
+            "blockTitle": "Devel Flags",
+            "blockComment": "Development footer"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Fake Complete",
+                    "enabledGetter": "state.flags.devel",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "context-save",
+                            "key": "state.local.importComplete",
+                            "valueGetter": "`true`"
+                        }
+                    ],
+                    "enabled": null
+                },
+                {
+                    "label": "Fake Incomplete",
+                    "enabledGetter": "state.flags.devel",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "context-save",
+                            "key": "state.local.importComplete",
+                            "valueGetter": "`false`"
+                        }
+                    ],
+                    "enabled": null
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "import",
+    "workflowId": "import",
+    "adapterName": "schemas",
+    "created": "2022-02-07T16:02:06.364Z",
+    "tags": [],
+    "updated": "2022-02-07T16:02:06.364Z",
+    "modified": "2022-02-07T16:02:06.364Z",
+    "title": "Import Schemas"
+}

@@ -1,0 +1,24 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "demodsp1-auth"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "myTracks",
+    "workflowId": "myTracks",
+    "adapterName": "demodsp1",
+    "created": "2020-11-09T17:23:43.457Z",
+    "tags": [],
+    "updated": "2020-11-09T17:23:43.456Z",
+    "modified": "2020-11-09T17:23:43.456Z",
+    "title": "My Tracks"
+}

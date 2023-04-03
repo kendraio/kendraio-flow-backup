@@ -1,0 +1,49 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "culturebanked",
+            "schema": "license",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "db",
+            "operation": "update",
+            "adapterName": "culturebanked",
+            "schema": "license"
+        },
+        {
+            "type": "launch",
+            "workflowId": "database",
+            "adapter": "culturebanked"
+        }
+    ],
+    "id": "editLicense",
+    "workflowId": "editLicense",
+    "adapterName": "culturebanked",
+    "created": "2020-06-26T10:27:49.003Z",
+    "updated": "2020-06-26T10:27:49.002Z",
+    "modified": "2020-06-26T10:27:49.002Z",
+    "title": "Edit License Details"
+}

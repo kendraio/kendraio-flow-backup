@@ -1,0 +1,55 @@
+{
+    "id": "contributorsDev2",
+    "modified": "2022-05-12T11:09:49.013Z",
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "message",
+            "message": "Contributors"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "ddex",
+            "schema": "batches",
+            "uuidGetter": "`f04b5e46-6123-4ff1-a003-140e08b2dbd4`",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].data.NewReleaseMessage.ResourceList.SoundRecording[].{ id: join(':', [to_string($.data[0].uuid), to_string(ResourceReference)]), isrc: ResourceId.ISRC, title: DisplayTitleText, contributors: SoundRecordingDetailsByTerritory[].\n[ResourceContributor[].\n    {name: PartyName.FullName, role: [ResourceContributorRole[?type(@) == 'string'], ResourceContributorRole[?type(@) == 'object'].join('', [_Namespace, _UserDefinedValue])][]}, \n    IndirectResourceContributor\n][][] }\n"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ISRC",
+                    "field": "isrc"
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title"
+                },
+                {
+                    "headerName": "Contributors",
+                    "field": "contributors",
+                    "valueFormatter": "value[].name"
+                }
+            ]
+        }
+    ],
+    "workflowId": "contributorsDev2",
+    "adapterName": "ddex",
+    "created": "2022-05-12T11:02:01.949Z",
+    "tags": [],
+    "updated": "2022-05-12T11:09:49.013Z",
+    "title": "DDEX Contributors"
+}

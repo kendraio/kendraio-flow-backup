@@ -1,0 +1,96 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Teosto Broadcaster: Get works by title",
+                "type": "object",
+                "properties": {
+                    "term": {
+                        "title": "Search term",
+                        "type": "string",
+                        "default": "HEART"
+                    },
+                    "limit": {
+                        "title": "Limit",
+                        "type": "integer",
+                        "default": 2
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "query",
+            "dataSource": {
+                "type": "remote",
+                "endpoint": {
+                    "protocol": "https:",
+                    "host": "teosto-cors-proxy-eilgg5e92.now.sh",
+                    "pathname": "/dev/rest/work/perTitle/HEART",
+                    "query": {
+                        "limit": 4
+                    },
+                    "valueGetters": {
+                        "pathname": "join('', ['/dev/rest/work/perTitle/', model.term])",
+                        "query": "{limit: model.limit}"
+                    }
+                },
+                "authentication": {
+                    "type": "basic-auth",
+                    "valueGetters": {
+                        "username": "user.teosto.username",
+                        "password": "user.teosto.password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].{ workkey: workkey, titles: titles[?title_type=='OT'].work_title, performer: performers.name, right_owners_authors: right_owners[?type=='AUTHOR'].join(' ', [to_string(firstname),  to_string(name),  '(' to_string(ipi_base_nbr) ')' ]), right_owners_publishers: right_owners[?type=='PUBLISHER'], iswc: iswc[*], isrc: isrc[*]  }"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "headerName": "Titles",
+                    "valueGetter": "titles"
+                },
+                {
+                    "headerName": "Performer",
+                    "valueGetter": "performer"
+                },
+                {
+                    "headerName": "Rights owners (Author)",
+                    "valueGetter": "right_owners_authors"
+                },
+                {
+                    "headerName": "Rights owners (Publishers)",
+                    "valueGetter": "right_owners_publishers[].name"
+                },
+                {
+                    "headerName": "ISWC",
+                    "valueGetter": "iswc"
+                },
+                {
+                    "headerName": "ISRC",
+                    "valueGetter": "isrc"
+                }
+            ]
+        }
+    ],
+    "id": "HLVSsI8I93lmTKHjQECh",
+    "adapter": "teosto",
+    "org": "kendraio",
+    "workflowId": "HLVSsI8I93lmTKHjQECh",
+    "adapterName": "teosto",
+    "created": "2019-11-14T12:05:45.367Z",
+    "updated": "2019-11-14T12:53:57.260Z",
+    "modified": "2019-11-14T12:53:57.260Z",
+    "title": "Teosto Broadcaster: Works by title"
+}

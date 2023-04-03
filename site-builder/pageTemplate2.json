@@ -1,0 +1,266 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "schema": "pageTemplate",
+            "uuidGetter": "context.queryParams.pageTemplateID",
+            "blockComment": "load page template"
+        },
+        {
+            "type": "context-save",
+            "key": "loaded_page_template",
+            "blockComment": "store page template"
+        },
+        {
+            "type": "mapping",
+            "mapping": "'86ff5c74-09c2-4449-88c3-852ccedfd988'",
+            "blockComment": "block type UUID"
+        },
+        {
+            "type": "context-save",
+            "key": "block_types_uuid",
+            "blockComment": "saves block types uuid"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "schema": "blocks",
+            "uuidGetter": "context.block_types_uuid",
+            "blockComment": "try loading block types"
+        },
+        {
+            "type": "mapping",
+            "mapping": "(data && values(omit(data[0],['uuid'])))||['menu','header','footer','test2']",
+            "blockComment": "if we loaded existing block type data, return it's values, or default data"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{enum:data}",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "block_types",
+            "blockComment": "Save block_types"
+        },
+        {
+            "type": "template",
+            "template": "<h3>Add different types of template blocks to a page:",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "label": "Submit",
+            "emitOnInit": true,
+            "skipInit": false,
+            "confirm": false,
+            "jsonSchema": {
+                "definitions": {
+                    "block_names": {
+                        "type": "string",
+                        "enum": [
+                            "menu",
+                            "footer",
+                            "header"
+                        ]
+                    },
+                    "context": {
+                        "app": {
+                            "adapterName": "site-builder",
+                            "workflowId": "pageTemplate",
+                            "location": {
+                                "origin": "https://app.kendra.io",
+                                "protocol": "https:",
+                                "host": "app.kendra.io",
+                                "port": "",
+                                "pathname": "/site-builder/pageTemplate",
+                                "search": "?pageTemplateID=cbc27362-2333-4200-8b73-ecbe2348f693",
+                                "hash": "",
+                                "href": "https://app.kendra.io/site-builder/pageTemplate?pageTemplateID=cbc27362-2333-4200-8b73-ecbe2348f693"
+                            },
+                            "connections": []
+                        },
+                        "queryParams": {
+                            "pageTemplateID": "cbc27362-2333-4200-8b73-ecbe2348f693"
+                        },
+                        "fragment": null,
+                        "loaded_page_template": [],
+                        "__key": "d2bab2bb-01f7-43c9-bd03-111ef52a547b",
+                        "block_types_uuid": "86ff5c74-09c2-4449-88c3-852ccedfd988",
+                        "saved": {
+                            "page_id": null,
+                            "page_name": null,
+                            "block_id": [
+                                {
+                                    "uuid": null,
+                                    "name": "test"
+                                }
+                            ]
+                        },
+                        "block_types": {
+                            "enum": [
+                                "menu",
+                                "header",
+                                "footer",
+                                "test"
+                            ]
+                        }
+                    }
+                },
+                "type": "object",
+                "title": "Page type",
+                "properties": {
+                    "page_id": {
+                        "type": "string",
+                        "title": "Page ID",
+                        "format": "uuid"
+                    },
+                    "page_name": {
+                        "type": "string",
+                        "title": "Page Name"
+                    },
+                    "block_id": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "title": "Block type",
+                            "properties": {
+                                "uuid": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "title": "Block ID"
+                                },
+                                "name": {
+                                    "$ref": "#/definitions/context/block_types"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Loads form schema from state.local.form and loads existing data if passed in"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "init"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "saved"
+                        },
+                        {
+                            "type": "db",
+                            "operation": "fetch",
+                            "adapterName": "schemas",
+                            "schema": "pageTemplate",
+                            "uuidGetter": "context.queryParams.pageTemplateID",
+                            "blockComment": ""
+                        },
+                        {
+                            "type": "switch",
+                            "valueGetter": "context.queryParams.pageTemplateID == data[0].uuid",
+                            "cases": [
+                                {
+                                    "value": false,
+                                    "blocks": [
+                                        {
+                                            "type": "debug"
+                                        },
+                                        {
+                                            "type": "template",
+                                            "template": "Adding data"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "merge(context.saved, { uuid: context.queryParams.pageTemplateID })",
+                                            "blockComment": ""
+                                        },
+                                        {
+                                            "type": "db",
+                                            "operation": "add",
+                                            "adapterName": "schemas",
+                                            "schema": "pageTemplate",
+                                            "blockComment": ""
+                                        }
+                                    ]
+                                },
+                                {
+                                    "value": true,
+                                    "blocks": [
+                                        {
+                                            "type": "template",
+                                            "template": "\ufe0f\ufe0fData already exists, updating as needed"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "merge(context.saved, { uuid: context.queryParams.pageTemplateID })",
+                                            "blockComment": ""
+                                        },
+                                        {
+                                            "type": "db",
+                                            "operation": "update",
+                                            "adapterName": "schemas",
+                                            "schema": "pageTemplate",
+                                            "blockComment": ""
+                                        }
+                                    ]
+                                }
+                            ],
+                            "default": {
+                                "blocks": []
+                            },
+                            "blockComment": ""
+                        }
+                    ]
+                }
+            ],
+            "blockComment": "Saves or updates page template"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Edit block types",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "site-builder",
+                            "workflowId": "blockEditor"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "pageTemplate2",
+    "workflowId": "pageTemplate2",
+    "adapterName": "site-builder",
+    "created": "2022-05-26T13:26:44.999Z",
+    "tags": [],
+    "updated": "2022-05-26T13:26:44.999Z",
+    "modified": "2022-05-26T13:26:44.999Z",
+    "title": "Site Builder Page Template Editor"
+}

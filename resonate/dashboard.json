@@ -1,0 +1,24 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "resonate-auth"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "dashboard",
+    "workflowId": "dashboard",
+    "adapterName": "resonate",
+    "created": "2021-05-07T12:09:26.654Z",
+    "tags": [],
+    "updated": "2021-05-07T12:09:26.654Z",
+    "modified": "2021-05-07T12:09:26.654Z",
+    "title": "Dashboard"
+}

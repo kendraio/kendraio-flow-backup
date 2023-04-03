@@ -1,0 +1,71 @@
+{
+    "blocks": [
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "file-input",
+            "label": "Import XML",
+            "accept": [
+                "xml"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "xmlOptions": {
+                "arrayAccessFormPaths": [
+                    "NewReleaseMessage.ResourceList.SoundRecording",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.DisplayArtist",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.ResourceContributor",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.ResourceContributor.ResourceContributorRole",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.IndirectResourceContributor",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.IndirectResourceContributor.IndirectResourceContributorRole",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.Genre",
+                    "NewReleaseMessage.ResourceList.Image",
+                    "NewReleaseMessage.ReleaseList.Release",
+                    "NewReleaseMessage.DealList.ReleaseDeal.Deal"
+                ]
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported",
+            "format": "xml",
+            "xmlOptions": {
+                "arrayAccessForm": "none",
+                "emptyNodeForm": "text",
+                "attributeConverters": [],
+                "datetimeAccessFormPaths": [],
+                "arrayAccessFormPaths": [],
+                "xmldomOptions": {},
+                "enableToStringFunc": true,
+                "skipEmptyTextNodesForObj": true,
+                "stripWhitespaces": true,
+                "useDoubleQuotes": true,
+                "ignoreRoot": false,
+                "escapeMode": true,
+                "attributePrefix": "_",
+                "selfClosingElements": true,
+                "keepCData": false,
+                "keepText": false,
+                "jsDateUTC": false
+            }
+        }
+    ],
+    "id": "ernExport",
+    "workflowId": "ernExport",
+    "adapterName": "ddex",
+    "created": "2021-03-19T12:28:00.491Z",
+    "tags": [],
+    "updated": "2021-03-19T12:28:00.491Z",
+    "modified": "2021-03-19T12:28:00.491Z",
+    "title": "ERN Export"
+}

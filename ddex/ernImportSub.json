@@ -1,0 +1,70 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "Import DDEX ERN XML",
+            "message": "The Electronic Release Notification Message Suite Standard (informally called the 'Release Notification Message Standard') is one of several XML message formats published by DDEX. Release notifications are messages that record labels or aggregators send to distributors to inform them of new releases that are available for distribution, and the terms and conditions under which such releases can be made available."
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "file-input",
+            "label": "Import XML",
+            "accept": [
+                "xml"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "xmlOptions": {
+                "arrayAccessFormPaths": [
+                    "NewReleaseMessage.ResourceList.SoundRecording",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.DisplayArtist",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.ResourceContributor",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.ResourceContributor.ResourceContributorRole",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.IndirectResourceContributor",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.IndirectResourceContributor.IndirectResourceContributorRole",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.Genre",
+                    "NewReleaseMessage.ResourceList.Image",
+                    "NewReleaseMessage.ReleaseList.Release",
+                    "NewReleaseMessage.DealList.ReleaseDeal.Deal",
+                    "NewReleaseMessage.PartyList.Party.PartyName"
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "savedData"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.NewReleaseMessage && length(data.NewReleaseMessage) > `0`",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "context.savedData"
+                        },
+                        {
+                            "type": "debug"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "ernImportSub",
+    "workflowId": "ernImportSub",
+    "adapterName": "ddex",
+    "created": "2022-06-20T16:19:17.343Z",
+    "tags": [],
+    "updated": "2022-06-20T16:19:17.343Z",
+    "modified": "2022-06-20T16:19:17.343Z",
+    "title": "ERN Import (Embeddable)"
+}

@@ -1,0 +1,106 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schemaGetter": "'pageTemplate'",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].{uuid: to_string(uuid), title: page_name} ",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<h3>Page template listing",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "passThrough": true,
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 15,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "width": 100,
+                    "filter": true
+                },
+                {
+                    "headerName": "UUID",
+                    "field": "uuid",
+                    "width": 100,
+                    "filter": true
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "site-builder",
+                                                "workflowId": "pageTemplate",
+                                                "context": {
+                                                    "pageTemplateID": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Create new page template",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "site-builder",
+                            "workflowId": "pageTemplate",
+                            "context": {
+                                "pageTemplateID": "uuid()"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "pageTemplatesList",
+    "workflowId": "pageTemplatesList",
+    "adapterName": "site-builder",
+    "created": "2022-05-13T18:11:02.740Z",
+    "tags": [],
+    "updated": "2022-05-13T18:11:02.740Z",
+    "modified": "2022-05-13T18:11:02.740Z",
+    "title": "Page template listing"
+}

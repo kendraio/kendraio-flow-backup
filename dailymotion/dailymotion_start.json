@@ -1,0 +1,97 @@
+{
+    "blocks": [
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.queryParams"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Video Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "grant_type": {
+                        "type": "string",
+                        "title": "grant_type",
+                        "default": "authorization_code"
+                    },
+                    "code": {
+                        "title": "code",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "client_id": {
+                        "title": "client_id",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150,
+                        "default": "183158f83e44b4934d2a"
+                    },
+                    "client_secret": {
+                        "type": "string",
+                        "title": "client_secret",
+                        "minLength": 2,
+                        "maxLength": 3000,
+                        "default": "449ef3a534dbf601d0ed8e89f6c848851914e3e3"
+                    },
+                    "redirect_uri": {
+                        "type": "string",
+                        "title": "redirect_uri",
+                        "default": "https://dev.app.kendra.io/dailymotion/dailymotion_start"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "qs(data)"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "http",
+            "method": "POST",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "kendraio-dailymotion-cors-proxy-107j3dwob.now.sh",
+                "pathname": "/oauth/token"
+            },
+            "headers": {
+                "Content-Type": "join('/', ['application','x-www-form-urlencoded'])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.access_token"
+        },
+        {
+            "type": "variable-set",
+            "name": "access_token"
+        }
+    ],
+    "id": "dailymotion_start",
+    "adapter": "dailymotion",
+    "org": "kendraio",
+    "workflowId": "dailymotion_start",
+    "adapterName": "dailymotion",
+    "created": "2020-01-02T13:26:58.326Z",
+    "updated": "2020-01-14T11:12:43.491Z",
+    "modified": "2020-01-14T11:12:43.491Z",
+    "title": "Daily Motion Step 2: Get:Access Code"
+}

@@ -1,0 +1,196 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Updating local database</h2>"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "flowSearch",
+            "schema": "none",
+            "uuidGetter": "context.saved.uuid"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].uuid"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsExisting"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsSavedCount"
+        },
+        {
+            "type": "template",
+            "template": "<p>Found {{context.flowsSavedCount}} flows in local database."
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://app.kendra.io/flows"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@,{\r\n    uri:join('/',['https://app.kendra.io/api',@.adapterName,@.workflowId]),    \r\n    exists:contains($.context.flowsExisting || [''], join('-',[@.adapterName,@.workflowId]))\r\n    })"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?adapterName!=`UNKNOWN`]"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsAll"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsAllCount"
+        },
+        {
+            "type": "template",
+            "template": "Flows available via API {{context.flowsAllCount}}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flowsAll"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?exists]"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsUpdate"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flowsAll"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?!exists]"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsAdd"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowsAddCount"
+        },
+        {
+            "type": "template",
+            "template": "Flows to be added: {{context.flowsAddCount}}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data > `50`"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "<em>There are a large number of flows being added, give the process a minute or two"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "template",
+                        "template": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flowsAdd"
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "data.uri"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "valueGetter": "data"
+                    }
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data && merge(data,{blockTypes:join(',',data.blocks[*].type || ['']) })"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data && merge(data,{uuid:join('-',[data.adapterName,data.workflowId]) })"
+                },
+                {
+                    "type": "db",
+                    "operation": "add",
+                    "adapterName": "flowSearch",
+                    "schema": "none"
+                },
+                {
+                    "type": "context-save",
+                    "keyGetter": "data && join('.',['flowFetch',data])"
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Search local database",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "flowSearch",
+                            "workflowId": "findBlocks"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flowFetch && length(keys(context.flowFetch))"
+        }
+    ],
+    "id": "updateLocalDatabaseFlows",
+    "workflowId": "updateLocalDatabaseFlows",
+    "adapterName": "flowSearch",
+    "created": "2021-08-06T11:57:14.758Z",
+    "tags": [],
+    "updated": "2021-08-06T11:57:14.758Z",
+    "modified": "2021-08-06T11:57:14.758Z",
+    "title": "Local Flow Database update"
+}

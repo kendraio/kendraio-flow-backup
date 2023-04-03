@@ -1,0 +1,47 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "ddex",
+            "schema": "batches",
+            "uuidGetter": "context.queryParams.uuid"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "viewBatch",
+    "workflowId": "viewBatch",
+    "adapterName": "ddex",
+    "created": "2021-03-04T14:04:27.580Z",
+    "tags": [],
+    "updated": "2021-03-04T14:04:27.580Z",
+    "modified": "2021-03-04T14:04:27.580Z",
+    "title": "View Batch"
+}

@@ -1,0 +1,36 @@
+{
+    "blocks": [
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Connect to Wallet",
+                    "color": "primary",
+                    "blocks": []
+                }
+            ]
+        },
+        {
+            "type": "template",
+            "template": "Claimable Amount: 12345.1234 TLM"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Claim",
+                    "color": "primary",
+                    "blocks": []
+                }
+            ]
+        }
+    ],
+    "id": "claim",
+    "workflowId": "claim",
+    "adapterName": "tlm",
+    "created": "2021-03-05T15:54:05.534Z",
+    "tags": [],
+    "updated": "2021-03-05T15:54:05.534Z",
+    "modified": "2021-03-05T15:54:05.534Z",
+    "title": "TLM"
+}

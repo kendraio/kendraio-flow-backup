@@ -1,0 +1,299 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Show Videos",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "default": "snippet"
+                    },
+                    "forMine": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "maxResults": {
+                        "type": "string",
+                        "default": "30"
+                    },
+                    "type": {
+                        "type": "string",
+                        "default": "video"
+                    }
+                }
+            },
+            "uiSchema": {
+                "forMine": {
+                    "ui:widget": "k-hidden"
+                },
+                "type": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/search",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[].{thumbnail: snippet.thumbnails.default.url, id: id.videoId,publishedAt: snippet.publishedAt,channelId: snippet.channelId,title: snippet.title,description: snippet.description,channelTitle: snippet.channelTitle}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 100,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Thumbnail",
+                    "width": 150,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "image",
+                                "src": "{{thumbnail}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "filter": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Channel",
+                    "field": "channelTitle",
+                    "filter": true
+                },
+                {
+                    "headerName": "Channel ID",
+                    "field": "channelId"
+                },
+                {
+                    "headerName": "Published Date",
+                    "field": "publishedAt",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].{id: id}"
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/videos",
+                        "valueGetters": {
+                            "query": "{ id: data.id, part: 'snippet,status' }"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[0].{ id: id, title: snippet.title, channelTitle: snippet.channelTitle, description: snippet.description, thumbnails: id, tags: snippet.tags, privacyStatus: status.privacyStatus, viewCount: statistics.viewCount,likeCount: statistics.likeCount,dislikeCount: statistics.dislikeCount,favoriteCount: statistics.favoriteCount,commentCount: statistics.commentCount}"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Video Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "channelTitle": {
+                        "title": "Channel",
+                        "description": "",
+                        "type": "null"
+                    },
+                    "id": {
+                        "title": "",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "title": {
+                        "title": "Title",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "minLength": 2,
+                        "maxLength": 3000
+                    },
+                    "thumbnails": {
+                        "type": "string",
+                        "title": "Thumbnail"
+                    },
+                    "tags": {
+                        "type": "string",
+                        "title": "Tags "
+                    },
+                    "privacyStatus": {
+                        "type": "string",
+                        "title": "Privacy Status",
+                        "enum": [
+                            "private",
+                            "public",
+                            "unlisted"
+                        ]
+                    }
+                }
+            },
+            "uiSchema": {
+                "uuid": {
+                    "ui:widget": "k-hidden"
+                },
+                "snippet.title": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Enter the Video Title",
+                    "ui:errMessage": {
+                        "required": "This is my Required Field error message.",
+                        "minLength": "This a custom Min length error message."
+                    }
+                },
+                "description": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Description",
+                    "ui:autofocus": true,
+                    "ui:widget": "k-textarea",
+                    "ui:rows": 4,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Excuse me, this field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                },
+                "id": {
+                    "ui:widget": "videoviewer"
+                },
+                "thumbnails": {
+                    "ui:widget": "thumbnailviewer"
+                },
+                "tags": {
+                    "ui:widget": "tags"
+                },
+                "playlist": {
+                    "ui:widget": "playlist"
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{id: id, snippet: {title: title, description: description, categoryId: '22', tags: tags}, status:{privacyStatus: privacyStatus}}"
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "PUT",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/videos",
+                        "query": {
+                            "part": "snippet,status"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "id": "bl1JysracnITVNDPkIIo",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "bl1JysracnITVNDPkIIo",
+    "adapterName": "youtube",
+    "created": "2019-12-09T11:51:55.413Z",
+    "updated": "2019-12-18T19:34:27.837Z",
+    "modified": "2019-12-18T19:34:27.837Z",
+    "title": "YouTube: Video: List and Edit"
+}

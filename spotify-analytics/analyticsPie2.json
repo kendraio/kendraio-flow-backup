@@ -1,0 +1,84 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "accessToken"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "spotifyAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ uri: 'spotify:artist:28KtnfdwBHptsGPPWjeovU' }"
+        },
+        {
+            "type": "form",
+            "label": "Fetch",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "uri": {
+                        "type": "string",
+                        "title": "Spotify URI",
+                        "description": "E.g. spotify:artist:########################"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "provider-api.spotify.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/v1/analytics/aggregated/', data.uri])"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyAuth])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.believe.\"mi7 records\".country.zip(keys(@), values(@))[*].{ label: [0], value: sum([1]) }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "message",
+            "title": "Number of plays (by country)"
+        },
+        {
+            "type": "chart",
+            "chartType": "pie"
+        }
+    ],
+    "id": "analyticsPie2",
+    "adapter": "spotify-analytics",
+    "org": "kendraio",
+    "workflowId": "analyticsPie2",
+    "adapterName": "spotify-analytics",
+    "created": "2020-03-03T11:26:35.391Z",
+    "updated": "2020-03-03T11:42:14.925Z",
+    "modified": "2020-03-03T11:42:14.925Z",
+    "title": "Spotify Analytics (by Country)"
+}

@@ -1,0 +1,114 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "schemas"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?uuid==$.context.queryParams.schemaId] | [0]"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "schema"
+        },
+        {
+            "type": "message",
+            "title": "List items from schema: {{ context.schema.name }}"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schemaGetter": "context.schema.name"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].merge(@, { label: get(@, $.context.schema.label)})"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "uuid"
+                },
+                {
+                    "headerName": "Label",
+                    "field": "label"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "editItem",
+                                                "context": {
+                                                    "schemaId": "context.queryParams.schemaId",
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "-label": "Add Item (Not currently working)",
+                    "-color": "default",
+                    "-blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "editItem",
+                            "context": {
+                                "schema": "context.queryParams.schema",
+                                "id": "uuid()"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "label": "List all schemas",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "items",
+    "workflowId": "items",
+    "adapterName": "schemas",
+    "created": "2021-10-22T15:04:33.775Z",
+    "tags": [],
+    "updated": "2021-10-22T15:04:33.775Z",
+    "modified": "2021-10-22T15:04:33.775Z",
+    "title": "List Items"
+}

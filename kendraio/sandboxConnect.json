@@ -1,0 +1,76 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "form",
+            "label": "Connect",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "endpoint": {
+                        "type": "string",
+                        "title": "Endpoint"
+                    },
+                    "key": {
+                        "type": "string",
+                        "title": "API Key"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                }
+            },
+            "uiSchema": {
+                "key": {
+                    "ui:widget": "password"
+                },
+                "password": {
+                    "ui:widget": "password"
+                }
+            }
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/auth",
+                "valueGetters": {
+                    "host": "data.endpoint",
+                    "query": "{ \"x-api-key\": data.key }"
+                }
+            },
+            "payload": "{ username: data.username, password: data.password, type: 'EMAIL' }"
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, context.saved)"
+        },
+        {
+            "type": "variable-set",
+            "name": "sandboxAuth"
+        }
+    ],
+    "id": "sandboxConnect",
+    "workflowId": "sandboxConnect",
+    "adapterName": "kendraio",
+    "created": "2020-04-29T12:45:01.334Z",
+    "updated": "2020-04-29T12:45:01.334Z",
+    "modified": "2020-04-29T12:45:01.334Z",
+    "title": "Sandbox Connect"
+}

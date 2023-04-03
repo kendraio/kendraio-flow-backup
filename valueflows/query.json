@@ -1,0 +1,85 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "valnet.lurker.dev",
+                "pathname": "/api/graphql"
+            },
+            "payload": "{ query: 'query ($token: String) {  viewer(token: $token) {    allCommitments {      id      action      plannedStart      committedOn      due      committedQuantity {        numericValue        unit {          name        }      }      note      resourceClassifiedAs {        name        category      }      involves {        id        resourceClassifiedAs {          name          category        }        trackingIdentifier      }      provider {        id        name      }      receiver {        id        name      }      inputOf {        id        name      }      outputOf {        id        name      }      scope {        id        name      }      plan {        id        name      }      isPlanDeliverable      forPlanDeliverable {        id        action        outputOf {          name        }      }      isDeletable    }  }}', variables: { token: context.vfAuth } }"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.allCommitments"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Action",
+                    "field": "action"
+                },
+                {
+                    "headerName": "Committed on",
+                    "field": "committedOn"
+                },
+                {
+                    "headerName": "Due",
+                    "field": "due"
+                },
+                {
+                    "headerName": "Quantity",
+                    "valueGetter": "join(' ', [to_string(committedQuantity.numericValue), committedQuantity.unit.name])"
+                },
+                {
+                    "headerName": "Note",
+                    "field": "node"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "resourceClassifiedAs.name"
+                },
+                {
+                    "headerName": "Category",
+                    "field": "resourceClassifiedAs.category"
+                },
+                {
+                    "headerName": "Scope",
+                    "field": "scope.name"
+                },
+                {
+                    "headerName": "Plan",
+                    "field": "plan.name"
+                }
+            ]
+        }
+    ],
+    "id": "query",
+    "adapter": "valueflows",
+    "org": "kendraio",
+    "workflowId": "query",
+    "adapterName": "valueflows",
+    "created": "2020-03-30T06:35:31.364Z",
+    "updated": "2020-04-06T14:31:38.850Z",
+    "modified": "2020-04-06T14:31:38.850Z",
+    "title": "ValueFlows Query"
+}

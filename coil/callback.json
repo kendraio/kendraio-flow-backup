@@ -1,0 +1,19 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "message": "TODO: Coil Authentication Callback"
+        },
+        {
+            "type": "web-money"
+        }
+    ],
+    "id": "callback",
+    "workflowId": "callback",
+    "adapterName": "coil",
+    "created": "2021-02-12T13:15:38.900Z",
+    "tags": [],
+    "updated": "2021-02-12T13:15:38.900Z",
+    "modified": "2021-02-12T13:15:38.900Z",
+    "title": "Coil Callback"
+}

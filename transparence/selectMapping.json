@@ -1,0 +1,120 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "transparence-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "validator",
+            "test": "not_null(context.saved.access_token)",
+            "message": "Access Token Not Found - Please Login"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "mapping": {
+                        "title": "Mapping format:",
+                        "type": "string",
+                        "enum": [
+                            "Transparence",
+                            "PlayRight",
+                            "SWISSPERFORM"
+                        ]
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.mapping",
+            "cases": [
+                {
+                    "value": "Transparence",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "transparence",
+                            "workflowId": "mapping1"
+                        }
+                    ]
+                },
+                {
+                    "value": "PlayRight",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "transparence",
+                            "workflowId": "mapping2"
+                        }
+                    ]
+                },
+                {
+                    "value": "SWISSPERFORM",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "transparence",
+                            "workflowId": "mapping3"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "validator",
+            "test": "not_null(data.licensor)",
+            "message": "Select mapping format above and import data"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://transparence.hasura.app/v1/graphql",
+            "query": "mutation MyMutation(\n  $licensors: [licensors_insert_input!]!, \n  $albums: [albums_insert_input!]!,\n  $artists: [artists_insert_input!]!,\n  $labels: [labels_insert_input!]!,\n  $parties: [parties_insert_input!]!,\n  $tracks: [tracks_insert_input!]!,\n  $contributions: [contributions_insert_input!]!\n) {\n  insert_licensors(objects: $licensors) {\n    affected_rows\n  }\n  insert_albums(objects: $albums) {\n      affected_rows\n  }\n  insert_artists(objects: $artists) {\n      affected_rows\n  }\n  insert_labels(objects: $labels) {\n      affected_rows\n  }\n  insert_parties(objects: $parties) {\n      affected_rows\n  }\n  insert_tracks(objects: $tracks) {\n      affected_rows\n  }\n  insert_contributions(objects: $contributions) {\n      affected_rows\n  }\n}",
+            "variables": {
+                "licensors": "data.licensor",
+                "albums": "data.album",
+                "artists": "data.artist",
+                "parties": "data.parties",
+                "labels": "data.label",
+                "tracks": "data.track",
+                "contributions": "data.contributions"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.[\n    {type: 'licensors', count: insert_licensors.affected_rows},\n    {type: 'albums', count: insert_albums.affected_rows},\n    {type: 'artists', count: insert_artists.affected_rows},\n    {type: 'labels', count: insert_labels.affected_rows},\n    {type: 'parties', count: insert_parties.affected_rows},\n    {type: 'tracks', count: insert_tracks.affected_rows},\n    {type: 'contributions', count: insert_contributions.affected_rows}\n]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "selectMapping",
+    "workflowId": "selectMapping",
+    "adapterName": "transparence",
+    "created": "2021-02-12T12:46:42.405Z",
+    "tags": [],
+    "updated": "2021-02-12T12:46:42.405Z",
+    "modified": "2021-02-12T12:46:42.405Z",
+    "title": "Transparence: Select Mapping"
+}

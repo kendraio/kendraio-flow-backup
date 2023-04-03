@@ -1,0 +1,54 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "\"test\"",
+            "blockComment": "Set default data value to \"test\""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "string": {
+                        "type": "string",
+                        "title": "String input",
+                        "default": "test"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Text input field"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.string || data",
+            "blockComment": "Set data to the text string if set, or use the default string"
+        },
+        {
+            "type": "context-save",
+            "key": "string",
+            "blockComment": "Stores plain string\n(so we can see the UUID's input text in the template)"
+        },
+        {
+            "type": "mapping",
+            "mapping": "uuid(data)",
+            "blockComment": "Deterministic UUID based on string input."
+        },
+        {
+            "type": "template",
+            "template": "<b><i>Deterministic</i> UUID:</b><br>uuid(`{{context.string}}`) == `{{data}}`",
+            "blockComment": "Show computation"
+        }
+    ],
+    "id": "uuid5",
+    "workflowId": "uuid5",
+    "adapterName": "examples",
+    "created": "2022-02-16T11:09:44.467Z",
+    "tags": [],
+    "updated": "2022-02-16T11:09:44.467Z",
+    "modified": "2022-02-16T11:09:44.467Z",
+    "title": "Workflow"
+}

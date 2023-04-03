@@ -1,0 +1,77 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "allowEmpty": true,
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query($token: String, $id: Int) { viewer(token: $token) { plan(id: $id) { id name  }}}",
+            "variables": {
+                "id": "context.queryParams.planId",
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.plan"
+        },
+        {
+            "type": "message",
+            "title": "Set project title"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "* this can be changed later"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "mutation ($token: String!, $id: Int!, $name: String) {  updatePlan(token: $token, id: $id, name: $name, note: $name) {  plan {   id    name   note   }  } }",
+            "variables": {
+                "id": "to_number(data.id)",
+                "name": "data.name",
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "validator",
+            "test": "not_null(data) && data.length",
+            "message": "Validation Failed"
+        },
+        {
+            "type": "launch",
+            "adapter": "valueflows",
+            "workflowId": "updatePlanWordCount",
+            "context": {
+                "planId": "data.data.updatePlan.plan.id"
+            }
+        }
+    ],
+    "id": "updatePlan",
+    "workflowId": "updatePlan",
+    "adapterName": "valueflows",
+    "created": "2020-07-02T10:49:56.871Z",
+    "tags": [],
+    "updated": "2020-07-02T10:49:56.871Z",
+    "modified": "2020-07-02T10:49:56.871Z",
+    "title": "ValueFlows Update Plan"
+}

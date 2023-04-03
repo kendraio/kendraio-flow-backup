@@ -1,0 +1,175 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "track"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "artist"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "licensor"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "album"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ track: data[0],artist: data[1],licensor: data[2],album: data[3],label: data[4] }"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.track[*].merge(@, { licensor: find($.data.licensor, 'uuid', licensor), trackArtist: find($.data.artist, 'uuid', trackArtist), album: find($.data.album, 'uuid', album), distributingLabel: find($.data.label, 'uuid', distributingLabel), albumArtist: find($.data.artist, 'uuid', albumArtist)})"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 15,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "headerCheckboxSelection": true,
+                    "width": 50,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Rights holder",
+                    "field": "rightsHolder",
+                    "valueFormatter": "(value && `\u2713`) || ''"
+                },
+                {
+                    "headerName": "Artist",
+                    "field": "trackArtist.name"
+                },
+                {
+                    "headerName": "Album",
+                    "field": "album.name"
+                },
+                {
+                    "headerName": "Title",
+                    "field": "trackTitle"
+                },
+                {
+                    "headerName": "Instrument",
+                    "field": "instrument"
+                },
+                {
+                    "headerName": "Role",
+                    "field": "role"
+                },
+                {
+                    "headerName": "ISRC",
+                    "field": "isrc"
+                },
+                {
+                    "headerName": "Country",
+                    "field": "releaseCountry"
+                },
+                {
+                    "headerName": "Release Date",
+                    "field": "initialReleaseDate"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "transparence",
+                                                "workflowId": "editTrack",
+                                                "context": {
+                                                    "uuid": "data.uuid"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "message",
+            "message": "{{ data.length }} selected"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].[trackArtist.name, trackTitle, isrc, rightsHolder && `Copyright Owner` || `Collections Designee`, product(percent, `100`), ``,``,\njoin(', ', releaseCountry[?@!=`USA`])\n,``,duration,``,``,``,``,``,initialRelease,``,``,``,``,``, albumArtist.name || trackArtist.name, album.name,``,upc,album.uuid, initialReleaseDate,releaseCountry[0],distributingLabel.name]"
+        },
+        {
+            "type": "xlsx-template",
+            "template": "https://s3.amazonaws.com/portals-prod-useruploads/media_files/ISRC%20Ingest%20Form.xlsx",
+            "headerRows": 10
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "SoundExchange-export"
+        }
+    ],
+    "id": "listTracks",
+    "workflowId": "listTracks",
+    "adapterName": "transparence",
+    "created": "2020-08-06T07:31:09.861Z",
+    "tags": [],
+    "updated": "2020-08-06T07:31:09.861Z",
+    "modified": "2020-08-06T07:31:09.861Z",
+    "title": "Transparence: List Tracks"
+}

@@ -1,0 +1,93 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Teosto Internal: Get authors works by IPI",
+                "type": "object",
+                "properties": {
+                    "ipi": {
+                        "title": "IPI number",
+                        "type": "string"
+                    },
+                    "limit": {
+                        "title": "How many results to fetch?",
+                        "type": "integer",
+                        "default": 2
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "query",
+            "dataSource": {
+                "type": "remote",
+                "endpoint": {
+                    "protocol": "https:",
+                    "host": "teosto-cors-proxy-eilgg5e92.now.sh",
+                    "pathname": "/dev/rest/work/searchAuthor_IPI",
+                    "query": {
+                        "limit": 4
+                    },
+                    "valueGetters": {
+                        "query": "{IPI: data.ipi, limit: data.limit}"
+                    }
+                },
+                "authentication": {
+                    "type": "basic-auth",
+                    "valueGetters": {
+                        "username": "user.teosto.username",
+                        "password": "user.teosto.password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].{ workkey: workkey, titles: titles[?title_type=='OT'].work_title, performer: performers.name, right_owners_authors: right_owners[?type=='AUTHOR'].join(' ', [to_string(firstname),  to_string(name),  '(' to_string(ipi_base_nbr) ')' ]), right_owners_publishers: right_owners[?type=='PUBLISHER'], iswc: iswc[*], isrc: isrc[*]} "
+        },
+        {
+            "type": "grid",
+            "columnDefs": [
+                {
+                    "headerName": "Work key",
+                    "field": "workkey"
+                },
+                {
+                    "headerName": "Titles",
+                    "valueGetter": "titles"
+                },
+                {
+                    "headerName": "Performer",
+                    "valueGetter": "performer"
+                },
+                {
+                    "headerName": "Rights owners (Author)",
+                    "valueGetter": "right_owners_authors"
+                },
+                {
+                    "headerName": "Rights owners (Publishers)",
+                    "valueGetter": "right_owners_publishers[].name"
+                },
+                {
+                    "headerName": "ISWC",
+                    "valueGetter": "iswc"
+                },
+                {
+                    "headerName": "ISRC",
+                    "valueGetter": "isrc"
+                }
+            ]
+        }
+    ],
+    "id": "nJc1W9g4zXpN9c3Au8Km",
+    "adapter": "teosto",
+    "org": "kendraio",
+    "workflowId": "nJc1W9g4zXpN9c3Au8Km",
+    "adapterName": "teosto",
+    "created": "2019-11-14T12:08:33.893Z",
+    "updated": "2019-11-14T12:08:33.893Z",
+    "modified": "2019-11-14T12:08:33.893Z",
+    "title": "Teosto Internal: Works by IPI"
+}

@@ -1,0 +1,53 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "`{\"uuid\":\"6a0a2dc0-de40-447d-aca3-d50144fb1229\",\"properties\":[{\"key\":\"query\",\"title\":\"query\",\"type\":\"Text\"},{\"key\":\"timestamp\",\"title\":\"timestamp\",\"type\":\"Date\"},{\"key\":\"title\",\"title\":\"title\",\"type\":\"Text\"},{\"key\":\"source\",\"title\":\"source\",\"type\":\"Text\"}],\"name\":\"searches\",\"description\":\"Saved searches\",\"label\":\"query\"}`",
+            "blockComment": "literal json"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "length([context.saved][?uuid==$.data.uuid])",
+            "cases": [
+                {
+                    "value": 0,
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "add",
+                            "adapterName": "schemas",
+                            "schema": "schemas"
+                        }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "schemas",
+                            "schema": "schemas"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": []
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "searchSaver",
+    "workflowId": "searchSaver",
+    "adapterName": "schemas",
+    "created": "2022-02-28T13:33:00.146Z",
+    "tags": [],
+    "updated": "2022-02-28T13:33:00.146Z",
+    "modified": "2022-02-28T13:33:00.146Z",
+    "title": "Save default search schema"
+}

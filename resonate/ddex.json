@@ -1,0 +1,88 @@
+{
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "Import XML",
+            "accept": [
+                "xml"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "xmlOptions": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.NewReleaseMessage"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "Resources:"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.ResourceList"
+                        },
+                        {
+                            "type": "debug",
+                            "open": 1,
+                            "showContext": false
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "Releases:"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.ReleaseList"
+                        },
+                        {
+                            "type": "debug",
+                            "open": 1,
+                            "showContext": false
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "Deal terms:"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.DealList"
+                        },
+                        {
+                            "type": "debug",
+                            "open": 1,
+                            "showContext": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "ddex",
+    "workflowId": "ddex",
+    "adapterName": "resonate",
+    "created": "2021-01-28T13:48:28.094Z",
+    "tags": [],
+    "updated": "2021-01-28T13:48:28.094Z",
+    "modified": "2021-01-28T13:48:28.094Z",
+    "title": "Resonate DDEX"
+}

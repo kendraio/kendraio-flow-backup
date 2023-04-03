@@ -1,0 +1,23 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "simple": true,
+            "key": "https://docs.google.com/spreadsheets/d/1YIQCavPvOzTArBc1d2dlbP3bhHVHI65o3-AEHp_urXA/"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "artWillList",
+    "workflowId": "artWillList",
+    "adapterName": "culturebanked",
+    "created": "2020-06-25T09:18:49.829Z",
+    "updated": "2020-06-25T09:18:49.829Z",
+    "modified": "2020-06-25T09:18:49.829Z",
+    "title": "Art"
+}

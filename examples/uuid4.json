@@ -1,0 +1,22 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "uuid()",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<h3><b><i>Random</i> UUID:</b><br>uuid() == `{{data}}`</h3>",
+            "blockComment": ""
+        }
+    ],
+    "id": "uuid4",
+    "workflowId": "uuid4",
+    "adapterName": "examples",
+    "created": "2022-02-16T11:15:36.164Z",
+    "tags": [],
+    "updated": "2022-02-16T11:15:36.164Z",
+    "modified": "2022-02-16T11:15:36.164Z",
+    "title": "Workflow"
+}

@@ -1,0 +1,235 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "uuidGetter": "context.queryParams.uuid",
+            "adapterName": "transparence",
+            "schema": "track"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "licensor": {
+                        "type": "string",
+                        "title": "Licensor"
+                    },
+                    "rightsHolder": {
+                        "type": "boolean",
+                        "title": "Rights holder"
+                    },
+                    "backingVocals": {
+                        "type": "boolean",
+                        "title": "Backing vocals"
+                    },
+                    "musician": {
+                        "type": "boolean",
+                        "title": "Musician"
+                    },
+                    "percent": {
+                        "type": "string",
+                        "title": "Percent"
+                    },
+                    "role": {
+                        "type": "array",
+                        "title": "Role",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "instrument": {
+                        "type": "string",
+                        "title": "Instrument"
+                    },
+                    "trackTitle": {
+                        "type": "string",
+                        "title": "Track title"
+                    },
+                    "trackArtist": {
+                        "type": "string",
+                        "title": "Track artist"
+                    },
+                    "album": {
+                        "type": "string",
+                        "title": "Album"
+                    },
+                    "distributingLabel": {
+                        "type": "string",
+                        "title": "Distributing label"
+                    },
+                    "isrc": {
+                        "type": "string",
+                        "title": "ISRC"
+                    },
+                    "upc": {
+                        "type": "string",
+                        "title": "UPC"
+                    },
+                    "releaseCountry": {
+                        "type": "array",
+                        "title": "Release country",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "albumArtist": {
+                        "type": "string",
+                        "title": "Album artist"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "title": "Duration"
+                    },
+                    "initialReleaseDate": {
+                        "type": "string",
+                        "title": "Initial release date"
+                    }
+                }
+            },
+            "uiSchema": {
+                "licensor": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "licensor"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select licensor",
+                                "labelGetter": "licensorName",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "trackArtist": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "artist"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select track artist",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "album": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "album"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select album",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "distributingLabel": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "label"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select distributing label",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "albumArtist": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "artist"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select album artist",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ],
+    "id": "editTrack",
+    "workflowId": "editTrack",
+    "adapterName": "transparence",
+    "created": "2020-07-03T14:55:56.041Z",
+    "tags": [],
+    "updated": "2020-07-03T14:55:56.040Z",
+    "modified": "2020-07-03T14:55:56.040Z",
+    "title": "Transparence: Edit Track"
+}

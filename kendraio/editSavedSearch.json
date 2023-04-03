@@ -1,0 +1,144 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Save Query",
+            "jsonSchema": {
+                "definitions": {
+                    "itemDef": {
+                        "type": "object",
+                        "properties": {
+                            "groups": {
+                                "type": "array",
+                                "title": "Group",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "default": "AND",
+                                            "enum": [
+                                                "AND",
+                                                "OR"
+                                            ]
+                                        },
+                                        "clauses": {
+                                            "$ref": "#/definitions/itemDef"
+                                        }
+                                    }
+                                }
+                            },
+                            "clauses": {
+                                "title": "Clause",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "field": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Title",
+                                                "Name",
+                                                "Author",
+                                                "Filesize",
+                                                "Date created"
+                                            ]
+                                        },
+                                        "condition": {
+                                            "type": "string",
+                                            "enum": [
+                                                "Equals",
+                                                "Contains",
+                                                "Is greater than",
+                                                "is less than"
+                                            ]
+                                        },
+                                        "value": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "default": "AND",
+                        "enum": [
+                            "AND",
+                            "OR"
+                        ]
+                    },
+                    "groups": {
+                        "type": "array",
+                        "title": "Groups",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {
+                                    "type": "string",
+                                    "default": "AND",
+                                    "enum": [
+                                        "AND",
+                                        "OR"
+                                    ]
+                                },
+                                "clauses": {
+                                    "$ref": "#/definitions/itemDef"
+                                }
+                            }
+                        }
+                    },
+                    "clauses": {
+                        "title": "Clauses",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Title",
+                                        "Name",
+                                        "Author",
+                                        "Filesize",
+                                        "Date created"
+                                    ]
+                                },
+                                "condition": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Equals",
+                                        "Contains",
+                                        "Is greater than",
+                                        "is less than"
+                                    ]
+                                },
+                                "value": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "editSavedSearch",
+    "workflowId": "editSavedSearch",
+    "adapterName": "kendraio",
+    "created": "2020-09-21T15:53:48.582Z",
+    "tags": [],
+    "updated": "2020-09-21T15:53:48.581Z",
+    "modified": "2020-09-21T15:53:48.581Z",
+    "title": "Saved Search Editor"
+}

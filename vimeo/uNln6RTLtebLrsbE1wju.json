@@ -1,0 +1,53 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vimeoToken"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.queryParams.video_id || '380291987'"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.vimeo.com/videos/', video_id, '/pictures'])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])"
+            }
+        },
+        {
+            "type": "message",
+            "title": "Thumbnails: {{data.name}}",
+            "message": "{{description}}"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "uNln6RTLtebLrsbE1wju",
+    "adapter": "vimeo",
+    "org": "kendraio",
+    "workflowId": "uNln6RTLtebLrsbE1wju",
+    "adapterName": "vimeo",
+    "created": "2019-12-20T16:14:01.167Z",
+    "updated": "2019-12-20T16:22:04.052Z",
+    "modified": "2019-12-20T16:22:04.052Z",
+    "title": "Vimeo: Get:Edit Thumbnails By Video_Id"
+}

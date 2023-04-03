@@ -1,0 +1,97 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "form",
+            "label": "Connect",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "endpoint": {
+                        "type": "string",
+                        "title": "Endpoint"
+                    },
+                    "key": {
+                        "type": "string",
+                        "title": "API Key"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                }
+            },
+            "uiSchema": {
+                "key": {
+                    "ui:widget": "password"
+                },
+                "password": {
+                    "ui:widget": "password"
+                }
+            }
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/auth",
+                "valueGetters": {
+                    "host": "data.endpoint",
+                    "query": "{ \"x-api-key\": data.key }"
+                }
+            },
+            "payload": "{ username: data.username, password: data.password, type: 'EMAIL' }"
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, context.saved)"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "validator",
+            "test": "not_null(data.token)",
+            "message": "Validation Failed"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "variable-set",
+            "name": "sandboxAuth"
+        }
+    ],
+    "id": "bandsintownConnect",
+    "workflowId": "bandsintownConnect",
+    "adapterName": "bandsintown",
+    "created": "2020-05-14T11:16:14.525Z",
+    "updated": "2020-05-14T11:16:14.525Z",
+    "modified": "2020-05-14T11:16:14.525Z",
+    "title": "Bandsintown Connect"
+}

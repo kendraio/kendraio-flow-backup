@@ -1,0 +1,44 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "Import DDEX ERN XML",
+            "message": "The Electronic Release Notification Message Suite Standard (informally called the 'Release Notification Message Standard') is one of several XML message formats published by DDEX. Release notifications are messages that record labels or aggregators send to distributors to inform them of new releases that are available for distribution, and the terms and conditions under which such releases can be made available."
+        },
+        {
+            "type": "file-input",
+            "label": "Import XML",
+            "accept": [
+                "xml"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "xmlOptions": {
+                "arrayAccessFormPaths": [
+                    "NewReleaseMessage.ResourceList.SoundRecording",
+                    "NewReleaseMessage.ResourceList.Image",
+                    "NewReleaseMessage.ReleaseList.Release",
+                    "NewReleaseMessage.DealList.ReleaseDeal.Deal"
+                ]
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.NewReleaseMessage.{\n    SoundRecordings: ResourceList.SoundRecording,\n    Images: ResourceList.Image,\n    Releases: ReleaseList.Release,\n    Deals: DealList.ReleaseDeal\n}"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "ernImport2",
+    "workflowId": "ernImport2",
+    "adapterName": "ddex",
+    "created": "2021-03-04T13:49:24.279Z",
+    "tags": [],
+    "updated": "2021-03-04T13:49:24.279Z",
+    "modified": "2021-03-04T13:49:24.279Z",
+    "title": "ERN Import 2"
+}

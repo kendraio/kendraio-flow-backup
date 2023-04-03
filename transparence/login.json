@@ -1,0 +1,67 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Login",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "password",
+                        "title": "Password"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "auth.kendra.io",
+                "pathname": "/oauth/token"
+            },
+            "payload": "{username: data.email, password: data.password, client_id: `8WF3ubZh33OkqWDINvxdR65zmSeGdwYu`, audience: `https://kendra.io/transparence`, grant_type: `http://auth0.com/oauth/grant-type/password-realm`, realm: `transparence` }",
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "data"
+                    },
+                    {
+                        "type": "debug"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "message",
+            "title": "Result:"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "variable-set",
+            "name": "transparence-auth"
+        }
+    ],
+    "id": "login",
+    "workflowId": "login",
+    "adapterName": "transparence",
+    "created": "2020-11-22T16:49:59.689Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2020-11-22T16:49:59.689Z",
+    "modified": "2020-11-22T16:49:59.689Z",
+    "title": "Login (Transparence)"
+}

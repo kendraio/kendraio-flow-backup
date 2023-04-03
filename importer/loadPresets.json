@@ -1,0 +1,66 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.importer.presets",
+            "valueGetter": "{count:`0`, defined:[]}",
+            "blockComment": "Initialise data state"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "importer",
+            "schema": "presets",
+            "blockComment": "Load presets"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.importer.presets.count",
+            "valueGetter": "length(data)",
+            "blockComment": "Set preset count"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.importer.presets.defined",
+            "blockTitle": "Defined presets",
+            "blockComment": "save presets to state"
+        },
+        {
+            "type": "context-save",
+            "key": "state.flags.presetCount",
+            "valueGetter": "state.global.importer.presets.count",
+            "blockComment": "presetCount flag"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].uuid",
+            "blockComment": "Get uuids"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.importer.presets.uuids",
+            "blockComment": "save uuid array"
+        },
+        {
+            "type": "mapping",
+            "mapping": "state.global.importer.presets.defined",
+            "blockComment": "Reset the preset data to pass to calling flow"
+        }
+    ],
+    "id": "loadPresets",
+    "workflowId": "loadPresets",
+    "adapterName": "importer",
+    "created": "2022-02-03T14:50:26.855Z",
+    "tags": [
+        "noui",
+        "sub",
+        "importer",
+        "hidden"
+    ],
+    "updated": "2022-02-03T14:50:26.774Z",
+    "modified": "2022-02-03T14:50:26.774Z",
+    "title": "Load Presets - noui"
+}

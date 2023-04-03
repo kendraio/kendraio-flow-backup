@@ -1,0 +1,112 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "type": "string",
+                        "title": "Asset"
+                    },
+                    "width": {
+                        "type": "number",
+                        "title": "Width (mm)"
+                    },
+                    "height": {
+                        "type": "number",
+                        "title": "Height (mm)"
+                    },
+                    "medium": {
+                        "type": "string",
+                        "title": "Medium"
+                    },
+                    "after": {
+                        "type": "string",
+                        "title": "After"
+                    },
+                    "location": {
+                        "type": "string",
+                        "title": "Location"
+                    },
+                    "owner": {
+                        "title": "Owner",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name"
+                            },
+                            "split": {
+                                "type": "number",
+                                "title": "Split"
+                            }
+                        }
+                    },
+                    "beneficiaries": {
+                        "title": "Beneficiaries",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "title": "Name"
+                                },
+                                "split": {
+                                    "type": "number",
+                                    "title": "Split"
+                                }
+                            }
+                        }
+                    },
+                    "marketPlatforms": {
+                        "type": "array",
+                        "title": "Market platforms",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "assetManager": {
+                        "type": "string",
+                        "title": "Asset manager"
+                    },
+                    "license": {
+                        "type": "string",
+                        "title": "License details"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "ennw79n14irphsy.m.pipedream.net",
+                "pathname": "/"
+            },
+            "payload": "merge(data, { id: uuid() })",
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "debug"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "createItem",
+    "workflowId": "createItem",
+    "adapterName": "culturebanked",
+    "created": "2020-06-25T14:37:00.635Z",
+    "updated": "2020-06-25T14:37:00.635Z",
+    "modified": "2020-06-25T14:37:00.635Z",
+    "title": "Create Item"
+}

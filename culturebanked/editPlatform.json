@@ -1,0 +1,49 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "culturebanked",
+            "schema": "platform",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "db",
+            "operation": "update",
+            "adapterName": "culturebanked",
+            "schema": "platform"
+        },
+        {
+            "type": "launch",
+            "workflowId": "database",
+            "adapter": "culturebanked"
+        }
+    ],
+    "id": "editPlatform",
+    "workflowId": "editPlatform",
+    "adapterName": "culturebanked",
+    "created": "2020-06-26T10:28:24.804Z",
+    "updated": "2020-06-26T10:28:24.804Z",
+    "modified": "2020-06-26T10:28:24.804Z",
+    "title": "Edit Market Platform Details"
+}

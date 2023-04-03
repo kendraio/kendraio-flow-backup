@@ -1,0 +1,45 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "message",
+            "message": "Releases"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "ddex",
+            "schema": "batches",
+            "uuidGetter": "context.queryParams.uuid"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        }
+    ],
+    "id": "releases",
+    "workflowId": "releases",
+    "adapterName": "ddex",
+    "created": "2021-03-05T10:13:14.325Z",
+    "tags": [],
+    "updated": "2021-03-05T10:13:14.325Z",
+    "modified": "2021-03-05T10:13:14.325Z",
+    "title": "DDEX Releases"
+}

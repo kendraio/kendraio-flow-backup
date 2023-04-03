@@ -1,0 +1,415 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "transparence-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "validator",
+            "test": "not_null(context.saved.access_token)",
+            "message": "Access Token Not Found - Please Login"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://transparence.hasura.app/v1/graphql",
+            "query": "query MyQuery($id: uuid!) {\n  contributions_by_pk(id: $id) {\n    backing_vocals\n    created_at\n    id\n    instrument\n    musician\n    rightsholder_percent\n    role\n    updated_at\n    track {\n      album {\n        id\n        name\n      }\n      created_at\n      distributing_label {\n        id\n        name\n      }\n      duration\n      id\n      initial_release_date\n      isrc\n      licensor {\n        id\n        name\n      }\n      release_country\n      track_artist {\n        id\n        name\n      }\n      track_title\n      upc\n      updated_at\n    }\n    party {\n      first_name\n      id\n      last_name\n    }\n  }\n}\n",
+            "variables": {
+                "id": "context.queryParams.id"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.contributions_by_pk"
+        },
+        {
+            "type": "form",
+            "label": "Validate",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "track": {
+                        "type": "object",
+                        "properties": {
+                            "licensor": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "title": "Licensor"
+                                    }
+                                }
+                            },
+                            "track_title": {
+                                "type": "object",
+                                "properties": {
+                                    "type": "string",
+                                    "title": "Track title"
+                                }
+                            },
+                            "track_artist": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "title": "Track artist"
+                                    }
+                                }
+                            },
+                            "album": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "title": "Album"
+                                    }
+                                }
+                            },
+                            "distributing_label": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "title": "Distributing label"
+                                    }
+                                }
+                            },
+                            "isrc": {
+                                "type": "string",
+                                "title": "ISRC"
+                            },
+                            "upc": {
+                                "type": "string",
+                                "title": "UPC"
+                            },
+                            "release_country": {
+                                "type": "string",
+                                "title": "Release country",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "duration": {
+                                "type": "string",
+                                "title": "Duration"
+                            },
+                            "initial_release_date": {
+                                "type": "string",
+                                "title": "Initial release date"
+                            }
+                        }
+                    },
+                    "rightsholder_percent": {
+                        "type": "number",
+                        "title": "Rights holder percent"
+                    },
+                    "backing_vocals": {
+                        "type": "boolean",
+                        "title": "Backing vocals"
+                    },
+                    "musician": {
+                        "type": "boolean",
+                        "title": "Musician"
+                    },
+                    "role": {
+                        "type": "string",
+                        "title": "Role",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "instrument": {
+                        "type": "string",
+                        "title": "Instrument"
+                    }
+                }
+            },
+            "uiSchema": {
+                "licensor": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "licensor"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select licensor",
+                                "labelGetter": "licensorName",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "trackArtist": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "artist"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select track artist",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "album": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "album"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select album",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "distributingLabel": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "label"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select distributing label",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "albumArtist": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "transparence",
+                                "schema": "artist"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select album artist",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "[data]"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "validate",
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "track": {
+                                            "type": "object",
+                                            "properties": {
+                                                "isrc": {
+                                                    "type": "string",
+                                                    "pattern": "^[A-Z]{2}-?\\w{3}-?\\d{2}-?\\d{5}$"
+                                                },
+                                                "initial_release_date": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "track_title": {
+                                                    "type": "string"
+                                                },
+                                                "upc": {
+                                                    "type": "string",
+                                                    "pattern": "^\\d{12,13}$"
+                                                }
+                                            },
+                                            "required": [
+                                                "isrc",
+                                                "track_title",
+                                                "upc"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "onError": {
+                                "blocks": [
+                                    {
+                                        "type": "message",
+                                        "title": "Validation Errors"
+                                    },
+                                    {
+                                        "type": "grid",
+                                        "columnDefs": [
+                                            {
+                                                "field": "message"
+                                            },
+                                            {
+                                                "field": "dataPath"
+                                            },
+                                            {
+                                                "field": "schemaPath"
+                                            },
+                                            {
+                                                "field": "keyword"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Save Changes",
+                                    "color": "default",
+                                    "blocks": [
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "data[0]"
+                                        },
+                                        {
+                                            "type": "graphql",
+                                            "endpoint": "https://transparence.hasura.app/v1/graphql",
+                                            "query": "mutation MyMutation($idInput1: tracks_pk_columns_input!, $idInput2: albums_pk_columns_input!, $idInput3: contributions_pk_columns_input!, $set1: tracks_set_input, $set2: albums_set_input, $set3: contributions_set_input) {\n  update_tracks_by_pk(pk_columns: $idInput1, _set:$set1) {\n    id\n  }\n  update_albums_by_pk(pk_columns: $idInput2, _set:$set2) {\n    id\n  }\n  update_contributions_by_pk(pk_columns: $idInput3, _set:$set3) {\n    id\n  }\n}",
+                                            "variables": {
+                                                "idInput1": "{ id: data.track.id }",
+                                                "set1": "omit(data.track, ['id', 'distributing_label', 'album', 'licensor', 'track_artist', 'created_at', 'updated_at'])",
+                                                "idInput2": "{ id: data.track.album.id }",
+                                                "set2": "omit(data.track.album, ['id'])",
+                                                "idInput3": "{ id: data.id }",
+                                                "set3": "omit(data, ['id', 'track', 'party', 'created_at', 'updated_at'])"
+                                            },
+                                            "headers": {
+                                                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+                                            },
+                                            "allowFirst": false,
+                                            "allowEmpty": false
+                                        },
+                                        {
+                                            "type": "message",
+                                            "message": "Track update result:"
+                                        },
+                                        {
+                                            "type": "debug",
+                                            "open": 1,
+                                            "showContext": false
+                                        },
+                                        {
+                                            "type": "actions",
+                                            "buttons": [
+                                                {
+                                                    "label": "Back to Contributions",
+                                                    "blocks": [
+                                                        {
+                                                            "type": "launch",
+                                                            "adapter": "transparence",
+                                                            "workflowId": "listContributionsApi"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "apiEditTrack",
+    "workflowId": "apiEditTrack",
+    "adapterName": "transparence",
+    "created": "2021-02-05T08:49:38.392Z",
+    "tags": [],
+    "updated": "2021-02-05T08:49:38.392Z",
+    "modified": "2021-02-05T08:49:38.392Z",
+    "title": "Transparence: Edit Track (API)"
+}

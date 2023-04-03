@@ -1,0 +1,49 @@
+{
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "Import",
+            "binary": true,
+            "accept": [
+                "xlsx"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.Sheet1[6:].[$.data.Sheet1[5], @].map(&fromPairs(zip([0], [1])), @)[?not_null(\"LICENSOR NAME\")]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "rowSelection": "multiple"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && {  licensor: uniqBy(data[].{      uuid: uuid(),      licensorName: \"LICENSOR NAME\",      contact: {     firstName: \"FIRST NAME\",      lastName: \"LAST NAME\"      }   }, 'licensorName'),   album: uniq(data[].\"ALBUM\")[].{ name: @, uuid: uuid() },   label: uniq(data[].\"DISTRIBUTING LABEL\")[].{ name: @, uuid: uuid() },   country: uniq(data[].split(\"RELEASE COUNTRY\", `/`)[].trim(@)),   artist: uniq(data[].\"ALBUM ARTIST\"[].trim(@))[].{ name: @, uuid: uuid() },   track: data[]}"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "metadataGrid",
+    "workflowId": "metadataGrid",
+    "adapterName": "transparence",
+    "created": "2020-07-03T13:43:26.282Z",
+    "tags": [],
+    "updated": "2020-07-03T13:43:26.282Z",
+    "modified": "2020-07-03T13:43:26.282Z",
+    "title": "Transparence: Metadata Grid"
+}

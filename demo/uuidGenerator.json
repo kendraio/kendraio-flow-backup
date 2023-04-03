@@ -1,0 +1,35 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Convert",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "string",
+                        "default": "test"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "uuid(data.value)"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "uuidGenerator",
+    "workflowId": "uuidGenerator",
+    "adapterName": "demo",
+    "created": "2021-04-16T11:36:18.268Z",
+    "tags": [],
+    "updated": "2021-04-16T11:36:18.268Z",
+    "modified": "2021-04-16T11:36:18.268Z",
+    "title": "UUID Generator"
+}

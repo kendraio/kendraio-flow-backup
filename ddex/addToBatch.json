@@ -1,0 +1,81 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "ddex",
+            "schema": "batches"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?data.NewReleaseMessage]\n.[uuid, data.NewReleaseMessage.ResourceList.SoundRecording[]]\n.map(\n    &zip(split(pad('', product(length([1]), sum([length([0]), `1`])), join('', [[0], ','])), ',')[?@], [1]), \n    @)\n.map(\n    &map(&{ id: join(':', [to_string([0]), to_string([1].ResourceReference)]), \n            title: [1].ReferenceTitle.TitleText\n    } @)\n    @\n)[]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "multiple",
+                "rowMultiSelectWithClick": true
+            },
+            "columnDefs": [
+                {
+                    "checkboxSelection": true,
+                    "width": 70,
+                    "suppressSizeToFit": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title"
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                }
+            ]
+        },
+        {
+            "type": "message",
+            "message": "{{ data.length }} items selected"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add to batch",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "debug",
+                            "showContext": true
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Done",
+                                    "blocks": [
+                                        {
+                                            "type": "launch",
+                                            "adapter": "ddex",
+                                            "workflowId": "batches"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "addToBatch",
+    "workflowId": "addToBatch",
+    "adapterName": "ddex",
+    "created": "2021-04-01T12:46:31.771Z",
+    "tags": [],
+    "updated": "2021-04-01T12:46:31.771Z",
+    "modified": "2021-04-01T12:46:31.771Z",
+    "title": "Add to Batch"
+}

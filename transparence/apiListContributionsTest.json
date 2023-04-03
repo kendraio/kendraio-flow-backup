@@ -1,0 +1,186 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "transparence-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "validator",
+            "test": "not_null(context.saved.access_token)",
+            "message": "Access Token Not Found - Please Login"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://transparence.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  contributions {\n    backing_vocals\n    created_at\n    id\n    instrument\n    musician\n    rightsholder_percent\n    role\n    updated_at\n    track {\n      album {\n        id\n        name\n      }\n      created_at\n      distributing_label {\n        id\n        name\n      }\n      duration\n      id\n      initial_release_date\n      isrc\n      licensor {\n        id\n        name\n      }\n      release_country\n      track_artist {\n        id\n        name\n      }\n      track_title\n      upc\n      updated_at\n    }\n    party {\n      first_name\n      id\n      last_name\n    }\n  }\n}\n",
+            "variables": {},
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.contributions"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 15,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerCheckboxSelection": true,
+                    "width": 50,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Rights holder",
+                    "field": "rightsholder_percent",
+                    "//valueFormatter": "(value && `\u2713`) || ''"
+                },
+                {
+                    "headerName": "Contributor",
+                    "field": "party",
+                    "valueFormatter": "value.last_name && join(' ', [value.first_name, value.last_name]) || value.first_name"
+                },
+                {
+                    "headerName": "Musician",
+                    "field": "musician",
+                    "valueFormatter": "(value && `\u2713`) || ''"
+                },
+                {
+                    "headerName": "Backing vocals",
+                    "field": "backing_vocals",
+                    "valueFormatter": "(value && `\u2713`) || ''"
+                },
+                {
+                    "headerName": "Artist",
+                    "field": "track.track_artist.name"
+                },
+                {
+                    "headerName": "Album",
+                    "field": "track.album.name"
+                },
+                {
+                    "headerName": "Title",
+                    "field": "track.track_title"
+                },
+                {
+                    "headerName": "Instrument",
+                    "field": "instrument"
+                },
+                {
+                    "headerName": "Role",
+                    "field": "role"
+                },
+                {
+                    "headerName": "ISRC",
+                    "field": "track.isrc"
+                },
+                {
+                    "headerName": "Country",
+                    "field": "track.release_country"
+                },
+                {
+                    "headerName": "Release Date",
+                    "field": "track.initial_release_date"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "transparence",
+                                                "workflowId": "apiEditTrack",
+                                                "context": {
+                                                    "id": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "context-save",
+            "contextKey": "selected"
+        },
+        {
+            "type": "message",
+            "message": "{{ data.length }} selected"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, { fullName: join(' ', [party.first_name,party.last_name]) })"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].[track.track_title, track.track_artist.name, (role=='F' && fullName)||'', (role=='NF' && fullName)||'', '',track.distributing_label.name ||'',track.initial_release_date,'',track.isrc||'', '',track.duration||'', '','','','']"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "xlsx-template",
+            "template": "https://the-greenman.github.io/kendraio-export-templates/Abramus-eng.xlsx",
+            "headerRows": 12
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "apiListContributionsTest",
+    "workflowId": "apiListContributionsTest",
+    "adapterName": "transparence",
+    "created": "2021-06-24T16:23:53.293Z",
+    "tags": [
+        "dev",
+        "dontuse",
+        "deleted"
+    ],
+    "updated": "2021-06-24T16:23:53.293Z",
+    "modified": "2021-06-24T16:23:53.293Z",
+    "title": "Transparence: List Contributions - Test version"
+}

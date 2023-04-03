@@ -1,0 +1,463 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "title": "PPL recording",
+                "description": "Register a recording with PPL.",
+                "type": "object",
+                "required": [
+                    "ISRC",
+                    "Band / Artist Name",
+                    "Recording Title",
+                    "Content Type",
+                    "(P)Date (YYYY)"
+                ],
+                "properties": {
+                    "ISRC": {
+                        "type": "string",
+                        "title": "ISRC",
+                        "minLength": 12,
+                        "maxLength": 12,
+                        "default": ""
+                    },
+                    "Band / Artist Name": {
+                        "type": "string",
+                        "title": "Band/Artist name"
+                    },
+                    "Recording Title": {
+                        "type": "string",
+                        "title": "Recording Title"
+                    },
+                    "Version Type": {
+                        "type": "string",
+                        "title": "Version Type",
+                        "enum": [
+                            "Album",
+                            "Alternative",
+                            "Demo",
+                            "Edit",
+                            "Instrumental",
+                            "Karaoke",
+                            "Live",
+                            "Radio edit",
+                            "Remix",
+                            "Session"
+                        ]
+                    },
+                    "Is Remastered": {
+                        "type": "string",
+                        "title": "Remastered",
+                        "description": "This recording is remastered",
+                        "enum": [
+                            "Y",
+                            "N"
+                        ]
+                    },
+                    "Genre": {
+                        "type": "string",
+                        "title": "Genre",
+                        "enum": [
+                            "Alternative Rock",
+                            "Adult contemporary",
+                            "Bhangra",
+                            "Blues",
+                            "Chamber music",
+                            "Children's music",
+                            "Christian",
+                            "Classical",
+                            "Country",
+                            "Dance",
+                            "Easy listening",
+                            "Erotic",
+                            "Folk",
+                            "Gospel",
+                            "Hip Hop",
+                            "Jazz",
+                            "Latin",
+                            "Middle of the road",
+                            "Musical (theatre)",
+                            "New Age",
+                            "Opera",
+                            "Operetta",
+                            "Other",
+                            "Pop",
+                            "Rap",
+                            "Reggae",
+                            "Religious",
+                            "Rhythm and Blues",
+                            "Rock",
+                            "Rock and Roll",
+                            "Show",
+                            "Soul",
+                            "Sound effects",
+                            "Spoken word",
+                            "Unclassified",
+                            "World music"
+                        ]
+                    },
+                    "Content Type": {
+                        "type": "string",
+                        "title": "Content Type",
+                        "enum": [
+                            "Audio",
+                            "video"
+                        ]
+                    },
+                    "(P)Date (YYYY)": {
+                        "type": "integer",
+                        "title": "(P)Date ",
+                        "description": "This is usually the year in which copies were first issued to the public. If this took place more than 50 years after the recording was made, or if you are unsure, please contact us to clarify.",
+                        "minLength": 4,
+                        "maxLength": 4
+                    },
+                    "(P)Name": {
+                        "type": "string",
+                        "title": "(P)Name ",
+                        "description": "The name of the original copyright owner of the sound recording as of the (P)Date."
+                    },
+                    "Primary Country of Recording": {
+                        "type": "string",
+                        "title": "Primary Country of Recording",
+                        "enum": [
+                            "United Kingdom",
+                            "United States",
+                            "Germany",
+                            "..needs finishing.."
+                        ]
+                    },
+                    "Country of Commissioning": {
+                        "type": "string",
+                        "title": "Country of Commissioning",
+                        "enum": [
+                            "United Kingdom",
+                            "United States",
+                            "Germany",
+                            "..needs finishing.."
+                        ]
+                    },
+                    "Alternative Title": {
+                        "type": "string",
+                        "title": "Alternative Title"
+                    },
+                    "Duration (mm:ss)": {
+                        "title": "Duration MMM:SS",
+                        "type": "string",
+                        "minimum": 3,
+                        "maximum": 6
+                    },
+                    "Explicit": {
+                        "type": "string",
+                        "title": "Contains Explicit Lyrics",
+                        "description": "This is an indicator that the recording contains explicit lyrical content.",
+                        "enum": [
+                            "Y",
+                            "N"
+                        ]
+                    },
+                    "Recording Date (DD/MM/YYYY)": {
+                        "title": "Recording Date",
+                        "type": "string"
+                    },
+                    "Language": {
+                        "type": "string",
+                        "title": "Language",
+                        "enum": [
+                            "English",
+                            "Arabic",
+                            "Bengali",
+                            "..needs finishing.."
+                        ]
+                    },
+                    "Country of First Publication": {
+                        "type": "string",
+                        "title": "Country of First Publication",
+                        "enum": [
+                            "United Kingdom",
+                            "United States",
+                            "Germany",
+                            "..needs finishing.."
+                        ]
+                    },
+                    "Recording Venue": {
+                        "type": "string",
+                        "title": "Recording Venue "
+                    },
+                    "Local Recording ID": {
+                        "type": "string",
+                        "title": "Local Recording ID",
+                        "description": "Local Recording ID"
+                    },
+                    "This Recording Uses a Sample": {
+                        "type": "string",
+                        "title": "This Recording Uses a Sample",
+                        "description": "This recording contains a Sample",
+                        "enum": [
+                            "Y",
+                            "N"
+                        ]
+                    },
+                    "This Recording Is a Medley": {
+                        "type": "string",
+                        "title": "This Recording Is a Medley",
+                        "description": "The recording is a Medley of more than one individual musical or lyrical works",
+                        "enum": [
+                            "Y",
+                            "N"
+                        ]
+                    },
+                    "My Line-up Default": {
+                        "type": "string",
+                        "title": "Publisher Name"
+                    },
+                    "Number of Featured Performers": {
+                        "title": "Number of Featured Performers",
+                        "description": "The number of unique Contracted and Other Featured performers who have contributed to the recording. Please refer to the PPL Repertoire Style Guide for further information.",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "Number of Non-Featured Performers": {
+                        "title": "Number of Non Featured Performers",
+                        "description": "The number of unique Non-Featured performers who have contributed to the recording. Please refer to the PPL Repertoire Style Guide for further information.",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "I Own The Rights to This Recording": {
+                        "type": "string",
+                        "title": "I Own The Rights to This Recording",
+                        "enum": [
+                            "Y",
+                            "N"
+                        ]
+                    },
+                    "Rightsholder ID 1": {
+                        "title": "Rightsholder ID 1",
+                        "type": "integer"
+                    },
+                    "Rights Ownership Type 1": {
+                        "type": "string",
+                        "title": "Rights Ownership Type 1",
+                        "enum": [
+                            "Exclusive Licensee",
+                            "Original Copyright Owner",
+                            "Successor In Title "
+                        ]
+                    },
+                    "Rights Country Default 1": {
+                        "type": "string",
+                        "title": "Rights Country Default 1"
+                    },
+                    "Rights Begin Date 1": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights Begin Date 1 (DD/MM/YYYY)"
+                    },
+                    "Rights End Date 1": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights End Date 1 (DD/MM/YYYY)"
+                    },
+                    "Rights % 1": {
+                        "title": "Rights % 1",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "Rightsholder ID 2": {
+                        "title": "Rightsholder ID 2",
+                        "type": "integer"
+                    },
+                    "Rights Ownership Type 2": {
+                        "type": "string",
+                        "title": "Rights Ownership Type 2",
+                        "enum": [
+                            "Exclusive Licensee",
+                            "Original Copyright Owner",
+                            "Successor In Title "
+                        ]
+                    },
+                    "Rights Country Default 2": {
+                        "type": "string",
+                        "title": "Rights Country Default 2"
+                    },
+                    "Rights Begin Date 2": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights Begin Date 2 (DD/MM/YYYY)"
+                    },
+                    "Rights End Date 2": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights End Date 2 (DD/MM/YYYY)"
+                    },
+                    "Rights % 2": {
+                        "title": "Rights % 2",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "Rightsholder ID 3": {
+                        "title": "Rightsholder ID 3",
+                        "type": "integer"
+                    },
+                    "Rights Ownership Type 3": {
+                        "type": "string",
+                        "title": "Rights Ownership Type 3",
+                        "enum": [
+                            "Exclusive Licensee",
+                            "Original Copyright Owner",
+                            "Successor In Title "
+                        ]
+                    },
+                    "Rights Country Default 3": {
+                        "type": "string",
+                        "title": "Rights Country Default 3"
+                    },
+                    "Rights Begin Date 3": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights Begin Date 3 (DD/MM/YYYY)"
+                    },
+                    "Rights End Date 3": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights End Date 3 (DD/MM/YYYY)"
+                    },
+                    "Rights % 3": {
+                        "title": "Rights % 3",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "Rightsholder ID 4": {
+                        "title": "Rightsholder ID 4",
+                        "type": "integer"
+                    },
+                    "Rights Ownership Type 4": {
+                        "type": "string",
+                        "title": "Rights Ownership Type 4",
+                        "enum": [
+                            "Exclusive Licensee",
+                            "Original Copyright Owner",
+                            "Successor In Title "
+                        ]
+                    },
+                    "Rights Country Default 4": {
+                        "type": "string",
+                        "title": "Rights Country Default 4"
+                    },
+                    "Rights Begin Date 4": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights Begin Date 4 (DD/MM/YYYY)"
+                    },
+                    "Rights End Date 4": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights End Date 4 (DD/MM/YYYY)"
+                    },
+                    "Rights % 4": {
+                        "title": "Rights % 4",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "Rightsholder ID 5": {
+                        "title": "Rightsholder ID 5",
+                        "type": "integer"
+                    },
+                    "Rights Ownership Type 5": {
+                        "type": "string",
+                        "title": "Rights Ownership Type 5",
+                        "enum": [
+                            "Exclusive Licensee",
+                            "Original Copyright Owner",
+                            "Successor In Title "
+                        ]
+                    },
+                    "Rights Country Default 5": {
+                        "type": "string",
+                        "title": "Rights Country Default 5"
+                    },
+                    "Rights Begin Date 5": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights Begin Date 5 (DD/MM/YYYY)"
+                    },
+                    "Rights End Date 5": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights End Date 5 (DD/MM/YYYY)"
+                    },
+                    "Rights % 5": {
+                        "title": "Rights % 5",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                    },
+                    "Rightsholder ID 6": {
+                        "title": "Rightsholder ID 6",
+                        "type": "integer"
+                    },
+                    "Rights Ownership Type 6": {
+                        "type": "string",
+                        "title": "Rights Ownership Type 6",
+                        "enum": [
+                            "Exclusive Licensee",
+                            "Original Copyright Owner",
+                            "Successor In Title "
+                        ]
+                    },
+                    "Rights Country Default 6": {
+                        "type": "string",
+                        "title": "Rights Country Default 6"
+                    },
+                    "Rights Begin Date 6": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights Begin Date 6 (DD/MM/YYYY)"
+                    },
+                    "Rights End Date 6": {
+                        "type": "string",
+                        "format": "date",
+                        "title": "Rights End Date 6 (DD/MM/YYYY)"
+                    },
+                    "Rights % 6": {
+                        "title": "Rights % 6",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[data]"
+        },
+        {
+            "type": "debug"
+        },
+        {
+            "type": "csv-export",
+            "header": true,
+            "skipEmptyLines": true
+        }
+    ],
+    "id": "H6ERnxbkLEAgrHyZ8u4h",
+    "adapter": "ppl",
+    "org": "kendraio",
+    "workflowId": "H6ERnxbkLEAgrHyZ8u4h",
+    "adapterName": "ppl",
+    "created": "2019-11-14T12:05:32.541Z",
+    "updated": "2019-11-14T12:05:32.541Z",
+    "modified": "2019-11-14T12:05:32.541Z",
+    "title": "PPL Export Example"
+}

@@ -1,0 +1,25 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "systemVar": true,
+            "name": "bookmarked-flows"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "collection",
+    "workflowId": "collection",
+    "adapterName": "core",
+    "created": "2020-11-05T15:14:06.163Z",
+    "tags": [],
+    "updated": "2020-11-05T15:14:06.163Z",
+    "modified": "2020-11-05T15:14:06.163Z",
+    "title": "My Flows"
+}

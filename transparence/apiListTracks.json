@@ -1,0 +1,183 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "transparence-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "validator",
+            "test": "not_null(context.saved.access_token)",
+            "message": "Access Token Not Found - Please Login"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "track"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "artist"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "licensor"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "album"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ track: data[0],artist: data[1],licensor: data[2],album: data[3],label: data[4] }"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.track[*].merge(@, { licensor: find($.data.licensor, 'uuid', licensor), trackArtist: find($.data.artist, 'uuid', trackArtist), album: find($.data.album, 'uuid', album), distributingLabel: find($.data.label, 'uuid', distributingLabel), albumArtist: find($.data.artist, 'uuid', albumArtist)})"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 15,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerCheckboxSelection": true,
+                    "width": 50,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Rights holder",
+                    "field": "rightsHolder",
+                    "valueFormatter": "(value && `\u2713`) || ''"
+                },
+                {
+                    "headerName": "Artist",
+                    "field": "trackArtist.name"
+                },
+                {
+                    "headerName": "Album",
+                    "field": "album.name"
+                },
+                {
+                    "headerName": "Title",
+                    "field": "trackTitle"
+                },
+                {
+                    "headerName": "Instrument",
+                    "field": "instrument"
+                },
+                {
+                    "headerName": "Role",
+                    "field": "role"
+                },
+                {
+                    "headerName": "ISRC",
+                    "field": "isrc"
+                },
+                {
+                    "headerName": "Country",
+                    "field": "releaseCountry"
+                },
+                {
+                    "headerName": "Release Date",
+                    "field": "initialReleaseDate"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "transparence",
+                                                "workflowId": "editTrack",
+                                                "context": {
+                                                    "uuid": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "message",
+            "message": "{{ data.length }} selected"
+        }
+    ],
+    "id": "apiListTracks",
+    "workflowId": "apiListTracks",
+    "adapterName": "transparence",
+    "created": "2021-01-14T14:40:24.691Z",
+    "tags": [],
+    "updated": "2021-01-14T14:40:24.691Z",
+    "modified": "2021-01-14T14:40:24.691Z",
+    "title": "Transparence: List Tracks (API) (ignore)"
+}

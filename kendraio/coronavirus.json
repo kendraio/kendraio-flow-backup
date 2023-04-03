@@ -1,0 +1,77 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "<p>Welcome to the Coronavirus dashboard within Kendraio App, our prototype for experimenting with new ways of accessing, owning and interacting with data. Here's <a href=\"https://medium.com/kendraio/covid-19-kendraio-creates-coronavirus-dashboard-within-kendraio-app-a0185e526b25\" target=\"_blank\"> how and why we did it</a>.</p><p>Do you have a question or feedback? Join our <a href=\"https://slack.kendra.io\" target=\"_blank\">Slack channel</a> or our <a href=\"https://www.facebook.com/groups/kendraio\" target=\"_blank\">Facebook group</a> and start a conversation!</p><p></p>"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusSummary"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusGlobal"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusDailyChange"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusByCountry"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusRecoveries"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusPie"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "coronavirus",
+    "workflowId": "coronavirus",
+    "adapterName": "kendraio",
+    "created": "2021-10-28T16:13:45.366Z",
+    "tags": [
+        "highlight"
+    ],
+    "updated": "2021-10-28T16:13:45.366Z",
+    "modified": "2021-10-28T16:13:45.366Z",
+    "title": "Coronavirus dashboard"
+}

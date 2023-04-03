@@ -1,0 +1,30 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ uuid: uuid() }"
+        },
+        {
+            "type": "variable-set",
+            "name": "resonate-auth-state",
+            "notify": false
+        },
+        {
+            "type": "template",
+            "template": "<a target='_blank' href='https://id.resonate.ninja/web/authorize?client_id=kendraio-62HH-3DH5-01H4-HF94&redirect_uri=https%3A%2F%2Fapp.kendra.io/resonate/authCallback&response_type=code&state={{ data.uuid }}&scope=read_write'>Connect</a>"
+        }
+    ],
+    "id": "authorize",
+    "workflowId": "authorize",
+    "adapterName": "resonate",
+    "created": "2021-05-07T11:54:05.451Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2021-05-07T11:54:05.451Z",
+    "modified": "2021-05-07T11:54:05.451Z",
+    "title": "Connect"
+}

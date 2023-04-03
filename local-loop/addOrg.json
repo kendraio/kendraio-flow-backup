@@ -1,0 +1,147 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "Existing organisations:",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://localloop.hasura.app/v1/graphql",
+            "query": "query GetOrganisations {\n  organisations {\n    name\n\t\tid\n  }\n}\n    ",
+            "variables": {},
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true,
+            "blockComment": "List existing orgs"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.organisations",
+            "blockComment": "Extract organisations array"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "blockComment": "See existing orgs as a table"
+        },
+        {
+            "type": "template",
+            "template": "Add the name of a new org here:",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "input": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name"
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Form to allow input of new org"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://localloop.hasura.app/v1/graphql",
+            "query": "mutation MyMutation($input: organisations_insert_input!) {\n  insert_organisations_one(object: $input) {\n    id\n    name\n  }\n}\n",
+            "variables": {
+                "input": "data.input"
+            },
+            "headers": {},
+            "allowFirst": false,
+            "allowEmpty": false,
+            "blockComment": "Requests to mutate the orgs table with data.input, from the form - which has the needed name property"
+        },
+        {
+            "type": "debug",
+            "open": 8,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "Show result of mutation request"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://localloop.hasura.app/v1/graphql",
+            "query": "query GetOrganisations {\n  organisations {\n    name\n\t\tid\n  }\n}\n    ",
+            "variables": {},
+            "headers": {},
+            "allowFirst": false,
+            "allowEmpty": true,
+            "blockComment": "Gets latest orgs list after addition"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.organisations",
+            "blockComment": "Get just the orgs"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "blockComment": "See orgs list as a table"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Main",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "local-loop",
+                            "workflowId": "main"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Filter transactions by organisation",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "local-loop",
+                            "workflowId": "filterTransactionsByOrg"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Add a new transaction",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "local-loop",
+                            "workflowId": "addTransaction"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "addOrg",
+    "workflowId": "addOrg",
+    "adapterName": "local-loop",
+    "created": "2023-01-25T16:08:55.446Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2023-01-25T16:08:55.446Z",
+    "modified": "2023-01-25T16:08:55.446Z",
+    "title": "Workflow"
+}

@@ -1,0 +1,226 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Search local flow database</h2><p>Search for flows block types or full content. </p>"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "flowSearch",
+            "schema": "none",
+            "uuidGetter": "context.saved.uuid"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flows"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flowCount"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": 0,
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "<h3>Your local flow database needs to be initialised before flows can be searched.</h3> <p>Click the 'Update local database' button to get started.</p><p>This flow has been designed to make it easy to find existing implementations of blocks and functionality. It will allow you to search for implementations of block types to see how they are applied in practice, hopefully making it easier to develop new flows.</p>"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "template",
+                        "template": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ blocks:``, content:`1`}"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "blocks": {
+                        "type": "string",
+                        "title": "Search block types",
+                        "default": ""
+                    },
+                    "content": {
+                        "type": "boolean",
+                        "title": "Search flow content",
+                        "default": 1
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "context-save",
+            "contextKey": "search"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flows"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?!(tags[?@ == 'deleted'])]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@,{\r\n    content:to_string(blocks)\r\n    })"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(context.search.blocks || ``) == `0` && data || data[?contains($.context.search.content && toLower(content || ``) || toLower(blockTypes || ``), toLower(trim($.context.search.blocks) || ``))]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 15,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "width": 300,
+                    "filter": true
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "View",
+                                        "blocks": [
+                                            {
+                                                "type": "dialog",
+                                                "blocks": [
+                                                    {
+                                                        "type": "template",
+                                                        "template": "{{data.content}}"
+                                                    },
+                                                    {
+                                                        "type": "actions",
+                                                        "buttons": [
+                                                            {
+                                                                "label": "Launch",
+                                                                "blocks": [
+                                                                    {
+                                                                        "type": "launch",
+                                                                        "valueGetters": {
+                                                                            "adapter": "data.adapterName",
+                                                                            "workflowId": "data.id"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            },
+                                                            {
+                                                                "label": "Close",
+                                                                "blocks": [
+                                                                    {
+                                                                        "type": "init"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Workflow ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Adapter",
+                    "field": "adapterName",
+                    "filter": true
+                },
+                {
+                    "headerName": "Blocks",
+                    "field": "blockTypes",
+                    "filter": true
+                },
+                {
+                    "headerName": "Modified",
+                    "field": "modified",
+                    "sort": "desc",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Update local database",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "flowSearch",
+                            "workflowId": "updateLocalDatabaseFlows"
+                        }
+                    ]
+                },
+                {
+                    "label": "Wipe local database",
+                    "color": "warn",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "flowSearch",
+                            "workflowId": "wipeLocalDatabase"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "findBlocks",
+    "workflowId": "findBlocks",
+    "adapterName": "flowSearch",
+    "created": "2021-10-22T13:10:54.875Z",
+    "tags": [
+        "tools"
+    ],
+    "updated": "2021-10-22T13:10:54.875Z",
+    "modified": "2021-10-22T13:10:54.875Z",
+    "title": "Find flows using block types"
+}

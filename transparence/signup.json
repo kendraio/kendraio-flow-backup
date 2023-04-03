@@ -1,0 +1,61 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Sign up",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "password",
+                        "title": "Password"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Full name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "auth.kendra.io",
+                "pathname": "/dbconnections/signup"
+            },
+            "payload": "{name: data.name, email: data.email, password: data.password, client_id: `8WF3ubZh33OkqWDINvxdR65zmSeGdwYu`, connection: `transparence` }",
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "data.error"
+                    },
+                    {
+                        "type": "debug"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "signup",
+    "workflowId": "signup",
+    "adapterName": "transparence",
+    "created": "2020-11-22T16:36:05.896Z",
+    "tags": [],
+    "updated": "2020-11-22T16:36:05.896Z",
+    "modified": "2020-11-22T16:36:05.896Z",
+    "title": "Sign up (Transparence)"
+}

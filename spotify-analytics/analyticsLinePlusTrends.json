@@ -1,0 +1,93 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "accessToken"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "spotifyAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ uri: 'spotify:artist:28KtnfdwBHptsGPPWjeovU' }"
+        },
+        {
+            "type": "form",
+            "label": "Fetch",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "uri": {
+                        "type": "string",
+                        "title": "Spotify URI",
+                        "description": "E.g. spotify:artist:########################"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "provider-api.spotify.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/v1/analytics/aggregated/', data.uri])"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyAuth])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.believe.\"mi7 records\".total.all[].{ label: '', value: @ }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "message",
+            "title": "Total plays (last month)"
+        },
+        {
+            "type": "chart",
+            "chartType": "line"
+        },
+        {
+            "type": "message",
+            "title": "Google Trends (\"peaky blinders\")"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "kendraio",
+            "workflowId": "trendsExample"
+        }
+    ],
+    "id": "analyticsLinePlusTrends",
+    "adapter": "spotify-analytics",
+    "org": "kendraio",
+    "workflowId": "analyticsLinePlusTrends",
+    "adapterName": "spotify-analytics",
+    "created": "2020-03-17T08:42:29.861Z",
+    "updated": "2020-03-17T09:04:49.501Z",
+    "modified": "2020-03-17T09:04:49.501Z",
+    "title": "Trends"
+}

@@ -1,0 +1,62 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: '' }"
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Venue name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/venue/search",
+                "host": "kendraio-bit-proxy.now.sh",
+                "valueGetters": {
+                    "query": "{ name: data.name }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+            }
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select venue",
+            "labelGetter": "join(', ', [name, city, region, country, postal_code])",
+            "valueField": "id",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "findVenue",
+    "workflowId": "findVenue",
+    "adapterName": "bandsintown",
+    "created": "2020-06-03T07:19:20.817Z",
+    "updated": "2020-06-03T07:19:20.817Z",
+    "modified": "2020-06-03T07:19:20.817Z",
+    "title": "Find Venue"
+}

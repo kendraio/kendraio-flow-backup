@@ -1,0 +1,227 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "context.queryParams.{id: videoId}"
+        },
+        {
+            "type": "form",
+            "label": "Show Video Details",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Video Id",
+                        "default": "ZULzDuAkf_c"
+                    },
+                    "part": {
+                        "type": "string",
+                        "default": "snippet,statistics,status"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                }
+            },
+            "uiSchema": {
+                "mine": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/videos",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[0].{ playlist: id, id: id, title: snippet.title, channelTitle: snippet.channelTitle, description: snippet.description, thumbnails: id, tags: snippet.tags, privacyStatus: status.privacyStatus, viewCount: statistics.viewCount,likeCount: statistics.likeCount,dislikeCount: statistics.dislikeCount,favoriteCount: statistics.favoriteCount,commentCount: statistics.commentCount}"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Video Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "channelTitle": {
+                        "title": "Channel",
+                        "description": "",
+                        "type": "null"
+                    },
+                    "id": {
+                        "title": "",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "title": {
+                        "title": "Title",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "minLength": 2,
+                        "maxLength": 3000
+                    },
+                    "thumbnails": {
+                        "type": "string",
+                        "title": "Thumbnail"
+                    },
+                    "tags": {
+                        "type": "string",
+                        "title": "Tags "
+                    },
+                    "privacyStatus": {
+                        "type": "string",
+                        "title": "Privacy Status",
+                        "enum": [
+                            "private",
+                            "public",
+                            "unlisted"
+                        ]
+                    },
+                    "viewCount": {
+                        "type": "string",
+                        "title": "viewCount "
+                    },
+                    "likeCount": {
+                        "type": "string",
+                        "title": "likeCount "
+                    },
+                    "dislikeCount": {
+                        "type": "string",
+                        "title": "dislikeCount "
+                    },
+                    "favoriteCount": {
+                        "type": "string",
+                        "title": "favoriteCount "
+                    },
+                    "commentCount": {
+                        "type": "string",
+                        "title": "commentCount"
+                    }
+                }
+            },
+            "uiSchema": {
+                "uuid": {
+                    "ui:widget": "k-hidden"
+                },
+                "snippet.title": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Enter the Video Title",
+                    "ui:errMessage": {
+                        "required": "This is my Required Field error message.",
+                        "minLength": "This a custom Min length error message."
+                    }
+                },
+                "description": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Description",
+                    "ui:autofocus": true,
+                    "ui:widget": "k-textarea",
+                    "ui:rows": 4,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Excuse me, this field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                },
+                "id": {
+                    "ui:widget": "videoviewer"
+                },
+                "thumbnails": {
+                    "ui:widget": "thumbnailviewer"
+                },
+                "tags": {
+                    "ui:widget": "tags"
+                },
+                "visibility": {
+                    "ui:widget": "visibility"
+                },
+                "playlist": {
+                    "ui:widget": "playlist"
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{id: id, snippet: {title: title, description: description, categoryId: '22', tags: tags}}"
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "PUT",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/videos",
+                        "query": {
+                            "part": "snippet"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "id": "f0JcVjojBAKliWBSFE9z",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "f0JcVjojBAKliWBSFE9z",
+    "adapterName": "youtube",
+    "created": "2019-11-21T14:10:58.953Z",
+    "updated": "2019-12-09T19:00:39.506Z",
+    "modified": "2019-12-09T19:00:39.506Z",
+    "title": "YouTube: Video: Edit"
+}

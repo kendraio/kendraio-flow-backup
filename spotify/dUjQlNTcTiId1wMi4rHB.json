@@ -1,0 +1,32 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ state: uuid() }"
+        },
+        {
+            "type": "variable-set",
+            "name": "temp-auth-state"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ state: data.state, client_id: 'c88ddbe9d34749169d80a7bc01b2bc5f' }"
+        },
+        {
+            "type": "template",
+            "template": "<a href=\"https://accounts.spotify.com/authorize?client_id={{data.client_id}}&state={{data.state}}&response_type=token&redirect_uri={{context.app.location.origin}}/spotify/callback\">Connect</a>"
+        }
+    ],
+    "id": "authorise",
+    "adapter": "spotify",
+    "org": "kendraio",
+    "workflowId": "dUjQlNTcTiId1wMi4rHB",
+    "adapterName": "spotify",
+    "created": "2019-12-17T09:48:56.862Z",
+    "updated": "2019-12-17T09:48:56.862Z",
+    "modified": "2019-12-17T09:48:56.862Z",
+    "title": "Authorise"
+}

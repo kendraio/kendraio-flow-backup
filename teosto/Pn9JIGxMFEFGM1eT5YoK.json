@@ -1,0 +1,169 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Teosto DSP: Get Work by ISWC",
+                "type": "object",
+                "required": [
+                    "iswc"
+                ],
+                "properties": {
+                    "iswc": {
+                        "title": "ISWC",
+                        "type": "string",
+                        "default": "T-912.457.854-7"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "query",
+            "dataSource": {
+                "type": "remote",
+                "endpoint": {
+                    "protocol": "https:",
+                    "host": "teosto-cors-proxy-eilgg5e92.now.sh",
+                    "query": {
+                        "limit": 1
+                    },
+                    "valueGetters": {
+                        "pathname": "join('', ['/dev/rest/work/perISWC/', model.iswc])"
+                    }
+                },
+                "authentication": {
+                    "type": "basic-auth",
+                    "valueGetters": {
+                        "username": "user.teosto.username",
+                        "password": "user.teosto.password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0].titles[0]"
+                        },
+                        {
+                            "type": "template",
+                            "template": "<h3>{{work_title}}</h3>"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "Owners"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0].right_owners"
+                        },
+                        {
+                            "type": "grid",
+                            "columnDefs": [
+                                {
+                                    "headerName": "IPI",
+                                    "field": "ipi_name_nbr"
+                                },
+                                {
+                                    "headerName": "Name",
+                                    "valueGetter": "name"
+                                },
+                                {
+                                    "headerName": "First name",
+                                    "valueGetter": "firstname"
+                                },
+                                {
+                                    "headerName": "Local name",
+                                    "valueGetter": "local_name"
+                                },
+                                {
+                                    "headerName": "Local first name",
+                                    "valueGetter": "local_firstname"
+                                },
+                                {
+                                    "headerName": "Type",
+                                    "valueGetter": "type"
+                                },
+                                {
+                                    "headerName": "Performance society",
+                                    "valueGetter": "performance_society"
+                                },
+                                {
+                                    "headerName": "Mechanical society",
+                                    "valueGetter": "mechanical_society"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "Titles"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0].titles"
+                        },
+                        {
+                            "type": "grid",
+                            "columnDefs": [
+                                {
+                                    "headerName": "Work Title",
+                                    "field": "work_title"
+                                },
+                                {
+                                    "headerName": "Local Work Title",
+                                    "valueGetter": "local_work_title"
+                                },
+                                {
+                                    "headerName": "Title Type",
+                                    "valueGetter": "title_type"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "ISRC"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0].isrc"
+                        },
+                        {
+                            "type": "grid"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "Pn9JIGxMFEFGM1eT5YoK",
+    "adapter": "teosto",
+    "org": "kendraio",
+    "workflowId": "Pn9JIGxMFEFGM1eT5YoK",
+    "adapterName": "teosto",
+    "created": "2019-11-14T12:06:20.940Z",
+    "updated": "2019-11-14T12:57:48.943Z",
+    "modified": "2019-11-14T12:57:48.943Z",
+    "title": "Teosto DSP: Works by ISWC"
+}

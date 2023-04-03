@@ -1,0 +1,202 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Video Id",
+                        "default": "I_txFxMKg4U"
+                    },
+                    "part": {
+                        "type": "string",
+                        "default": "snippet,statistics"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                }
+            },
+            "uiSchema": {
+                "mine": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "debug",
+                    "showContext": true
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/videos",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[0]"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Video Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "title": "",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "snippet.title": {
+                        "title": "Title",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "snippet.description": {
+                        "type": "string",
+                        "title": "Description",
+                        "minLength": 2,
+                        "maxLength": 1000
+                    },
+                    "thumbnails": {
+                        "type": "string",
+                        "title": "Thumbnails"
+                    },
+                    "snippet.tags": {
+                        "type": "string",
+                        "title": "Tags ",
+                        "description": "Press enter to add a tag"
+                    },
+                    "visibility": {
+                        "type": "object",
+                        "title": "Visibility "
+                    },
+                    "playlist": {
+                        "type": "object",
+                        "title": "Playlists"
+                    },
+                    "statistics.viewCount": {
+                        "type": "string",
+                        "title": "viewCount "
+                    },
+                    "statistics.likeCount": {
+                        "type": "string",
+                        "title": "likeCount "
+                    },
+                    "statistics.dislikeCount": {
+                        "type": "string",
+                        "title": "dislikeCount "
+                    },
+                    "statistics.favoriteCount": {
+                        "type": "string",
+                        "title": "favoriteCount "
+                    },
+                    "statistics.commentCount": {
+                        "type": "string",
+                        "title": "commentCount"
+                    },
+                    "isReadyForSync": {
+                        "type": "boolean",
+                        "title": "Ready for sync?",
+                        "default": false
+                    }
+                }
+            },
+            "uiSchema": {
+                "uuid": {
+                    "ui:widget": "k-hidden"
+                },
+                "snippet.title": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Enter the Video Title",
+                    "ui:errMessage": {
+                        "required": "This is my Required Field error message.",
+                        "minLength": "This a custom Min length error message."
+                    }
+                },
+                "snippet.description": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Enter the Video Description",
+                    "ui:autofocus": true,
+                    "ui:widget": "k-textarea",
+                    "ui:rows": 8,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Excuse me, this field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                },
+                "id": {
+                    "ui:widget": "videoviewer"
+                },
+                "thumbnails": {
+                    "ui:widget": "thumbnailviewer"
+                },
+                "snippet.tags": {
+                    "ui:widget": "tags"
+                },
+                "visibility": {
+                    "ui:widget": "visibility"
+                },
+                "playlist": {
+                    "ui:widget": "playlist"
+                }
+            }
+        }
+    ],
+    "id": "tIJwa0zZqK4r2yqCnRjj",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "tIJwa0zZqK4r2yqCnRjj",
+    "adapterName": "youtube",
+    "created": "2019-11-21T12:30:07.472Z",
+    "updated": "2019-12-05T17:57:21.469Z",
+    "modified": "2019-12-05T17:57:21.469Z",
+    "title": "TimTube: Edit Video Details"
+}

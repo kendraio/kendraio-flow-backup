@@ -1,0 +1,38 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockComment": "Load schemas"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{graph:join(` ; `,data[*].join(join(` `,[`; `,name,` `,`  --> `]),[``,properties[?type==`Object` || type==`List` || type==`ObjectReference` || type==`ListReference`].config][])|[?@!=``])}",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<h2>Schema Dependency graph</h2>",
+            "blockComment": ""
+        },
+        {
+            "type": "mermaid"
+        }
+    ],
+    "id": "dependenciesMermaid",
+    "workflowId": "dependenciesMermaid",
+    "adapterName": "shemas",
+    "created": "2022-06-13T10:15:58.648Z",
+    "tags": [
+        "deleted",
+        "delete",
+        "hidden"
+    ],
+    "updated": "2022-06-13T10:15:58.648Z",
+    "modified": "2022-06-13T10:15:58.648Z",
+    "title": "Workflow"
+}

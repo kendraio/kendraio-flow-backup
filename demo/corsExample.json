@@ -1,0 +1,50 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "type": "number",
+                        "title": "Page",
+                        "default": 1
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "reqres.in",
+                "pathname": "/api/users",
+                "query": {
+                    "page": 2
+                },
+                "valueGetters": {
+                    "query": "{ page: data.page }"
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "corsExample",
+    "workflowId": "corsExample",
+    "adapterName": "demo",
+    "created": "2021-04-23T09:30:51.657Z",
+    "tags": [],
+    "updated": "2021-04-23T09:30:51.657Z",
+    "modified": "2021-04-23T09:30:51.657Z",
+    "title": "CORS Example"
+}

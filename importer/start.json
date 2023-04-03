@@ -1,0 +1,237 @@
+{
+    "blocks": [
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockTitle": "Load Schemas",
+            "blockComment": "Load schema data"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": true,
+            "enabledGetter": "state.flags.devel",
+            "blockComment": ""
+        },
+        {
+            "type": "init",
+            "blockComment": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h1>Data Importer</h1>",
+            "blockComment": "Page header"
+        },
+        {
+            "type": "template",
+            "template": "{{#unless state.flags.schemaCount}}<h2>Get started with the data importer</h2><p>The Data Importer needs to be initialised before you can begin. <ol><li>Initialise your database by importing or creating a schema</li><li>Create or import presets for each of the data file types you want to import</li></ol></p>{{/unless}}",
+            "blockComment": "No schemas defined"
+        },
+        {
+            "type": "template",
+            "template": "{{#if state.flags.schemaCount}}<h3>Destination data schemas</h3>{{/if}}",
+            "blockComment": "Destination schema header"
+        },
+        {
+            "type": "grid",
+            "enabledGetter": "state.flags.schemaCount",
+            "gridOptions": {
+                "rowSelection": "single"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Browse data",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "itemsFromSchemaId",
+                                                "context": {
+                                                    "schemaId": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "blockComment": "Display available schemas"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.schemaSelected",
+            "valueGetter": "length(data)>`0`",
+            "blockComment": "schemaSelected"
+        },
+        {
+            "type": "context-save",
+            "key": "selectedName",
+            "valueGetter": "data[0].name",
+            "blockComment": "selectedName"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "enabledGetter": "state.flags.devel"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].uuid",
+            "blockComment": "Extract the UUID"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "selected",
+            "blockComment": "selected uuid"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "importer",
+            "workflowId": "loadPresets",
+            "blockComment": "Load presets"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?targetSchema==$.context.selected]",
+            "blockComment": "Filter selected"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.presetsExist",
+            "valueGetter": "state.local.schemaSelected && length(data)>`0`",
+            "blockComment": "presetsExist"
+        },
+        {
+            "type": "template",
+            "template": "{{#if state.local.schemaSelected}}<h3>Import presets for {{context.selectedName}}</h3>{{#unless state.local.presetsExist}}No presets are currently defined for this schema.{{/unless}}{{/if}}",
+            "blockComment": "Select a preset"
+        },
+        {
+            "type": "grid",
+            "enabledGetter": "state.local.schemaSelected && state.local.presetsExist",
+            "gridOptions": {},
+            "passThrough": true,
+            "columnDefs": [
+                {
+                    "headerName": "Name",
+                    "field": "presetName"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Import Items",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "importer",
+                                                "workflowId": "importUsingPreset",
+                                                "context": {
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": "Display presets"
+        },
+        {
+            "type": "template",
+            "template": "<hr/><h3>Settings and Configuration</h3>",
+            "blockComment": "Settings and config"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Manage schemas",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Manage import presets",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "listPresets"
+                        }
+                    ],
+                    "enabledGetter": "(state.flags.schemaCount >`0`)",
+                    "enabled": false
+                }
+            ]
+        },
+        {
+            "type": "gosub",
+            "adapterName": "devel",
+            "workflowId": "flagsDisplay",
+            "blockComment": "Devel footer"
+        }
+    ],
+    "id": "start",
+    "workflowId": "start",
+    "adapterName": "importer",
+    "created": "2022-02-03T15:03:14.371Z",
+    "tags": [
+        "importer",
+        "start"
+    ],
+    "updated": "2022-02-03T15:03:14.371Z",
+    "modified": "2022-02-03T15:03:14.371Z",
+    "title": "Data importer start page"
+}

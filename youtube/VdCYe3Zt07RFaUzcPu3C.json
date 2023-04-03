@@ -1,0 +1,156 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "context.queryParams.{playlistId: id}"
+        },
+        {
+            "type": "form",
+            "label": "Show Videos in Playlist",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "default": "snippet"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "playlistId": {
+                        "type": "string",
+                        "default": "PL_7OZQWitzO969ZDSWzecmZYrfxrjxBg1",
+                        "title": "Playlist Id"
+                    }
+                }
+            },
+            "uiSchema": {
+                "mine": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/playlistItems",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[].{thumbnail: snippet.thumbnails.default.url, id: snippet.resourceId.videoId, title: snippet.title,channelTitle: snippet.channelTitle,description: snippet.description, privacyStatus: status.privacyStatus, publishedAt: snippet.publishedAt}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 100,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Show Video",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "youtube",
+                                                "workflowId": "f0JcVjojBAKliWBSFE9z",
+                                                "context": {
+                                                    "videoId": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Thumbnail",
+                    "width": 150,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "image",
+                                "src": "{{thumbnail}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "filter": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Channel Title",
+                    "field": "channelTitle",
+                    "filter": true
+                },
+                {
+                    "headerName": "Published Date",
+                    "field": "publishedAt",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ]
+        }
+    ],
+    "id": "VdCYe3Zt07RFaUzcPu3C",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "VdCYe3Zt07RFaUzcPu3C",
+    "adapterName": "youtube",
+    "created": "2019-11-21T14:47:21.570Z",
+    "updated": "2019-12-09T19:12:11.406Z",
+    "modified": "2019-12-09T19:12:11.406Z",
+    "title": "YouTube: List Videos in Playlist"
+}

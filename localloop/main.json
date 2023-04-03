@@ -1,0 +1,53 @@
+{
+    "blocks": [
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Filter transactions by organisation",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "localloop",
+                            "workflowId": "filterTransactionsByOrg"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Add a new organisation",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "localloop",
+                            "workflowId": "addOrg"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Add a new transaction",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "localloop",
+                            "workflowId": "addTransaction"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "main",
+    "workflowId": "main",
+    "adapterName": "localloop",
+    "created": "2023-01-24T10:17:56.164Z",
+    "tags": [],
+    "updated": "2023-01-24T10:17:56.164Z",
+    "modified": "2023-01-24T10:17:56.164Z",
+    "title": "Main"
+}

@@ -1,0 +1,196 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "ddex",
+            "schema": "batches"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Batch name",
+                    "field": "batchName"
+                },
+                {
+                    "headerName": "Created",
+                    "field": "created"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "View",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "ddex",
+                                                "workflowId": "viewBatch",
+                                                "context": {
+                                                    "uuid": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Add items",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "ddex",
+                                                "workflowId": "addToBatch",
+                                                "context": {
+                                                    "uuid": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Entities",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "ddex",
+                                                "workflowId": "mappings",
+                                                "context": {
+                                                    "uuid": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "ddex",
+                                                "workflowId": "editBatch",
+                                                "context": {
+                                                    "uuid": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Edit 4.2",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "ddex",
+                                                "workflowId": "editBatch42",
+                                                "context": {
+                                                    "uuid": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Export",
+                                        "blocks": [
+                                            {
+                                                "type": "dialog",
+                                                "blocks": [
+                                                    {
+                                                        "type": "form",
+                                                        "label": "Run Mapping",
+                                                        "jsonSchema": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "outputFormat": {
+                                                                    "title": "Output format",
+                                                                    "type": "string",
+                                                                    "default": "DDEX ERN",
+                                                                    "enum": [
+                                                                        "DDEX ERN",
+                                                                        "DSP1 Ingest",
+                                                                        "Resonate"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        },
+                                                        "uiSchema": {}
+                                                    },
+                                                    {
+                                                        "type": "mapping",
+                                                        "mapping": "data.data"
+                                                    },
+                                                    {
+                                                        "type": "file-export",
+                                                        "label": "Export",
+                                                        "fileName": "exported",
+                                                        "format": "xml",
+                                                        "xmlOptions": {
+                                                            "arrayAccessForm": "none",
+                                                            "emptyNodeForm": "text",
+                                                            "attributeConverters": [],
+                                                            "datetimeAccessFormPaths": [],
+                                                            "arrayAccessFormPaths": [],
+                                                            "xmldomOptions": {},
+                                                            "enableToStringFunc": true,
+                                                            "skipEmptyTextNodesForObj": true,
+                                                            "stripWhitespaces": true,
+                                                            "useDoubleQuotes": true,
+                                                            "ignoreRoot": false,
+                                                            "escapeMode": true,
+                                                            "attributePrefix": "_",
+                                                            "selfClosingElements": true,
+                                                            "keepCData": false,
+                                                            "keepText": false,
+                                                            "jsDateUTC": false
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add Batch",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "addBatch"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ]
+        }
+    ],
+    "id": "batches",
+    "workflowId": "batches",
+    "adapterName": "ddex",
+    "created": "2022-06-20T16:21:20.844Z",
+    "tags": [],
+    "updated": "2022-06-20T16:21:20.844Z",
+    "modified": "2022-06-20T16:21:20.844Z",
+    "title": "Batches"
+}

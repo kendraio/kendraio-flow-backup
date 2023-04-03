@@ -1,0 +1,148 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "shareUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8p8xQ33T8JX_ZY6wx44U4IkF0hib4fR8pg1Fmv66lcGlAU6Pj540a8LAXpJKZakIto_3JQRfRUowt/pub?gid=1639340551&single=true&output=csv",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "floatingFilter": true,
+                "pagination": true,
+                "paginationPageSize": 20,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "Description",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Department",
+                    "field": "Department",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Size / Weight",
+                    "field": "Size / Weight",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Price",
+                    "field": "Price",
+                    "width": 150,
+                    "filter": "agNumberColumnFilter",
+                    "valueFormatter": "join('', ['\u00a3', value])",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    },
+                    "cellClass": "text-right"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ items: data }"
+        },
+        {
+            "type": "form",
+            "label": "Recalculate",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "Description": {
+                                    "type": "string"
+                                },
+                                "Department": {
+                                    "type": "string"
+                                },
+                                "Size / Weight": {
+                                    "type": "string"
+                                },
+                                "Quantity": {
+                                    "type": "number",
+                                    "title": "Quantity",
+                                    "default": 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "items": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Description",
+                        "Department",
+                        "Size / Weight",
+                        "Quantity"
+                    ],
+                    "allowAdd": false,
+                    "allowRemove": false,
+                    "items": {
+                        "Description": {
+                            "ui:widget": "readonly"
+                        },
+                        "Department": {
+                            "ui:widget": "readonly"
+                        },
+                        "Size / Weight": {
+                            "ui:widget": "readonly"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ items: data.items, total: currency(product(sum(data.items[].product(product(to_number(Price), `100`), Quantity) || `[]`), `0.01`), 'en-GB', 'GBP') }"
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "<p>Hello,</p><p>Here is my order:</p><ul>{{#each data.items}}<li><b>{{Quantity}} x</b> {{Description}} ({{Department}}) - {{\"Size / Weight\"}} - &pound;{{Price}}</li>{{/each}}</ul><p>I make that a total of {{data.total}}</p><p>Thanks!</p>"
+                }
+            ]
+        }
+    ],
+    "id": "seasonsListProducts",
+    "workflowId": "seasonsListProducts",
+    "adapterName": "seasons",
+    "created": "2022-10-26T15:28:14.762Z",
+    "tags": [],
+    "updated": "2022-10-26T15:28:14.761Z",
+    "modified": "2022-10-26T15:28:14.761Z",
+    "title": "Seasons List Products"
+}

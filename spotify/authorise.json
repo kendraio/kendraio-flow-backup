@@ -1,0 +1,32 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ state: uuid() }"
+        },
+        {
+            "type": "variable-set",
+            "name": "temp-auth-state"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ state: data.state, client_id: 'c88ddbe9d34749169d80a7bc01b2bc5f' }"
+        },
+        {
+            "type": "template",
+            "template": "<a href=\"https://accounts.spotify.com/authorize?client_id={{data.client_id}}&state={{data.state}}&scope=playlist-modify-public playlist-modify-private&response_type=token&redirect_uri={{context.app.location.origin}}/spotify/callback\">Connect</a>"
+        }
+    ],
+    "id": "authorise",
+    "adapter": "spotify",
+    "org": "kendraio",
+    "workflowId": "authorise",
+    "adapterName": "spotify",
+    "created": "2019-12-09T16:10:55.949Z",
+    "updated": "2019-12-19T11:25:12.758Z",
+    "modified": "2019-12-19T11:25:12.758Z",
+    "title": "Spotify: Connect"
+}

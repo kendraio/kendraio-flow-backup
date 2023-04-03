@@ -1,0 +1,152 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "simple": true,
+            "key": "https://docs.google.com/spreadsheets/d/1YIQCavPvOzTArBc1d2dlbP3bhHVHI65o3-AEHp_urXA/",
+            "shareUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vS9bFRzFzBEQKOSNfGUh91JEUx4K3z0ZMRzmagW5TV6Arm4OtjI0H_ELzqHhPf7qi1EE9EV9u2j7a9h/pub?gid=0&single=true&output=csv",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 25,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "headerCheckboxSelection": true,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Asset",
+                    "field": "Asset"
+                },
+                {
+                    "headerName": "Medium",
+                    "field": "Medium"
+                },
+                {
+                    "headerName": "After",
+                    "field": "After"
+                },
+                {
+                    "headerName": "Owner",
+                    "field": "Owner"
+                },
+                {
+                    "headerName": "Market Platforms",
+                    "field": "Market Platform(s)"
+                }
+            ]
+        },
+        {
+            "type": "message",
+            "message": "{{#if data.length}}{{data.length}} items selected{{/if}}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].{asset: trim(Asset), width: trim(\"Width (mm)\"), height: trim(\"Height (mm)\"), medium: trim(Medium), after: trim(After), location: trim(Location), owner: Owner.split(@, ',')[].{ name: trim(@) }, marketPlatforms: \"Market Platform(s)\".split(@, ',')[].trim(@), beneficiaries: Beneficiaries.split(@, ',')[].{ name: trim(@) } , assetManager: trim(\"Asset Manager\"), licenseDetails: trim(\"License Details\")  }"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data && uniq(data[].[owner[].name, beneficiaries[].name, assetManager][][])"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data && uniq(data[].licenseDetails)"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data && uniq(data[].marketPlatforms[][])[?length(@) > `0`]"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && { parties: data[0][].{ type: `party`, id: uuid(), name: @ }, licenses: data[1][].{ type: `license`, id: uuid(), name: @ }, marketPlatforms: data[2][].{ type: `platform`, id: uuid(), name: @ }, works: data[3][].merge(@, { id: uuid(), type: `work` }) }"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && merge(data,{ works: data.works[].merge(@, { assetManager: find($.data.parties, 'name', assetManager).id, owner: owner[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, marketPlatforms: marketPlatforms[].find($.data.marketPlatforms, 'name', @).id, beneficiaries: beneficiaries[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, licenseDetails: find($.data.licenses, 'name', licenseDetails).id }) })"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.[parties, licenses, marketPlatforms, works][].merge(@, { uuid: id, schema: type })"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Import",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "debug",
+                                    "consoleLog": true
+                                },
+                                {
+                                    "type": "db",
+                                    "skipFirst": false,
+                                    "operation": "add",
+                                    "schemaGetter": "data.type",
+                                    "adapterName": "culturebanked"
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        }
+    ],
+    "id": "import",
+    "workflowId": "import",
+    "adapterName": "culturebanked",
+    "created": "2022-07-27T15:03:22.230Z",
+    "tags": [],
+    "updated": "2022-07-27T15:03:22.230Z",
+    "modified": "2022-07-27T15:03:22.230Z",
+    "title": "Art (Import)"
+}

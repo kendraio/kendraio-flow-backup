@@ -1,0 +1,234 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local",
+            "valueGetter": "{importActive:`false`,importComplete:`false`, imported:[], toImport:[], selectedCount: `0`, importReady: `false`}",
+            "blockTitle": "Init local state",
+            "blockComment": "Init local state"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "importer",
+            "schema": "presets",
+            "uuidGetter": "context.queryParams.id",
+            "blockComment": "load preset data"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[0]",
+            "blockComment": "get the first result "
+        },
+        {
+            "type": "context-save",
+            "contextKey": "preset",
+            "blockComment": "save preset "
+        },
+        {
+            "type": "template",
+            "template": "<h2>Import a data file</h2>",
+            "blockComment": "header"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "schema": "schemas",
+            "uuidGetter": "context.preset.targetSchema",
+            "blockComment": "load target schema"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[0]",
+            "blockComment": "get first result"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "schema",
+            "blockComment": "save schema"
+        },
+        {
+            "type": "template",
+            "template": "<p><hr/><strong>Target schema</strong>: {{context.schema.name}} </p><p><strong>Import preset name</strong>: {{context.preset.presetName}}<hr/></p>",
+            "blockComment": "target schema and preset"
+        },
+        {
+            "type": "file-input",
+            "label": "Import spreadsheet file (XLSX or CSV)",
+            "accept": [
+                "xlsx",
+                "csv"
+            ],
+            "binary": true,
+            "arrayBuffer": false,
+            "enabledGetter": "!(state.local.importComplete)",
+            "blockComment": ""
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.Sheet1[1:].[$.data.Sheet1[0], @].map(&fromPairs(zip([0], [1])), @)"
+        },
+        {
+            "type": "rename-fields",
+            "mappingGetter": "context.preset.fieldMappings",
+            "inputGetter": "data"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.selectedCount",
+            "valueGetter": "length(data)",
+            "blockTitle": "SelectedCount",
+            "blockComment": "selectedCount\n\nWe may want to upgrade this to only import selected items later. "
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.importReady",
+            "valueGetter": "!(state.local.importComplete) && state.local.selectedCount > `0`",
+            "blockComment": "importReady"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "output"
+        },
+        {
+            "type": "template",
+            "template": "<h3>Data Preview</h3><p>Review the imported data to ensure that the columns contain the correct data.</p>",
+            "blockComment": "preview header"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10
+            },
+            "blockComment": "preview"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "enabledGetter": "state.flags.devel",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "{{#if state.local.importReady}}<h3>Confirm import</h3><p>If the data looks ok, click 'Confirm' to begin the import.</p>{{/if}}",
+            "blockComment": "confirm"
+        },
+        {
+            "type": "template",
+            "template": "{{#if state.local.importActive}}Imported {{state.local.importedCount}} of {{state.local.selectedCount}}{{/if}}",
+            "blockComment": "Current import status"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back/Cancel",
+                    "enabledGetter": "!(state.local.importComplete)",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "listPresets"
+                        }
+                    ],
+                    "enabled": false
+                },
+                {
+                    "label": "Confirm Import",
+                    "color": "primary",
+                    "enabledGetter": "state.local.importReady",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "context.output"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "state.local.importActive",
+                            "valueGetter": "`true`"
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "skipFirst": false,
+                                    "type": "db",
+                                    "operation": "add",
+                                    "adapterName": "schemas",
+                                    "schemaGetter": "context.schema.name"
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.imported",
+                                    "valueGetter": "[state.local.imported || [],[data]] []"
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.importedCount",
+                                    "valueGetter": "length(state.local.imported)"
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.importComplete",
+                                    "valueGetter": "state.local.selectedCount ==  length(state.local.imported)"
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.importReady",
+                                    "valueGetter": "!(state.local.importComplete)"
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": false
+                },
+                {
+                    "label": "Continue",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "start"
+                        }
+                    ],
+                    "enabledGetter": "state.local.importComplete",
+                    "enabled": true
+                }
+            ],
+            "blockComment": "confirm"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "devel",
+            "workflowId": "flagsDisplay",
+            "blockComment": "Devel"
+        }
+    ],
+    "id": "importUsingPreset",
+    "workflowId": "importUsingPreset",
+    "adapterName": "importer",
+    "created": "2022-02-10T15:35:38.056Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2022-02-10T15:35:38.056Z",
+    "modified": "2022-02-10T15:35:38.056Z",
+    "title": "Import Using Preset"
+}

@@ -1,0 +1,37 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist",
+                "host": "kendraio-bit-proxy.now.sh"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', data.token])"
+            }
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select artist",
+            "labelGetter": "name",
+            "valueField": "id",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "selectArtist",
+    "workflowId": "selectArtist",
+    "adapterName": "bandsintown",
+    "created": "2020-06-03T07:18:16.328Z",
+    "updated": "2020-06-03T07:18:16.328Z",
+    "modified": "2020-06-03T07:18:16.328Z",
+    "title": "Select Artist"
+}

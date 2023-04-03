@@ -1,0 +1,113 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "type(data) == `string` && length(data) > `0` && data != `clear`",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Auth token is set"
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Clear auth",
+                                    "blocks": [
+                                        {
+                                            "type": "init"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "`clear`"
+                                        },
+                                        {
+                                            "type": "variable-set",
+                                            "name": "vfAuth"
+                                        },
+                                        {
+                                            "type": "dispatch",
+                                            "action": "refreshWorkflow"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": false,
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ username: '', password: '' }"
+                        },
+                        {
+                            "type": "form",
+                            "jsonSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "title": "Username"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "title": "Password"
+                                    }
+                                }
+                            },
+                            "uiSchema": {
+                                "password": {
+                                    "ui:widget": "password"
+                                }
+                            }
+                        },
+                        {
+                            "type": "http",
+                            "method": "post",
+                            "endpoint": {
+                                "protocol": "https:",
+                                "host": "valnet.lurker.dev",
+                                "pathname": "/api/graphql"
+                            },
+                            "payload": "data && { query: join('', ['mutation {  createToken(username: \"', data.username ,'\", password: \"', data.password ,'\") { token }}']) }"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.data.createToken.token"
+                        },
+                        {
+                            "type": "variable-set",
+                            "name": "vfAuth"
+                        },
+                        {
+                            "type": "dispatch",
+                            "action": "refreshWorkflow"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "valueflows",
+    "created": "2020-07-02T10:45:20.871Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2020-07-02T10:45:20.871Z",
+    "modified": "2020-07-02T10:45:20.871Z",
+    "title": "ValueFlows Connect"
+}

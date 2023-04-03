@@ -1,0 +1,51 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "connectionParams"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data || `{}`"
+        },
+        {
+            "type": "form",
+            "label": "Login",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {
+                "password": {
+                    "ui:widget": "k-password"
+                }
+            }
+        },
+        {
+            "type": "variable-set",
+            "name": "connectionParams"
+        }
+    ],
+    "id": "login",
+    "workflowId": "login",
+    "adapterName": "teosto",
+    "created": "2020-06-29T09:11:21.857Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2020-06-29T09:11:21.857Z",
+    "modified": "2020-06-29T09:11:21.857Z",
+    "title": "Teosto Login"
+}

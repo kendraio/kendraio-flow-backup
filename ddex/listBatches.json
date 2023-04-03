@@ -1,0 +1,37 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "List Batches",
+            "message": "A batch represents a set of content for delivery"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Import DDEX XML",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "ernImport"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "listBatches",
+    "workflowId": "listBatches",
+    "adapterName": "ddex",
+    "created": "2021-02-18T11:09:43.803Z",
+    "tags": [],
+    "updated": "2021-02-18T11:09:43.803Z",
+    "modified": "2021-02-18T11:09:43.803Z",
+    "title": "List Batches (DDEX Deliveries)"
+}

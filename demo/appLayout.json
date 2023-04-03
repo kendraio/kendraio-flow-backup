@@ -1,0 +1,146 @@
+{
+    "blocks": [
+        {
+            "type": "app-layout",
+            "tabs": [
+                {
+                    "icon": "person",
+                    "title": "Account",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Account Tab"
+                        }
+                    ]
+                },
+                {
+                    "icon": "stacked_bar_chart",
+                    "title": "Chart",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusByCountry"
+                        }
+                    ]
+                },
+                {
+                    "icon": "settings",
+                    "title": "Settings",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "appLayout",
+    "workflowId": "appLayout",
+    "adapterName": "demo",
+    "created": "2021-06-11T11:53:50.910Z",
+    "tags": [
+        "app"
+    ],
+    "updated": "2021-06-11T11:53:50.910Z",
+    "modified": "2021-06-11T11:53:50.910Z",
+    "title": "Demo App"
+}

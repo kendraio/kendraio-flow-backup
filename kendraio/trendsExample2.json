@@ -1,0 +1,65 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://trends-api.now.sh/api/?keyword=spring&key=1&type=years&duration=5"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{ data: data.default.timelineData[].{ value: value[0], label: formattedAxisTime }, label: 'spring'}"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://trends-api.now.sh/api/?keyword=daylight savings&key=1&type=years&duration=5"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{ data: data.default.timelineData[].{ value: value[0], label: formattedAxisTime }, label: 'daylight savings'}"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://trends-api.now.sh/api/?keyword=fall&key=1&type=years&duration=5"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{ data: data.default.timelineData[].{ value: value[0], label: formattedAxisTime }, label: 'fall'}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "chart",
+            "chartType": "line",
+            "multi": true
+        }
+    ],
+    "id": "trendsExample2",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "trendsExample2",
+    "adapterName": "kendraio",
+    "created": "2020-03-17T16:28:03.612Z",
+    "updated": "2020-03-17T16:29:14.785Z",
+    "modified": "2020-03-17T16:29:14.785Z",
+    "title": "Trends"
+}

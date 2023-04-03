@@ -1,0 +1,26 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "wallet",
+            "service": "uphold",
+            "list_all_balances": true,
+            "make_card_button": true
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showContext": false
+        }
+    ],
+    "id": "walletArray",
+    "workflowId": "walletArray",
+    "adapterName": "dsp1",
+    "created": "2021-07-29T17:56:07.401Z",
+    "tags": [],
+    "updated": "2021-07-29T17:56:07.401Z",
+    "modified": "2021-07-29T17:56:07.401Z",
+    "title": "Multiple balance prototype (DSP1)"
+}

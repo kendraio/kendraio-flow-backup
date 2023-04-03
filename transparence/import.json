@@ -1,0 +1,82 @@
+{
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "1. Load Excel",
+            "binary": true,
+            "accept": [
+                "xlsx"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.Sheet1[6:].[$.data.Sheet1[5], @].map(&fromPairs(zip([0], [1])), @)[?not_null(\"LICENSOR NAME\")]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && {  licensor: uniqBy(data[].{      uuid: uuid(), type: 'licensor',     licensorName: \"LICENSOR NAME\",      contact: {     firstName: \"FIRST NAME\",      lastName: \"LAST NAME\"      }   }, 'licensorName'),   album: uniq(data[].\"ALBUM\")[].{ name: @, type: 'album',  uuid: uuid() },   label: uniq(data[].\"DISTRIBUTING LABEL\")[].{ name: @, type: 'label', uuid: uuid() },   country: uniq(data[].split(\"RELEASE COUNTRY\", `/`)[].trim(@)),   artist: uniq(data[].[\"ALBUM ARTIST\", \"TRACK ARTIST\"][][].trim(@))[].{ name: @, type: 'artist', uuid: uuid() },   track: data[]}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{ licensor, album, label, country, artist, track: $.data.track[].{  licensor: find($.data.licensor, 'licensorName', \"LICENSOR NAME\").uuid, type: 'track',  rightsHolder: trim(\"RIGHTS HOLDER\") == 'Yes',  percent: \"%\",  role: split(\"ROLE (PERFORMED)\", `/`)[].trim(@),  backingVocals: trim(\"BCK VOCALS\") == 'Yes',  musician: trim(\"MUSICIAN\") == 'Yes',  instrument: split(\"INSTRUMENT\", `;`)[].split(@, `/`)[].trim(@),  trackTitle: \"TRACK TITLE\",  trackArtist: find($.data.artist, 'name', \"TRACK ARTIST\").uuid,  album: find($.data.album, 'name', \"ALBUM\").uuid,  distributingLabel: find($.data.label, 'name', \"DISTRIBUTING LABEL\").uuid,   isrc: \"ISRC\",   upc: \"UPC\",   releaseCountry: split(\"RELEASE COUNTRY\", `/`)[].trim(@),   albumArtist: find($.data.artist, 'name', \"ALBUM ARTIST\").uuid, duration: \"DURATION\",  initialReleaseDate: \"INITIAL RELEASE DATE \"} }"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.[licensor,album,label,country,artist,track][]"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "2. Import",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "db",
+                                    "skipFirst": false,
+                                    "operation": "add",
+                                    "schemaGetter": "data.type",
+                                    "adapterName": "transparence"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "import",
+    "workflowId": "import",
+    "adapterName": "transparence",
+    "created": "2020-07-03T14:10:32.559Z",
+    "tags": [],
+    "updated": "2020-07-03T14:10:32.558Z",
+    "modified": "2020-07-03T14:10:32.558Z",
+    "title": "Transparence: Import XLSX"
+}

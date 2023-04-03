@@ -1,0 +1,78 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Upload",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "file": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {
+                "file": {
+                    "ui:widget": "file"
+                }
+            }
+        },
+        {
+            "type": "read-file",
+            "readMode": "dataUrl",
+            "fileGetter": "data.file",
+            "mode": "update",
+            "updatePath": "file"
+        },
+        {
+            "type": "context",
+            "contextPath": "dropboxAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "dropbox"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "debug",
+                    "showContext": true
+                },
+                {
+                    "type": "http",
+                    "method": "post",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "content.dropboxapi.com",
+                        "pathname": "/2/files/upload"
+                    },
+                    "headers": {
+                        "Content-Type": "'application/octet-stream'",
+                        "Dropbox-API-Arg": "json({ path: join('', ['/uploads/', data.file.name]) })"
+                    },
+                    "payload": "data.file.result",
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.dropboxAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "uploadFile",
+    "adapter": "dropbox",
+    "org": "kendraio",
+    "workflowId": "uploadFile",
+    "adapterName": "dropbox",
+    "created": "2019-11-27T10:47:04.486Z",
+    "updated": "2019-11-27T10:47:04.486Z",
+    "modified": "2019-11-27T10:47:04.486Z",
+    "title": "Dropbox Upload"
+}

@@ -1,0 +1,87 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "dsp1-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "mutation MyMutation($trackId: String!) {\n  uploadTrack(trackId: $trackId) {\n    signedRequest\n    url\n  }\n}\n",
+            "variables": {
+                "trackId": "context.queryParams.id"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "context-save",
+            "contextKey": "signedRequest"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "file-input",
+            "label": "Import",
+            "accept": [
+                "mp3"
+            ],
+            "binary": true
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "http",
+            "method": "bput",
+            "endpoint": {
+                "protocol": "https:",
+                "valueGetter": "context.signedRequest.data.uploadTrack.signedRequest"
+            },
+            "headers": {
+                "Content-Type": "`audio/mpeg`"
+            },
+            "payload": "data.content",
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "debug"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "uploadTrack",
+    "workflowId": "uploadTrack",
+    "adapterName": "dsp1",
+    "created": "2020-11-20T16:01:36.455Z",
+    "tags": [],
+    "updated": "2020-11-20T16:01:36.455Z",
+    "modified": "2020-11-20T16:01:36.455Z",
+    "title": "Upload Track (DSP1)"
+}

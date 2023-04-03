@@ -1,0 +1,22 @@
+{
+    "blocks": [
+        {
+            "type": "video-upload",
+            "accept": "application/vnd.vimeo.*+json;version=3.4"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        }
+    ],
+    "id": "vimeo-video-upload",
+    "adapter": "vimeo",
+    "org": "kendraio",
+    "workflowId": "vimeo-video-upload",
+    "adapterName": "vimeo",
+    "created": "2020-01-03T17:32:35.957Z",
+    "updated": "2020-01-22T15:36:32.627Z",
+    "modified": "2020-01-22T15:36:32.627Z",
+    "title": "Vimeo: Upload Video(s)"
+}

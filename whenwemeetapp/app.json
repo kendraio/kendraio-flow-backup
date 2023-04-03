@@ -1,0 +1,156 @@
+{
+    "blocks": [
+        {
+            "type": "app-layout",
+            "tabs": [
+                {
+                    "icon": "search",
+                    "title": "Search",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Where I search for matches"
+                        }
+                    ]
+                },
+                {
+                    "icon": "person",
+                    "title": "Profile",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "My profile page."
+                        }
+                    ]
+                },
+                {
+                    "icon": "stacked_bar_chart",
+                    "title": "Chart",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusByCountry"
+                        }
+                    ]
+                },
+                {
+                    "icon": "settings",
+                    "title": "Settings",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Settings Tab"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "app",
+    "workflowId": "app",
+    "adapterName": "whenwemeetapp",
+    "created": "2021-06-25T10:46:28.024Z",
+    "tags": [
+        "app"
+    ],
+    "updated": "2021-06-25T10:46:28.023Z",
+    "modified": "2021-06-25T10:46:28.023Z",
+    "title": "WhenWeMeet"
+}

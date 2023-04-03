@@ -1,0 +1,338 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "track"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "artist"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "licensor"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "album"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "transparence",
+                            "schema": "label"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ track: data[0],artist: data[1],licensor: data[2],album: data[3],label: data[4] }"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.track[*].merge(@, { licensor: find($.data.licensor, 'uuid', licensor), trackArtist: find($.data.artist, 'uuid', trackArtist), album: find($.data.album, 'uuid', album), distributingLabel: find($.data.label, 'uuid', distributingLabel), albumArtist: find($.data.artist, 'uuid', albumArtist)})"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 15,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "headerCheckboxSelection": true,
+                    "width": 50,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Rights holder",
+                    "field": "rightsHolder",
+                    "valueFormatter": "(value && `\u2713`) || ''"
+                },
+                {
+                    "headerName": "Artist",
+                    "field": "trackArtist.name"
+                },
+                {
+                    "headerName": "Album",
+                    "field": "album.name"
+                },
+                {
+                    "headerName": "Title",
+                    "field": "trackTitle"
+                },
+                {
+                    "headerName": "Instrument",
+                    "field": "instrument"
+                },
+                {
+                    "headerName": "Role",
+                    "field": "role"
+                },
+                {
+                    "headerName": "ISRC",
+                    "field": "isrc"
+                },
+                {
+                    "headerName": "Country",
+                    "field": "releaseCountry"
+                },
+                {
+                    "headerName": "Release Date",
+                    "field": "initialReleaseDate"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "transparence",
+                                                "workflowId": "editTrack",
+                                                "context": {
+                                                    "uuid": "data.uuid"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Validate",
+                                        "blocks": [
+                                            {
+                                                "type": "validate",
+                                                "schema": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "isrc": {
+                                                            "type": "string",
+                                                            "pattern": "^[A-Z]{2}-?\\w{3}-?\\d{2}-?\\d{5}$"
+                                                        },
+                                                        "initialReleaseDate": {
+                                                            "type": "string",
+                                                            "format": "date"
+                                                        },
+                                                        "trackTitle": {
+                                                            "type": "string"
+                                                        },
+                                                        "upc": {
+                                                            "type": "string",
+                                                            "pattern": "^\\d{12,13}$"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "isrc",
+                                                        "trackTitle",
+                                                        "upc"
+                                                    ]
+                                                },
+                                                "onError": {
+                                                    "blocks": [
+                                                        {
+                                                            "type": "dialog",
+                                                            "blocks": [
+                                                                {
+                                                                    "type": "message",
+                                                                    "title": "Validation Errors",
+                                                                    "message": "---------------------------------------------------------------------------------------------------------------------------------------------------"
+                                                                },
+                                                                {
+                                                                    "type": "grid",
+                                                                    "columnDefs": [
+                                                                        {
+                                                                            "field": "message",
+                                                                            "width": 200
+                                                                        },
+                                                                        {
+                                                                            "field": "dataPath",
+                                                                            "width": 200
+                                                                        },
+                                                                        {
+                                                                            "field": "schemaPath",
+                                                                            "width": 200
+                                                                        },
+                                                                        {
+                                                                            "field": "keyword"
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "actions",
+                                                                    "buttons": [
+                                                                        {
+                                                                            "label": "Close",
+                                                                            "blocks": [
+                                                                                {
+                                                                                    "type": "init"
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "message",
+            "message": "{{ data.length }} selected"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Validate",
+                                    "blocks": [
+                                        {
+                                            "type": "debug",
+                                            "open": 0
+                                        },
+                                        {
+                                            "type": "validate",
+                                            "schema": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "isrc": {
+                                                            "type": "string",
+                                                            "pattern": "^[A-Z]{2}-?\\w{3}-?\\d{2}-?\\d{5}$"
+                                                        },
+                                                        "initialReleaseDate": {
+                                                            "type": "string",
+                                                            "format": "date"
+                                                        },
+                                                        "trackTitle": {
+                                                            "type": "string"
+                                                        },
+                                                        "upc": {
+                                                            "type": "string",
+                                                            "pattern": "^\\d{12,13}$"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "isrc",
+                                                        "trackTitle",
+                                                        "upc"
+                                                    ]
+                                                }
+                                            },
+                                            "onError": {
+                                                "blocks": [
+                                                    {
+                                                        "type": "message",
+                                                        "title": "Validation Errors"
+                                                    },
+                                                    {
+                                                        "type": "grid",
+                                                        "columnDefs": [
+                                                            {
+                                                                "field": "message"
+                                                            },
+                                                            {
+                                                                "field": "dataPath"
+                                                            },
+                                                            {
+                                                                "field": "schemaPath"
+                                                            },
+                                                            {
+                                                                "field": "keyword"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[*].[trackArtist.name, trackTitle, isrc, rightsHolder && `Copyright Owner` || `Collections Designee`, product(percent, `100`), ``,``,join(', ', releaseCountry[?@!=`USA`]),``,duration,``,``,``,``,``,initialRelease,``,``,``,``,``, albumArtist.name || trackArtist.name, album.name,``,upc,album.uuid, initialReleaseDate,releaseCountry[0],distributingLabel.name]"
+                        },
+                        {
+                            "type": "xlsx-template",
+                            "template": "https://s3.amazonaws.com/portals-prod-useruploads/media_files/ISRC%20Ingest%20Form.xlsx",
+                            "headerRows": 10
+                        },
+                        {
+                            "type": "file-export",
+                            "label": "Export",
+                            "fileName": "SoundExchange-export"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "listTracksWithValidate",
+    "workflowId": "listTracksWithValidate",
+    "adapterName": "transparence",
+    "created": "2020-10-30T12:00:43.076Z",
+    "tags": [],
+    "updated": "2020-10-30T12:00:43.076Z",
+    "modified": "2020-10-30T12:00:43.076Z",
+    "title": "Transparence: List Tracks (Validate)"
+}

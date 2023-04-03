@@ -1,0 +1,88 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "file-input",
+            "label": "Import Gandi",
+            "accept": [
+                "csv",
+                "json",
+                "xml"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "*[].[fqdn, dates.created_at, dates.registry_ends_at]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Domain"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Expires"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "gandiLocal",
+    "workflowId": "gandiLocal",
+    "adapterName": "localData",
+    "created": "2023-01-18T12:55:20.316Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-01-18T12:55:20.316Z",
+    "modified": "2023-01-18T12:55:20.316Z",
+    "title": "Gandi Local"
+}

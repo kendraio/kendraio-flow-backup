@@ -1,0 +1,124 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Local Database Wipe</h2><p>Clear the local flows database so that it can be refreshed.<p>"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "flowSearch",
+            "schema": "none",
+            "skipFirst": false
+        },
+        {
+            "type": "context-save",
+            "contextKey": "flows"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)"
+        },
+        {
+            "type": "template",
+            "template": "Flows in local db: {{data}}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\r\n    \"confirm\":`0`\r\n}"
+        },
+        {
+            "type": "form",
+            "hasSubmit": true,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "confirm": {
+                        "type": "boolean",
+                        "title": "Confirm local database wipe",
+                        "default": false
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "context-save",
+            "contextKey": "confirm"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.flows"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "context.confirm.confirm",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "context.flows"
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "data.uuid"
+                                },
+                                {
+                                    "type": "db",
+                                    "operation": "delete",
+                                    "adapterName": "flowSearch",
+                                    "schema": "none",
+                                    "uuidGetter": "data"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Update local database",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "flowSearch",
+                            "workflowId": "updateLocalDatabaseFlows"
+                        }
+                    ]
+                },
+                {
+                    "label": "Search local database",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "flowSearch",
+                            "workflowId": "findBlocks"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "wipeLocalDatabase",
+    "workflowId": "wipeLocalDatabase",
+    "adapterName": "flowSearch",
+    "created": "2021-08-06T11:13:38.377Z",
+    "tags": [],
+    "updated": "2021-08-06T11:13:38.377Z",
+    "modified": "2021-08-06T11:13:38.377Z",
+    "title": "Local Flow Database wipe"
+}

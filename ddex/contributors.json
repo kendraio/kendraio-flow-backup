@@ -1,0 +1,42 @@
+{
+    "blocks": [
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "message",
+            "message": "Contributors"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "ddex",
+            "schema": "contributors",
+            "uuidGetter": "context.queryParams.batch"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        }
+    ],
+    "id": "contributors",
+    "workflowId": "contributors",
+    "adapterName": "ddex",
+    "created": "2021-03-05T09:50:32.270Z",
+    "tags": [],
+    "updated": "2021-03-05T09:50:32.270Z",
+    "modified": "2021-03-05T09:50:32.270Z",
+    "title": "DDEX Contributors"
+}

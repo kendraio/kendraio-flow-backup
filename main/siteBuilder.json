@@ -1,0 +1,83 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "'86ff5c74-09c2-4449-88c3-852ccedfd988'",
+            "blockComment": "block type UUID"
+        },
+        {
+            "type": "context-save",
+            "key": "block_types_uuid",
+            "blockComment": "saves block types uuid"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "schema": "blocks",
+            "uuidGetter": "context.block_types_uuid",
+            "blockComment": "try loading block types"
+        },
+        {
+            "type": "mapping",
+            "mapping": "(data && values(omit(data[0],['uuid'])))||['menu','header','footer','test2']",
+            "blockComment": "if we loaded existing block type data, return it's values, or default data"
+        },
+        {
+            "type": "template",
+            "template": "<h3>Add different types of template blocks to a page:",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "set(`{\n    \"type\": \"form\",\n    \"jsonSchema\": {\n        \"definitions\": {\n            \"block_names\": {\n                \"type\": \"string\",\n                \"enum\": [\n                    \"menu\",\n                    \"footer\",\n                    \"header\"\n                ]\n            }\n        },\n        \"type\": \"object\",\n        \"title\": \"Page type\",\n        \"properties\": {\n            \"page_id\": {\n                \"type\": \"string\",\n                \"title\": \"Page ID\",\n                \"format\": \"uuid\"\n            },\n            \"page_name\": {\n                \"type\": \"string\",\n                \"title\": \"Page Name\"\n            },\n            \"block_id\": {\n                \"type\": \"array\",\n                \"items\": {\n                    \"type\": \"object\",\n                    \"title\": \"Block type\",\n                    \"properties\": {\n                        \"uuid\": {\n                            \"type\": \"string\",\n                            \"format\": \"uuid\",\n                            \"title\": \"Block ID\"\n                        },\n                        \"name\": {\n                            \"$ref\": \"#/definitions/block_names\"\n                        }\n                    }\n                }\n            }\n        }\n    },\n    \"uiSchema\": {},\n\"block_id\": [\n   {\n     \"uuid\": \"d025b204-662b-4f2b-bf97-b345ce8b501e\",\n     \"name\": \"menu\"\n   }\n ],\n \"page_id\": \"home\",\n \"page_name\": \"Home\"\n}`,'jsonSchema.definitions.block_names.enum', data)",
+            "blockComment": "Combine form output with another form schema: the set function is passed:\n1. A JSON object value to be updated, using a backtick string e.g `{\"key\":\"value\"}` (which allows multiline JSON to be used)\n2. A string path to the key to be updated, e.g. `\"key\"`\n3. The value to be set, e.g. `\"value\"`"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "label": "Submit",
+            "emitOnInit": true,
+            "skipInit": false,
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "data"
+                    }
+                ]
+            },
+            "confirm": false,
+            "blockComment": "Loads form schema from state.local.form and loads existing data if passed in"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Edit block types",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "site-builder",
+                            "workflowId": "blockEditor"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "siteBuilder",
+    "workflowId": "siteBuilder",
+    "adapterName": "main",
+    "created": "2022-05-11T16:11:46.438Z",
+    "tags": [],
+    "updated": "2022-05-11T16:11:46.436Z",
+    "modified": "2022-05-11T16:11:46.436Z",
+    "title": "Site Builder Main Page"
+}

@@ -1,0 +1,94 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "<hr>{{#if state.flags.devel}}<h3>Flags</h3>{{/if}}"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Enable development flag",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "context-save",
+                            "key": "state.flags.devel",
+                            "valueGetter": "`true`"
+                        }
+                    ],
+                    "enabledGetter": "!(state.flags.devel)",
+                    "enabled": true
+                },
+                {
+                    "label": "Disable development flag",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "context-save",
+                            "key": "state.flags.devel",
+                            "valueGetter": "`false`"
+                        }
+                    ],
+                    "enabledGetter": "state.flags.devel",
+                    "enabled": null
+                },
+                {
+                    "label": "Reset flags",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "context-save",
+                            "key": "state.flags",
+                            "valueGetter": "{devel: `false`}"
+                        }
+                    ],
+                    "enabledGetter": "state.flags.devel",
+                    "enabled": null
+                }
+            ]
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "valueGetter": "state.flags",
+            "enabledGetter": "state.flags.devel",
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Flag"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Value"
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": false,
+            "showContext": false,
+            "showState": true,
+            "enabledGetter": "state.flags.devel",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "{{#if state.flags.devel}}<p><em>Flags are defined at: state.flags</p>{{/if}}<hr>"
+        }
+    ],
+    "id": "flagsDisplay",
+    "workflowId": "flagsDisplay",
+    "adapterName": "devel",
+    "created": "2022-02-02T17:36:58.450Z",
+    "tags": [
+        "sub",
+        "devel"
+    ],
+    "updated": "2022-02-02T17:36:58.450Z",
+    "modified": "2022-02-02T17:36:58.450Z",
+    "title": "Display Flags"
+}

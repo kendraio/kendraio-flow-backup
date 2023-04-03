@@ -1,0 +1,145 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "gigs",
+            "schema": "venues"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "floatingFilter": true
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Name",
+                    "field": "name",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "City",
+                    "field": "city",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Country",
+                    "field": "country",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "width": 100,
+                    "resizable": false,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "gigs",
+                                                "workflowId": "editVenue",
+                                                "context": {
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add Venue",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "dialog",
+                            "blocks": [
+                                {
+                                    "type": "form",
+                                    "label": "Save",
+                                    "jsonSchema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "title": "Name"
+                                            },
+                                            "city": {
+                                                "type": "string",
+                                                "title": "City"
+                                            },
+                                            "country": {
+                                                "type": "string",
+                                                "title": "Country"
+                                            },
+                                            "latitude": {
+                                                "type": "string",
+                                                "title": "Latitude"
+                                            },
+                                            "longitude": {
+                                                "type": "string",
+                                                "title": "Longitude"
+                                            }
+                                        },
+                                        "required": [
+                                            "name",
+                                            "city",
+                                            "country",
+                                            "latitude",
+                                            "longitude"
+                                        ]
+                                    },
+                                    "uiSchema": {}
+                                },
+                                {
+                                    "type": "db",
+                                    "operation": "add",
+                                    "adapterName": "gigs",
+                                    "schema": "venues"
+                                },
+                                {
+                                    "type": "dispatch",
+                                    "action": "refreshWorkflow"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "venueList",
+    "workflowId": "venueList",
+    "adapterName": "gigs",
+    "created": "2020-05-27T08:14:40.133Z",
+    "updated": "2020-05-27T08:14:40.133Z",
+    "modified": "2020-05-27T08:14:40.133Z",
+    "title": "Venues"
+}

@@ -1,0 +1,115 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "allowFirst": true,
+            "allowEmpty": true,
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query ($token: String,$id:Int) {  viewer(token: $token) {    plan(id:$id) {      id      name      note      planProcesses {        id        name        committedInputs(action:WORK) {          id          committedQuantity {            numericValue            unit {              name            }          }          provider {            id            name          }        }      }    }  }}",
+            "variables": {
+                "token": "context.vfAuth",
+                "id": "context.queryParams.planId"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 4,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.plan"
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Add translation title"
+                    },
+                    "note": {
+                        "type": "string",
+                        "title": "Original word count"
+                    },
+                    "planProcesses": {
+                        "type": "array",
+                        "title": "Processes",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "title": "Process"
+                                },
+                                "agent": {
+                                    "type": "string",
+                                    "title": "Agent"
+                                },
+                                "status": {
+                                    "type": "string",
+                                    "enum": [
+                                        "Complete",
+                                        "In Progress",
+                                        "Waiting"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "planProcesses": {
+                    "ui:widget": "table",
+                    "allowAdd": false,
+                    "allowRemove": false,
+                    "colHeadings": [
+                        "Process",
+                        "Agent",
+                        "Status"
+                    ],
+                    "items": {
+                        "name": {
+                            "ui:widget": "readonly"
+                        },
+                        "agent": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "adapterName": "valueflows",
+                                "blocks": [
+                                    {
+                                        "type": "gosub",
+                                        "adapterName": "valueflows",
+                                        "workflowId": "selectAgent"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "id": "editPlan",
+    "workflowId": "editPlan",
+    "adapterName": "valueflows",
+    "created": "2020-07-09T10:05:25.372Z",
+    "tags": [],
+    "updated": "2020-07-09T10:05:25.372Z",
+    "modified": "2020-07-09T10:05:25.372Z",
+    "title": "ValueFlows Edit Plan"
+}

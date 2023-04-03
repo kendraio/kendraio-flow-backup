@@ -1,0 +1,42 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "This is a demonstration of Web Monetization. If you have Coil payments, when you play the track, Coil will automatically send donations to a Web Monitization account enabled using the Interledger Protocol. It will stop when the track is paused. For a more complex example see the <a href='https://app.kendra.io/player/all'>Player</a>, which has a blog post and screencast that goes into more detail."
+        },
+        {
+            "type": "mapping",
+            "mapping": "\n    {\n  \"display_artist\": 'Patient Pacifist',\n  \"display_title\": 'Divided',\n  \"url\": 'https://dsp1-track-uploads.s3.amazonaws.com/auth0|5fa9852a2576900076396b60/b49cd51b-6f0a-4c7a-9c69-b83b753ee867',\n  \"paymentPointer\":'$ilp.uphold.com/QhJqdGMmjZM4'\n}\n"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "player",
+            "onPlay": [
+                {
+                    "type": "web-money"
+                }
+            ],
+            "onPause": [
+                {
+                    "type": "web-money",
+                    "enabled": false
+                }
+            ]
+        }
+    ],
+    "id": "basic",
+    "workflowId": "basic",
+    "adapterName": "player",
+    "created": "2021-03-04T14:09:28.463Z",
+    "tags": [],
+    "updated": "2021-03-04T14:09:28.463Z",
+    "modified": "2021-03-04T14:09:28.463Z",
+    "title": "Kendraio Player Basic"
+}

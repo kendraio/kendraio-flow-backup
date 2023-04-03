@@ -1,0 +1,61 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Login",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "password",
+                        "title": "Password"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "auth.kendra.io",
+                "pathname": "/oauth/token"
+            },
+            "payload": "{username: data.email, password: data.password, client_id: `cgW1ngajSlWUwSpF2KHq4MuiC29x05cv`, audience: `https://kendra.io/hasura`, grant_type: `http://auth0.com/oauth/grant-type/password-realm`, realm: `demodsp1` }",
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "data"
+                    },
+                    {
+                        "type": "debug"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "message",
+            "title": "Result:"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "login",
+    "workflowId": "login",
+    "adapterName": "demodsp1",
+    "created": "2020-11-13T09:09:41.369Z",
+    "tags": [],
+    "updated": "2020-11-13T09:09:41.369Z",
+    "modified": "2020-11-13T09:09:41.369Z",
+    "title": "Login"
+}

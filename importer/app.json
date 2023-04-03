@@ -1,0 +1,52 @@
+{
+    "blocks": [
+        {
+            "type": "app-layout",
+            "tabs": [
+                {
+                    "icon": "home",
+                    "title": "Start",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "importer",
+                            "workflowId": "start"
+                        }
+                    ]
+                },
+                {
+                    "icon": "import_export",
+                    "title": "Presets",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "importer",
+                            "workflowId": "presets"
+                        }
+                    ]
+                },
+                {
+                    "icon": "storage",
+                    "title": "Schemas",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "schemas",
+                            "workflowId": "list"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "app",
+    "workflowId": "app",
+    "adapterName": "importer",
+    "created": "2021-10-14T20:16:52.157Z",
+    "tags": [
+        "app"
+    ],
+    "updated": "2021-10-14T20:16:52.157Z",
+    "modified": "2021-10-14T20:16:52.157Z",
+    "title": "Workflow"
+}

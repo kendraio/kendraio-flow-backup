@@ -1,0 +1,104 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "This is a random UUID, which is generated right away, when the flow loads:",
+            "blockComment": "Simple UUID intro"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "examples",
+            "workflowId": "uuid4",
+            "blockComment": "uuid4 example"
+        },
+        {
+            "type": "template",
+            "template": "<br><hr><br>When the button below is pressed, random UUIDs are added to a list:",
+            "blockComment": "uuid list intro"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "examples",
+            "workflowId": "uuid4S",
+            "blockComment": "uuid4S"
+        },
+        {
+            "type": "template",
+            "template": "<br><hr><br>Text from the input field below is used as input for a deterministic, or hash based UUID function. The generated UUID is not random, it is always the same if the input is the same. Try changing the text!",
+            "blockComment": "Hashed based UUID intro"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "examples",
+            "workflowId": "uuid5",
+            "blockComment": "uuid5"
+        },
+        {
+            "type": "template",
+            "template": "<br><hr><br>See the flows and code for the above examples:",
+            "blockComment": "Source flow buttons title"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Basic random UUID example",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "examples",
+                            "workflowId": "uuid4"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Basic random UUID flow example"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Random UUID list example",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "examples",
+                            "workflowId": "uuid4S"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "uuid4S"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Deterministic UUID example",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "examples",
+                            "workflowId": "uuid5"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "uuid5"
+        }
+    ],
+    "id": "uuid",
+    "workflowId": "uuid",
+    "adapterName": "examples",
+    "created": "2022-02-16T11:40:52.668Z",
+    "tags": [],
+    "updated": "2022-02-16T11:40:52.668Z",
+    "modified": "2022-02-16T11:40:52.668Z",
+    "title": "All UUID examples"
+}

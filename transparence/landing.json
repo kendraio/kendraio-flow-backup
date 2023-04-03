@@ -1,0 +1,145 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "transparence-auth"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "enabledGetter": "state.flags.devel",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "transparence",
+            "blockComment": "save auth token"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://transparence.hasura.app/v1/graphql",
+            "query": "{\r\n  __schema {\r\n    types {\r\n      name\r\n    }\r\n  }\r\n}\r\n",
+            "variables": {},
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.transparence.access_token || ''])"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "type(data.data.__schema)"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": "null",
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "<h2>Please log in</h2? "
+                        },
+                        {
+                            "type": "gosub",
+                            "adapterName": "transparence",
+                            "workflowId": "login"
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Reload landing page",
+                                    "color": "default",
+                                    "blocks": [
+                                        {
+                                            "type": "launch",
+                                            "adapter": "transparence",
+                                            "workflowId": "landing"
+                                        }
+                                    ],
+                                    "enabled": true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "object",
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "<h2>Artist data explorer</h2? "
+                        },
+                        {
+                            "type": "gosub",
+                            "adapterName": "transparence",
+                            "workflowId": "apiListContributionsSummary"
+                        },
+                        {
+                            "type": "gosub",
+                            "adapterName": "transparence",
+                            "workflowId": "apiListContributions"
+                        }
+                    ]
+                }
+            ],
+            "blockComment": "Display artist data if it exists, login form if it doesn't. \n\nGosub: apiListContributions for track data"
+        },
+        {
+            "type": "template",
+            "template": "<hr/><h3>Additional actions</h3>",
+            "blockComment": "Additional actions"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "All workflows",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "transparence",
+                            "workflowId": "workflowList"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Add a new user",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "transparence",
+                            "workflowId": "signup"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "type": "gosub",
+            "adapterName": "devel",
+            "workflowId": "flagsDisplay",
+            "blockComment": ""
+        }
+    ],
+    "id": "landing",
+    "workflowId": "landing",
+    "adapterName": "transparence",
+    "created": "2022-04-25T11:54:10.566Z",
+    "tags": [],
+    "updated": "2022-04-25T11:54:10.566Z",
+    "modified": "2022-04-25T11:54:10.566Z",
+    "title": "Transparence landing page"
+}

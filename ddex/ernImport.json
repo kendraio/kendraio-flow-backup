@@ -1,0 +1,88 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "Import DDEX ERN XML",
+            "message": "The Electronic Release Notification Message Suite Standard (informally called the 'Release Notification Message Standard') is one of several XML message formats published by DDEX. Release notifications are messages that record labels or aggregators send to distributors to inform them of new releases that are available for distribution, and the terms and conditions under which such releases can be made available."
+        },
+        {
+            "hasSubmit": false,
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "batchName": {
+                        "type": "string",
+                        "title": "Batch name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "file-input",
+            "label": "Import XML",
+            "accept": [
+                "xml"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "xmlOptions": {
+                "arrayAccessFormPaths": [
+                    "NewReleaseMessage.partyList.Party.PartyName",
+                    "NewReleaseMessage.ResourceList.SoundRecording",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory",
+                    "NewReleaseMessage.ResourceList.SoundRecording.SoundRecordingDetailsByTerritory.DisplayArtist",
+                    "NewReleaseMessage.ResourceList.Image",
+                    "NewReleaseMessage.ReleaseList.Release",
+                    "NewReleaseMessage.DealList.ReleaseDeal.Deal"
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, { created: now(), batchName: context.saved.batchName })\n"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.NewReleaseMessage && length(data.NewReleaseMessage) > `0`",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "adapterName": "ddex",
+                            "schema": "batches",
+                            "operation": "add"
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "ernImport",
+    "workflowId": "ernImport",
+    "adapterName": "ddex",
+    "created": "2022-06-20T14:21:40.261Z",
+    "tags": [],
+    "updated": "2022-06-20T14:21:40.261Z",
+    "modified": "2022-06-20T14:21:40.261Z",
+    "title": "ERN Import"
+}

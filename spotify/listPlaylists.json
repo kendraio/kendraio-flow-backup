@@ -1,0 +1,104 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "spotifyToken"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://api.spotify.com/v1/me/playlists",
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyToken])"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Image",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<img src=\"{{data.images.[0].url}}\" />"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Owner",
+                    "field": "owner.display_name"
+                },
+                {
+                    "headerName": "Tracks",
+                    "field": "tracks.total"
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Collaborative",
+                    "field": "collaborative"
+                },
+                {
+                    "headerName": "Public",
+                    "field": "public"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "View",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "spotify",
+                                                "workflowId": "viewPlaylist",
+                                                "context": {
+                                                    "id": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "id": "listPlaylists",
+    "adapter": "spotify",
+    "org": "kendraio",
+    "workflowId": "listPlaylists",
+    "adapterName": "spotify",
+    "created": "2019-12-09T16:11:29.317Z",
+    "updated": "2019-12-09T16:11:29.317Z",
+    "modified": "2019-12-09T16:11:29.317Z",
+    "title": "List playlists"
+}

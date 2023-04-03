@@ -1,0 +1,201 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<p>Play tracks from multiple DSPs within one player and pay artists directly via Web Monetization. Kendraio Player enables a user to pay when Web Monetization support is provided within their browser, or when Coil subscribers login via the Coil API using the Connect button provided. Currently, this Flow integrates DSP1 via a GraphQL API. For more details read our <a href='https://medium.com/kendraio/coil-web-monetization-on-mobile-no-browser-extension-20e3eff2b9f4'>blog post</a>, watch the <a href='https://youtu.be/T2yXWJKIgOQ'>video explainer</a> and see <a href='https://www.kendra.io/kendraio-pay'>our website</a>. See the <a href='https://github.com/kendraio/kendraio-app'>source code</a>. Read about <a href='https://webmonetization.org'>Web Monetization</a>, <a href='https://interledger.org/'>Interledger</a>,  and <a href='https://coil.com'>Coil</a>. Many thanks to <a href='https://www.grantfortheweb.org'>Grant for the Web</a> for funding us.</p><p>Please note that non-identifying play statistics are collected, the results are aggregated <a href='https://app.kendra.io/player/stats'>here.</a>"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  tracks {\n    display_artist\n    display_title\n    id\n    user_id\n    user {\n        payment_pointer\n    }\n  }\n}\n\n",
+            "variables": {},
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.tracks"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "graphql"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https://",
+                "host": "www.audiotarky.com",
+                "pathname": "/api/tracks/index.json"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.graphql[], data.tracks[].{ display_title: name, display_artist: artist, album, page, artist_url, image, payment_pointer: ilp, url, dsp: 'Audiotarky', api: api_page }][]"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "tracks"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "search": {
+                        "type": "string",
+                        "title": "Search songs",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.search && (length(data.search) == `0` && context.tracks) || context.tracks[?contains(toLower(display_title), toLower(trim($.data.search))) || contains(toLower(display_artist), toLower(trim($.data.search)))]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "single",
+                "pagination": true,
+                "paginationPageSize": 15
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Title",
+                    "field": "display_title"
+                },
+                {
+                    "headerName": "Artist",
+                    "field": "display_artist"
+                },
+                {
+                    "headerName": "DSP",
+                    "field": "dsp",
+                    "valueFormatter": "value||'DSP1'"
+                },
+                {
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "switch",
+                                "valueGetter": "data.dsp",
+                                "cases": [
+                                    {
+                                        "value": "Audiotarky",
+                                        "blocks": [
+                                            {
+                                                "type": "actions",
+                                                "buttons": [
+                                                    {
+                                                        "label": "See info",
+                                                        "color": "accent",
+                                                        "blocks": [
+                                                            {
+                                                                "type": "dialog",
+                                                                "blocks": [
+                                                                    {
+                                                                        "type": "template",
+                                                                        "template": "<div><img width='300' height='300' style='display: block;' src='{{ data.image }}'><div><br/><strong>Title: </strong>{{ data.display_title }}<br/><strong>Artist: </strong>{{ data.display_artist }}<br/><strong>Album: </strong>{{ data.album }}<br/><strong>Interledger Address: </strong>{{ data.payment_pointer }}<br/><br/><strong><a href='{{ data.page }}' target='_blank'>Play track at Audiotarky</a> | <a href='{{ data.artist_url }}' target='_blank'>Artist Page</a></strong></div></div>"
+                                                                    },
+                                                                    {
+                                                                        "type": "actions",
+                                                                        "buttons": [
+                                                                            {
+                                                                                "label": "OK",
+                                                                                "color": "primary",
+                                                                                "blocks": [
+                                                                                    {
+                                                                                        "type": "dispatch",
+                                                                                        "action": "closeMetadata"
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].{ \n    analyticsItemUUID:id||uuid(url), \n    analyticsRecipientID:user_id||artist_url, \n    paymentPointer: payment_pointer || user.payment_pointer, \n    display_artist: display_artist, \n    display_title: display_title, \n    url: url || join('', ['https://dsp1-track-uploads.s3.amazonaws.com/', to_string(user_id), '/', to_string(id)]), \n    api: api || '' \n}"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "context-save",
+            "contextKey": "currentTrack"
+        },
+        {
+            "type": "player",
+            "titleMapping": "context.currentTrack && join(' - ', [context.currentTrack.display_artist, context.currentTrack.display_title])",
+            "onError": [
+                {
+                    "type": "debug"
+                }
+            ],
+            "onPlay": [
+                {
+                    "type": "web-money",
+                    "trackingEnabled": true,
+                    "supportMissingMessage": "",
+                    "paymentActiveMessage": "Status: Playing"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": "https://www.audiotarky.com/$/artists/chris-foster/hadelin/the-seeds-of-love/index.json"
+                }
+            ],
+            "onPause": [
+                {
+                    "type": "web-money",
+                    "enabled": false,
+                    "supportMissingMessage": "",
+                    "paymentPausedMessage": "Status: Paused<br><br><br>"
+                }
+            ],
+            "onReady": []
+        }
+    ],
+    "id": "all",
+    "workflowId": "all",
+    "adapterName": "player",
+    "created": "2021-10-28T16:14:36.756Z",
+    "tags": [
+        "highlight"
+    ],
+    "updated": "2021-10-28T16:14:36.756Z",
+    "modified": "2021-10-28T16:14:36.756Z",
+    "title": "Kendraio Player"
+}

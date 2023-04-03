@@ -1,0 +1,88 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Enter Linear Key",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "linearkey": {
+                        "type": "string",
+                        "title": "Linear API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.linear.app",
+                "pathname": "/graphql"
+            },
+            "headers": {
+                "authorization": "data.linearkey"
+            },
+            "payload": "{ query: '{ issues { nodes { id title } } }'}",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.issues.nodes",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Issue"
+                },
+                {
+                    "field": "1",
+                    "headerName": "ID"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "linear",
+    "workflowId": "linear",
+    "adapterName": "kendraio",
+    "created": "2023-03-07T16:40:55.250Z",
+    "tags": [],
+    "updated": "2023-03-07T16:40:55.249Z",
+    "modified": "2023-03-07T16:40:55.249Z",
+    "title": "Linear"
+}

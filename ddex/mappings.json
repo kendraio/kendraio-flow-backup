@@ -1,0 +1,153 @@
+{
+    "blocks": [
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Contributors",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ type: 'contributors' }"
+                        }
+                    ]
+                },
+                {
+                    "label": "Contributors (Dev)",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ type: 'contributorsDev' }"
+                        }
+                    ]
+                },
+                {
+                    "label": "Sound Recordings",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ type: 'soundRecordings' }"
+                        }
+                    ]
+                },
+                {
+                    "label": "Releases",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ type: 'releases' }"
+                        }
+                    ]
+                },
+                {
+                    "label": "Resources",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ type: 'resources' }"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, { batch: context.queryParams.uuid })\n\n"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "selectedMapping"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.type",
+            "cases": [
+                {
+                    "value": "contributors",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "fetch",
+                            "adapterName": "ddex",
+                            "schema": "batches",
+                            "uuidGetter": "context.queryParams.uuid"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0]"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data"
+                        }
+                    ]
+                },
+                {
+                    "value": "contributorsDev",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "ddex",
+                            "workflowId": "contributorsDev"
+                        }
+                    ]
+                },
+                {
+                    "value": "releases",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "ddex",
+                            "workflowId": "releases",
+                            "modelGetter": "data",
+                            "contextGetter": "context"
+                        }
+                    ]
+                },
+                {
+                    "value": "soundRecordings",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "ddex",
+                            "workflowId": "soundRecordings",
+                            "modelGetter": "data",
+                            "contextGetter": "context"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "message",
+                        "message": "Error: unknown mapping type"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        }
+    ],
+    "id": "mappings",
+    "workflowId": "mappings",
+    "adapterName": "ddex",
+    "created": "2021-03-26T14:44:34.651Z",
+    "tags": [],
+    "updated": "2021-03-26T14:44:34.651Z",
+    "modified": "2021-03-26T14:44:34.651Z",
+    "title": "DDEX Mappings"
+}

@@ -1,0 +1,129 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "message",
+            "message": "Use this form to notify your content host that your material carries a DST (Digital Services Tax) requirement. Select the content hosts that you wish to notify and then click on Submit. They will then receive your DST notification requiring them to pay DST tax on any revenue generated from your content. You will also be able to track their acknowledgement of and compliance with your requirements. For more information see here.",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": true,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "Apple": {
+                        "type": "boolean",
+                        "title": "Apple",
+                        "default": false
+                    },
+                    "Google": {
+                        "type": "boolean",
+                        "title": "Google",
+                        "default": false
+                    },
+                    "Amazon": {
+                        "type": "boolean",
+                        "title": "Amazon",
+                        "default": false
+                    },
+                    "Meta": {
+                        "type": "boolean",
+                        "title": "Meta",
+                        "default": false
+                    },
+                    "YouTube": {
+                        "type": "boolean",
+                        "title": "YouTube",
+                        "default": false
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "dialog",
+            "blocks": [
+                {
+                    "type": "message",
+                    "message": "Send emails?"
+                },
+                {
+                    "type": "actions",
+                    "buttons": [
+                        {
+                            "label": "OK",
+                            "color": "primary",
+                            "blocks": [
+                                {
+                                    "type": "dispatch",
+                                    "action": "resetApp"
+                                }
+                            ],
+                            "enabled": true
+                        },
+                        {
+                            "label": "Cancel",
+                            "blocks": [
+                                {
+                                    "type": "init"
+                                }
+                            ],
+                            "enabled": true
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "saved"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.[`Apple`,*.Apple],context.[`Google`,*.Google],context.[`Amazon`,*.Amazon],context.[`Meta`,*.Meta],context.[`YouTube`,*.YouTube]]",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "headerName": "Service",
+                    "field": "0"
+                },
+                {
+                    "headerName": "Notified",
+                    "field": "1",
+                    "valueFormatter": "json(value[0]).replace(@,'true', '\u2705').replace(@,'false','\u274c')"
+                },
+                {
+                    "headerName": "Confirmation Received",
+                    "field": "2",
+                    "valueFormatter": "`\u274c`"
+                },
+                {
+                    "headerName": "Compliance Verified",
+                    "field": "3",
+                    "valueFormatter": "`\u274c`"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "dst",
+    "workflowId": "dst",
+    "adapterName": "culturebanked",
+    "created": "2023-03-16T11:41:44.359Z",
+    "tags": [],
+    "updated": "2023-03-16T11:41:44.359Z",
+    "modified": "2023-03-16T11:41:44.359Z",
+    "title": "CultureBanked DST"
+}

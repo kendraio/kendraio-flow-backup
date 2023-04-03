@@ -1,0 +1,37 @@
+{
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "Import",
+            "accept": [
+                "json"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "dispatch",
+            "action": "importAdapter"
+        }
+    ],
+    "id": "importAdapter",
+    "adapter": "core",
+    "org": "kendraio",
+    "workflowId": "importAdapter",
+    "adapterName": "core",
+    "created": "2019-11-21T09:31:15.345Z",
+    "updated": "2019-11-21T09:31:15.345Z",
+    "modified": "2019-11-21T09:31:15.345Z",
+    "title": "Import Adapter"
+}

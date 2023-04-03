@@ -1,0 +1,57 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "query {\n  track_xrp_rank {\n    display_artist\n    display_title\n    total_xrp\n    sessions\n    total_session_mins\n  }\n}",
+            "variables": {},
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.track_xrp_rank"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "grid",
+                            "gridOptions": {}
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[].{ label: display_title, value: total_xrp }"
+                        },
+                        {
+                            "type": "chart"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "myStats",
+    "workflowId": "myStats",
+    "adapterName": "dsp1",
+    "created": "2021-03-26T15:05:29.402Z",
+    "tags": [],
+    "updated": "2021-03-26T15:05:29.402Z",
+    "modified": "2021-03-26T15:05:29.402Z",
+    "title": "Stats  test (DSP1) "
+}

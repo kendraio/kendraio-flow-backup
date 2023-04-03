@@ -1,0 +1,62 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "dsp1-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "query MyQuery($trackId: uuid!) {\n  tracks_by_pk(id: $trackId) {\n    id\n    url\n    user_id\n    display_artist\n    display_title\n  }\n}",
+            "variables": {
+                "trackId": "context.queryParams.id"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.tracks_by_pk && data.data.tracks_by_pk.{ display_artist: display_artist, display_title: display_title, url: join('', ['https://dsp1-track-uploads.s3.amazonaws.com/', to_string(user_id), '/', to_string(id)]) }"
+        },
+        {
+            "type": "form",
+            "label": "Load Stream",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {
+                "url": {}
+            }
+        },
+        {
+            "type": "message",
+            "title": "{{ data.display_artist }} - {{ data.display_title }}"
+        },
+        {
+            "type": "player"
+        }
+    ],
+    "id": "streamTrack",
+    "workflowId": "streamTrack",
+    "adapterName": "dsp1",
+    "created": "2020-11-20T17:08:32.718Z",
+    "tags": [],
+    "updated": "2020-11-20T17:08:32.718Z",
+    "modified": "2020-11-20T17:08:32.718Z",
+    "title": "Stream track"
+}

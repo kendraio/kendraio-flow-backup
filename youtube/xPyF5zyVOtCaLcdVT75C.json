@@ -1,0 +1,79 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Video Id",
+                        "default": "I_txFxMKg4U"
+                    },
+                    "part": {
+                        "type": "string",
+                        "default": "snippet,contentDetails,statistics"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "key": {
+                        "type": "string",
+                        "default": "AIzaSyAf-qU5cQwbAJZoFGLsFUmyB7OBBY15GZQ"
+                    }
+                }
+            },
+            "uiSchema": {
+                "part": {
+                    "ui:widget": "k-hidden"
+                },
+                "mine": {
+                    "ui:widget": "k-hidden"
+                },
+                "key": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "www.googleapis.com",
+                "pathname": "/youtube/v3/videos",
+                "valueGetters": {
+                    "query": "data"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[].snippet"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "xPyF5zyVOtCaLcdVT75C",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "xPyF5zyVOtCaLcdVT75C",
+    "adapterName": "youtube",
+    "created": "2019-11-20T12:39:18.993Z",
+    "updated": "2019-12-05T17:58:56.824Z",
+    "modified": "2019-12-05T17:58:56.824Z",
+    "title": "TimTube Get Video Details (No Auth0)"
+}

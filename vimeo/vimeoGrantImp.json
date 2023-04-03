@@ -1,0 +1,242 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "parseQs(context.fragment).access_token"
+        },
+        {
+            "type": "variable-set",
+            "name": "access_token"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vimeoToken"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.vimeo.com/me/videos', ''])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data[0].{thumbnail: sizes[2].link}"
+        },
+        {
+            "type": "template",
+            "template": "<img src=\"{{data.thumbnail}}\"/>"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.vimeo.com",
+                "pathname": "/me/videos"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])",
+                "Content-Type": "join('/', ['application','json'])",
+                "Accept": "join('/', ['application', join('+',  ['vnd.vimeo.*', 'json;version=3.4'])])"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data[].{thumbnail: pictures.sizes[1].link, id: replace(uri, `/videos/`, ``), link: link, name: name, description: description, status:status, created_time: created_time}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 100,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Thumbnail",
+                    "width": 150,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "image",
+                                "src": "{{thumbnail}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": false
+                },
+                {
+                    "headerName": "Link",
+                    "field": "link",
+                    "filter": false
+                },
+                {
+                    "headerName": "Title",
+                    "field": "name",
+                    "filter": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Published Date",
+                    "field": "created_time",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit Thumb",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "vimeo",
+                                                "workflowId": "vimeo_get_edit_thumbnails",
+                                                "context": {
+                                                    "video_id": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.vimeo.com/videos/', data[0].id])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{ id: replace(uri, `videos`, ``), name: name, description: description, tags: tags[*].tag}"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Video Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "name": {
+                        "title": "Title",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "minLength": 2,
+                        "maxLength": 3000
+                    },
+                    "tags": {
+                        "type": "string",
+                        "title": "Tags "
+                    }
+                }
+            },
+            "uiSchema": {
+                "name": {
+                    "ui:placeholder": "Enter the Video Title",
+                    "ui:errMessage": {
+                        "required": "This is my Required Field error message.",
+                        "minLength": "This a custom Min length error message."
+                    }
+                },
+                "description": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Description",
+                    "ui:autofocus": true,
+                    "ui:widget": "kendraio-textarea",
+                    "ui:rows": 4,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Excuse me, this field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                },
+                "id": {
+                    "ui:widget": "videoviewer2"
+                },
+                "tags": {
+                    "ui:widget": "tags"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{id:id,name: name, description: description, tags: tags}"
+        },
+        {
+            "type": "http",
+            "method": "PATCH",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.vimeo.com/videos/', data.id])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])",
+                "Content-Type": "join('/', ['application','json'])",
+                "Accept": "join('/', ['application', join('+',  ['vnd.vimeo.*', 'json;version=3.4'])])"
+            }
+        }
+    ],
+    "id": "vimeoGrantImp",
+    "workflowId": "vimeoGrantImp",
+    "adapterName": "vimeo",
+    "created": "2020-07-01T09:42:51.242Z",
+    "tags": [],
+    "updated": "2020-07-01T09:42:51.242Z",
+    "modified": "2020-07-01T09:42:51.242Z",
+    "title": "Vimeo: Get:Edit My Videos"
+}

@@ -1,0 +1,59 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "transparence-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "validator",
+            "test": "not_null(context.saved.access_token)",
+            "message": "Access Token Not Found - Please Login"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://transparence.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  contributions {\n    backing_vocals\n    created_at\n    id\n    instrument\n    musician\n    rightsholder_percent\n    role\n    updated_at\n    track {\n      album {\n        id\n        name\n      }\n      created_at\n      distributing_label {\n        id\n        name\n      }\n      duration\n      id\n      initial_release_date\n      isrc\n      licensor {\n        id\n        name\n      }\n      release_country\n      track_artist {\n        id\n        name\n      }\n      track_title\n      upc\n      updated_at\n    }\n    party {\n      first_name\n      id\n      last_name\n    }\n  }\n}\n",
+            "variables": {},
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\r\n    contributions: data.contributions,\r\n    tracks:uniq(data.contributions[*].track.track_title),\r\n    albumns: uniq(data.contributions[*].track.album.name),\r\n    artists: uniq(data.contributions[*].track.track_artist.name)\r\n}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data,{ summary: {\r\n    \"albumns\":length(data.albumns),\r\n    \"artists\":length(data.artists),\r\n    \"tracks\":length(data.tracks)\r\n}})"
+        },
+        {
+            "type": "template",
+            "template": "<h3>Summary</h3><p>Total tracks: {{data.summary.tracks}}</p><p>Total artists:{{data.summary.artists}}</p><p>Total albumns:{{data.summary.albumns}}</p>"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "selected"
+        }
+    ],
+    "id": "apiListContributionsSummary",
+    "workflowId": "apiListContributionsSummary",
+    "adapterName": "transparence",
+    "created": "2021-06-25T15:37:15.280Z",
+    "tags": [],
+    "updated": "2021-06-25T15:37:15.279Z",
+    "modified": "2021-06-25T15:37:15.279Z",
+    "title": "Transparence: Contributions summary"
+}

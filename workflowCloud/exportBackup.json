@@ -1,0 +1,67 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://app.kendra.io/api"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && uniq(data[].adapterName)[].{ id: @, name: @ }"
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select project",
+            "labelGetter": "id",
+            "valueField": "name",
+            "outputGetter": "id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.saved[?adapterName == $.data]"
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "skipInit": false,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "app.kendra.io",
+                        "valueGetters": {
+                            "pathname": "join('/', [`/api`, data.adapterName, data.workflowId])"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "serialize",
+            "hasFormatSelection": true,
+            "formats": [
+                "json"
+            ]
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "exportBackup",
+    "workflowId": "exportBackup",
+    "adapterName": "workflowCloud",
+    "created": "2020-06-26T10:13:16.093Z",
+    "updated": "2020-06-26T10:13:16.093Z",
+    "modified": "2020-06-26T10:13:16.093Z",
+    "title": "Export Backup"
+}

@@ -1,0 +1,29 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://covid19.mathdro.id/api"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[{ label: 'Confirmed', value: data.confirmed.value},{ label: 'Deaths', value: data.deaths.value},{ label: 'Recovered', value: data.recovered.value}]"
+        },
+        {
+            "type": "chart",
+            "chartType": "pie"
+        }
+    ],
+    "id": "coronavirusPie",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "coronavirusPie",
+    "adapterName": "kendraio",
+    "created": "2020-04-03T06:16:26.720Z",
+    "updated": "2020-04-03T06:16:26.720Z",
+    "modified": "2020-04-03T06:16:26.720Z",
+    "title": "Coronavirus (Pie Chart)"
+}

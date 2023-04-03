@@ -1,0 +1,67 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Login",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "password",
+                        "title": "Password"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "auth.kendra.io",
+                "pathname": "/oauth/token"
+            },
+            "payload": "{username: data.email, password: data.password, client_id: `cgW1ngajSlWUwSpF2KHq4MuiC29x05cv`, audience: `https://kendra.io/hasura`, grant_type: `http://auth0.com/oauth/grant-type/password-realm`, realm: `demodsp1` }",
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "data"
+                    },
+                    {
+                        "type": "debug"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "message",
+            "title": "Result:"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "variable-set",
+            "name": "dsp1-auth"
+        }
+    ],
+    "id": "login",
+    "workflowId": "login",
+    "adapterName": "dsp1",
+    "created": "2020-11-20T17:21:44.493Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2020-11-20T17:21:44.493Z",
+    "modified": "2020-11-20T17:21:44.493Z",
+    "title": "Login (DSP1)"
+}

@@ -1,0 +1,134 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "'86ff5c74-09c2-4449-88c3-852ccedfd988'",
+            "blockComment": "this UUID is reused"
+        },
+        {
+            "type": "context-save",
+            "key": "uuid",
+            "blockComment": "so we save it"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "schema": "blocks",
+            "uuidGetter": "context.uuid",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "(data && values(omit(data[0],['uuid'])))||['menu','header','footer','test']",
+            "blockComment": "if we loaded existing data, get it as values, or return default data"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Block type",
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "title": "Block type name"
+                }
+            },
+            "uiSchema": {},
+            "emitOnInit": true,
+            "hasSubmit": false,
+            "skipInit": false,
+            "blockComment": "Block type list editor"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "init"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "saved"
+                        },
+                        {
+                            "type": "db",
+                            "operation": "fetch",
+                            "adapterName": "schemas",
+                            "schema": "blocks",
+                            "uuidGetter": "context.uuid",
+                            "blockComment": ""
+                        },
+                        {
+                            "type": "switch",
+                            "valueGetter": "context.uuid == data[0].uuid",
+                            "cases": [
+                                {
+                                    "value": false,
+                                    "blocks": [
+                                        {
+                                            "type": "debug"
+                                        },
+                                        {
+                                            "type": "template",
+                                            "template": "Adding data"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "merge(context.saved, { uuid: context.uuid })",
+                                            "blockComment": ""
+                                        },
+                                        {
+                                            "type": "db",
+                                            "operation": "add",
+                                            "adapterName": "schemas",
+                                            "schema": "blocks",
+                                            "blockComment": ""
+                                        }
+                                    ]
+                                },
+                                {
+                                    "value": true,
+                                    "blocks": [
+                                        {
+                                            "type": "template",
+                                            "template": "\ufe0f\ufe0fData already exists, updating as needed"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "merge(context.saved, { uuid: context.uuid })",
+                                            "blockComment": ""
+                                        },
+                                        {
+                                            "type": "db",
+                                            "operation": "update",
+                                            "adapterName": "schemas",
+                                            "schema": "blocks",
+                                            "blockComment": ""
+                                        }
+                                    ]
+                                }
+                            ],
+                            "default": {
+                                "blocks": []
+                            },
+                            "blockComment": ""
+                        }
+                    ]
+                }
+            ],
+            "blockComment": "saves or updates data"
+        }
+    ],
+    "id": "blockEditor",
+    "workflowId": "blockEditor",
+    "adapterName": "site-builder",
+    "created": "2022-05-11T15:33:38.093Z",
+    "tags": [],
+    "updated": "2022-05-11T15:33:38.093Z",
+    "modified": "2022-05-11T15:33:38.093Z",
+    "title": "Block type editor"
+}

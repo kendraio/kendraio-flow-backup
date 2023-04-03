@@ -1,0 +1,62 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: '' }"
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Artist name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist/search",
+                "host": "kendraio-bit-proxy.now.sh",
+                "valueGetters": {
+                    "query": "{ name: data.name }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+            }
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select artist",
+            "labelGetter": "name",
+            "valueField": "id",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "findArtist",
+    "workflowId": "findArtist",
+    "adapterName": "bandsintown",
+    "created": "2020-06-03T07:19:43.123Z",
+    "updated": "2020-06-03T07:19:43.123Z",
+    "modified": "2020-06-03T07:19:43.123Z",
+    "title": "Find Artist"
+}

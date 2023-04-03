@@ -1,0 +1,160 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vimeoToken"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ searchTerm: '' }"
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "title": "Query",
+                        "type": "string",
+                        "default": "merry xmas"
+                    },
+                    "per_page": {
+                        "title": "Limit",
+                        "type": "number",
+                        "max": "25",
+                        "default": 10
+                    },
+                    "sort": {
+                        "type": "string",
+                        "title": "Sort by",
+                        "default": "relevant",
+                        "enum": [
+                            "alphabetical",
+                            "comments",
+                            "date",
+                            "duration",
+                            "likes",
+                            "plays",
+                            "relevant"
+                        ]
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "context-save",
+            "contextKey": "query"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.vimeo.com",
+                "pathname": "/videos",
+                "valueGetters": {
+                    "query": "{query : data.query, sort : data.sort, per_page: data.per_page }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "template",
+            "template": "We found {{data.total}} matching videos"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data[].{thumbnail: pictures.sizes[0].link, id: replaceMe(uri), link: link, name: name, description: description, status:status, created_time: created_time}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 144,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Video",
+                    "width": 256,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "vimeoPlayer",
+                                "src": "{{id}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": false
+                },
+                {
+                    "headerName": "Link",
+                    "field": "link",
+                    "filter": false
+                },
+                {
+                    "headerName": "Title",
+                    "field": "name",
+                    "filter": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Published Date",
+                    "field": "created_time",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ videos: data }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        }
+    ],
+    "id": "vimeo_search_vids",
+    "adapter": "vimeo",
+    "org": "kendraio",
+    "workflowId": "vimeo_search_vids",
+    "adapterName": "vimeo",
+    "created": "2019-12-19T10:50:54.962Z",
+    "updated": "2019-12-19T14:46:19.034Z",
+    "modified": "2019-12-19T14:46:19.034Z",
+    "title": "Vimeo: Search Videos"
+}

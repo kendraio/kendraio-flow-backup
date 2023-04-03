@@ -1,0 +1,70 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://trends-api.now.sh/api?keyword=angular"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{ data: data.default.timelineData[].{ value: value[0], label: formattedAxisTime }, label: 'angular'}"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://trends-api.now.sh/api?keyword=react"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{ data: data.default.timelineData[].{ value: value[0], label: formattedAxisTime }, label: 'react'}"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://trends-api.now.sh/api?keyword=vue"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{ data: data.default.timelineData[].{ value: value[0], label: formattedAxisTime }, label: 'vue'}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "chart",
+            "chartType": "line",
+            "multi": true
+        }
+    ],
+    "id": "trendsExample",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "trendsExample",
+    "adapterName": "kendraio",
+    "created": "2020-03-17T08:50:37.020Z",
+    "updated": "2020-03-17T09:51:16.178Z",
+    "modified": "2020-03-17T09:51:16.178Z",
+    "title": "Trends"
+}

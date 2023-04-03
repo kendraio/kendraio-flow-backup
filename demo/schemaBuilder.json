@@ -1,0 +1,77 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Schema name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "properties": {
+                        "type": "array",
+                        "title": "Properties",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "title": "Key"
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "title": "Title"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "title": "Type",
+                                    "enum": [
+                                        "Text",
+                                        "Number",
+                                        "Date",
+                                        "Reference",
+                                        "Object",
+                                        "List"
+                                    ]
+                                },
+                                "config": {
+                                    "type": "string",
+                                    "title": "Config"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "properties": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Key",
+                        "Title",
+                        "Description",
+                        "Config"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "schemaBuilder",
+    "workflowId": "schemaBuilder",
+    "adapterName": "demo",
+    "created": "2021-04-29T11:56:34.664Z",
+    "tags": [],
+    "updated": "2021-04-29T11:56:34.664Z",
+    "modified": "2021-04-29T11:56:34.664Z",
+    "title": "Schema Builder"
+}

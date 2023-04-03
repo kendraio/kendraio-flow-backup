@@ -1,0 +1,32 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://covid19.mathdro.id/api/countries"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.countries"
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Country",
+            "labelGetter": "name",
+            "valueField": "iso2",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "countrySelect",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "countrySelect",
+    "adapterName": "kendraio",
+    "created": "2020-04-03T05:31:28.573Z",
+    "updated": "2020-04-03T05:31:28.573Z",
+    "modified": "2020-04-03T05:31:28.573Z",
+    "title": "Select Country"
+}

@@ -1,0 +1,30 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "data"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "gigs",
+            "schema": "artists",
+            "uuidGetter": "data.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "message",
+            "message": "{{ data.name }}"
+        }
+    ],
+    "id": "displayArtistName",
+    "workflowId": "displayArtistName",
+    "adapterName": "gigs",
+    "created": "2020-05-27T12:58:56.165Z",
+    "updated": "2020-05-27T12:58:56.165Z",
+    "modified": "2020-05-27T12:58:56.165Z",
+    "title": "Display Artist Name"
+}

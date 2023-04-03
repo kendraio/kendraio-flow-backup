@@ -1,0 +1,213 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "gigs",
+            "schema": "gigs"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "floatingFilter": true
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Description",
+                    "field": "description",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Artist Name",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "debug",
+                                "consoleLog": true
+                            },
+                            {
+                                "type": "db",
+                                "operation": "fetch",
+                                "adapterName": "gigs",
+                                "schema": "artists",
+                                "uuidGetter": "data.headline_artist"
+                            },
+                            {
+                                "type": "debug",
+                                "consoleLog": true
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "data[0]"
+                            },
+                            {
+                                "type": "message",
+                                "message": "{{ data.name }}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Date",
+                    "field": "start_date",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Time",
+                    "field": "start_time",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "width": 200,
+                    "resizable": false,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "gigs",
+                                                "workflowId": "editGig",
+                                                "context": {
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Upload",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "bandsintown",
+                                                "workflowId": "uploadGig",
+                                                "context": {
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add Gig",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "dialog",
+                            "blocks": [
+                                {
+                                    "type": "form",
+                                    "label": "Save",
+                                    "jsonSchema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "headline_artist": {
+                                                "type": "string",
+                                                "title": "Headline Artist"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "title": "Description"
+                                            },
+                                            "start_date": {
+                                                "type": "string",
+                                                "title": "Start Date"
+                                            },
+                                            "start_time": {
+                                                "type": "string",
+                                                "default": "12:00:00",
+                                                "description": "Format: 14:24:00",
+                                                "title": "Start Time"
+                                            },
+                                            "venue": {
+                                                "type": "string",
+                                                "title": "Venue"
+                                            }
+                                        },
+                                        "required": []
+                                    },
+                                    "uiSchema": {
+                                        "start_date": {
+                                            "ui:widget": "date"
+                                        },
+                                        "headline_artist": {
+                                            "ui:widget": "blocks",
+                                            "blocksConfig": {
+                                                "blocks": [
+                                                    {
+                                                        "type": "gosub",
+                                                        "adapterName": "gigs",
+                                                        "workflowId": "selectArtist"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "venue": {
+                                            "ui:widget": "blocks",
+                                            "blocksConfig": {
+                                                "blocks": [
+                                                    {
+                                                        "type": "gosub",
+                                                        "adapterName": "gigs",
+                                                        "workflowId": "selectVenue"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "db",
+                                    "operation": "add",
+                                    "adapterName": "gigs",
+                                    "schema": "gigs"
+                                },
+                                {
+                                    "type": "dispatch",
+                                    "action": "refreshWorkflow"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "gigList",
+    "workflowId": "gigList",
+    "adapterName": "gigs",
+    "created": "2020-05-27T13:28:59.829Z",
+    "updated": "2020-05-27T13:28:59.829Z",
+    "modified": "2020-05-27T13:28:59.829Z",
+    "title": "Gigs"
+}

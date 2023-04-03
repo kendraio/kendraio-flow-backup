@@ -1,0 +1,124 @@
+{
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "1. Load Excel",
+            "binary": true,
+            "arrayBuffer": false,
+            "accept": [
+                "xlsx"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.Sheet1[6:].[$.data.Sheet1[5], @].map(&fromPairs(zip([0], [1])), @)[?not_null(\"LICENSOR NAME\")]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && {  licensor: uniqBy(data[].{      uuid: uuid(), type: 'licensor',     licensorName: \"LICENSOR NAME\",      contact: {     firstName: \"FIRST NAME\",      lastName: \"LAST NAME\"      }   }, 'licensorName'),   album: uniq(data[].\"ALBUM\")[].{ name: @, type: 'album',  uuid: uuid() },   label: uniq(data[].\"DISTRIBUTING LABEL\")[].{ name: @, type: 'label', uuid: uuid() },   country: uniq(data[].split(\"RELEASE COUNTRY\", `/`)[].trim(@)),   artist: uniq(data[].[\"ALBUM ARTIST\", \"TRACK ARTIST\"][][].trim(@))[].{ name: @, type: 'artist', uuid: uuid() },   track: data[]}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{ licensor, album, label, country, artist, track: $.data.track[].{  licensor: find($.data.licensor, 'licensorName', \"LICENSOR NAME\").uuid, type: 'track',  rightsHolder: trim(\"RIGHTS HOLDER\") == 'Yes',  percent: \"%\",  role: split(\"ROLE (PERFORMED)\", `/`)[].trim(@),  backingVocals: trim(\"BCK VOCALS\") == 'Yes',  musician: trim(\"MUSICIAN\") == 'Yes',  instrument: split(\"INSTRUMENT\", `;`)[].split(@, `/`)[].trim(@),  trackTitle: \"TRACK TITLE\",  trackArtist: find($.data.artist, 'name', \"TRACK ARTIST\").uuid,  album: find($.data.album, 'name', \"ALBUM\").uuid,  distributingLabel: find($.data.label, 'name', \"DISTRIBUTING LABEL\").uuid,   isrc: \"ISRC\",   upc: to_string(\"UPC\"),   releaseCountry: split(\"RELEASE COUNTRY\", `/`)[].trim(@),   albumArtist: find($.data.artist, 'name', \"ALBUM ARTIST\").uuid, duration: \"DURATION\",  initialReleaseDate: \"INITIAL RELEASE DATE \"} }"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.[licensor,album,label,country,artist,track][]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?type==`track`]"
+        },
+        {
+            "type": "message",
+            "title": "Track data extracted for validation:"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "validate",
+            "schema": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "isrc": {
+                            "type": "string",
+                            "pattern": "^[A-Z]{2}-?\\w{3}-?\\d{2}-?\\d{5}$"
+                        },
+                        "initialReleaseDate": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "trackTitle": {
+                            "type": "string"
+                        },
+                        "upc": {
+                            "type": "string",
+                            "pattern": "^\\d{12,13}$"
+                        }
+                    },
+                    "required": [
+                        "isrc",
+                        "trackTitle",
+                        "upc"
+                    ]
+                }
+            },
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "message",
+                        "title": "Validation Errors"
+                    },
+                    {
+                        "type": "grid",
+                        "columnDefs": [
+                            {
+                                "field": "message"
+                            },
+                            {
+                                "field": "dataPath"
+                            },
+                            {
+                                "field": "schemaPath"
+                            },
+                            {
+                                "field": "keyword"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "validate",
+    "workflowId": "validate",
+    "adapterName": "transparence",
+    "created": "2020-11-22T17:04:38.392Z",
+    "tags": [],
+    "updated": "2020-11-22T17:04:38.391Z",
+    "modified": "2020-11-22T17:04:38.391Z",
+    "title": "Transparence: Validate XLSX"
+}

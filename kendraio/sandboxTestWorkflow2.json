@@ -1,0 +1,283 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Connect",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "endpoint": {
+                        "type": "string",
+                        "title": "Endpoint"
+                    },
+                    "key": {
+                        "type": "string",
+                        "title": "API Key"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                }
+            },
+            "uiSchema": {
+                "password": {
+                    "ui:widget": "password"
+                }
+            }
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/auth",
+                "valueGetters": {
+                    "host": "data.endpoint",
+                    "query": "{ \"x-api-key\": data.key }"
+                }
+            },
+            "payload": "{ username: data.username, password: data.password, type: 'EMAIL' }"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "token"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist",
+                "valueGetters": {
+                    "host": "context.saved.endpoint",
+                    "query": "{ \"x-api-key\": context.saved.key }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', data.token])"
+            }
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select artist",
+            "labelField": "name",
+            "valueField": "id"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "http",
+                        "method": "get",
+                        "endpoint": {
+                            "protocol": "https:",
+                            "valueGetters": {
+                                "pathname": "join('', ['/artist/', to_string(data), '/events'])",
+                                "host": "context.saved.endpoint",
+                                "query": "{ \"x-api-key\": context.saved.key }"
+                            }
+                        },
+                        "headers": {
+                            "Authorization": "join('', ['Bearer ', context.token.token])"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "single"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Date",
+                    "field": "start_date"
+                },
+                {
+                    "headerName": "Time",
+                    "field": "start_time"
+                },
+                {
+                    "headerName": "Venue Name",
+                    "field": "venue_name"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "form",
+            "title": "Update Event",
+            "label": "Update Event",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "ID"
+                    },
+                    "headline_artist_id": {
+                        "type": "string",
+                        "title": "Headline Artist ID"
+                    },
+                    "headline_artist_name": {
+                        "type": "string",
+                        "title": "Headline Artist Name"
+                    },
+                    "venue_id": {
+                        "type": "string",
+                        "title": "Venue ID"
+                    },
+                    "venue_name": {
+                        "type": "string",
+                        "title": "Venue Name"
+                    },
+                    "venue_city": {
+                        "type": "string",
+                        "title": "Venue City"
+                    },
+                    "venue_country": {
+                        "type": "string",
+                        "title": "Venue Country"
+                    },
+                    "venue_latitude": {
+                        "type": "number",
+                        "title": "Venue Latitude"
+                    },
+                    "venue_longitude": {
+                        "type": "number",
+                        "title": "Venue Longitude"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "description": "Format: 2019-10-01",
+                        "title": "Start Date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "Start Time"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "enum": [
+                            "PUBLISHED",
+                            "DRAFT",
+                            "SCHEDULED",
+                            "DELETED"
+                        ]
+                    },
+                    "tickets_manager": {
+                        "type": "array",
+                        "title": "Tickets Manager",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "link": {
+                                    "type": "string",
+                                    "title": "Link"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "title": "Tickets Manager",
+                                    "enum": [
+                                        "TICKETS",
+                                        "TICKETS 2",
+                                        "PRESALE",
+                                        "VIP",
+                                        "FAN CLUB",
+                                        "FREE",
+                                        "SOLD OUT"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "http",
+                        "method": "patch",
+                        "endpoint": {
+                            "protocol": "https:",
+                            "valueGetters": {
+                                "pathname": "join('', ['/artist/', to_string(data.headline_artist_id), '/events/', to_string(data.id)])",
+                                "host": "context.saved.endpoint",
+                                "query": "{ \"x-api-key\": context.saved.key }"
+                            }
+                        },
+                        "headers": {
+                            "Authorization": "join('', ['Bearer ', context.token.token])"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "id": "sandboxTestWorkflow2",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "sandboxTestWorkflow2",
+    "adapterName": "kendraio",
+    "created": "2020-02-27T10:24:19.084Z",
+    "updated": "2020-02-27T10:40:49.681Z",
+    "modified": "2020-02-27T10:40:49.681Z",
+    "title": "Sandbox Test Workflow 2"
+}

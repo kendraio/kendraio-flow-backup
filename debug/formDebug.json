@@ -1,0 +1,32 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "skipInit": true,
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "{ jsonSchema: 'test' }"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "formDebug",
+    "workflowId": "formDebug",
+    "adapterName": "debug",
+    "created": "2021-04-30T07:38:58.248Z",
+    "tags": [],
+    "updated": "2021-04-30T07:38:58.248Z",
+    "modified": "2021-04-30T07:38:58.248Z",
+    "title": "Form Debug"
+}

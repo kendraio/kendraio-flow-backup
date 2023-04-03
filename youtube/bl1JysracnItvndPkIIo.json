@@ -1,0 +1,311 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "<p>To use YouTube's API, you must agree to the <a href='https://www.youtube.com/t/terms'>YouTube Terms of Service</a>, and the <a href='https://policies.google.com/privacy'>Google Privacy Policy</a>. If you connect with your YouTube account, you can manage your permission later at your <a href='https://myaccount.google.com/permissions?pli=1'>Google Security Settings</a>.</p><p>Kendraio App permits user created Flows to be shared as Flow low-code and/or links. Flows may only store public YouTube data for less than 30 days at a time. Before this duration is reached, the data must be refreshed or deleted. This does not affect your own personal use of your own private account data. For example, storing a list of your own most popular YouTube videos is allowed.",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Show Videos",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "default": "snippet"
+                    },
+                    "forMine": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "maxResults": {
+                        "type": "string",
+                        "default": "30"
+                    },
+                    "type": {
+                        "type": "string",
+                        "default": "video"
+                    }
+                }
+            },
+            "uiSchema": {
+                "forMine": {
+                    "ui:widget": "kendraio-hidden"
+                },
+                "type": {
+                    "ui:widget": "kendraio-hidden"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/search",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[].{thumbnail: snippet.thumbnails.default.url, id: id.videoId,publishedAt: snippet.publishedAt,channelId: snippet.channelId,title: snippet.title,description: snippet.description,channelTitle: snippet.channelTitle}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 100,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Thumbnail",
+                    "width": 150,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "image",
+                                "src": "{{thumbnail}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "filter": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Channel",
+                    "field": "channelTitle",
+                    "filter": true
+                },
+                {
+                    "headerName": "Privacy Status",
+                    "field": "privacyStatus",
+                    "filter": true
+                },
+                {
+                    "headerName": "Channel ID",
+                    "field": "channelId"
+                },
+                {
+                    "headerName": "Published Date",
+                    "field": "publishedAt",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].{id: id}"
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/videos",
+                        "valueGetters": {
+                            "query": "{ id: data.id, part: 'snippet,status' }"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[0].{ id: id, title: snippet.title, channelTitle: snippet.channelTitle, description: snippet.description, thumbnails: id, tags: snippet.tags, privacyStatus: status.privacyStatus, viewCount: statistics.viewCount,likeCount: statistics.likeCount,dislikeCount: statistics.dislikeCount,favoriteCount: statistics.favoriteCount,commentCount: statistics.commentCount}"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Video Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "channelTitle": {
+                        "title": "Channel",
+                        "description": "",
+                        "type": "null"
+                    },
+                    "id": {
+                        "title": "",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "title": {
+                        "title": "Title",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "minLength": 2,
+                        "maxLength": 3000
+                    },
+                    "thumbnails": {
+                        "type": "string",
+                        "title": "Thumbnail"
+                    },
+                    "tags": {
+                        "type": "string",
+                        "title": "Tags "
+                    },
+                    "privacyStatus": {
+                        "type": "string",
+                        "title": "Privacy Status",
+                        "enum": [
+                            "private",
+                            "public",
+                            "unlisted"
+                        ]
+                    }
+                }
+            },
+            "uiSchema": {
+                "uuid": {
+                    "ui:widget": "kendraio-hidden"
+                },
+                "snippet.title": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Enter the Video Title",
+                    "ui:errMessage": {
+                        "required": "This is my Required Field error message.",
+                        "minLength": "This a custom Min length error message."
+                    }
+                },
+                "description": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Description",
+                    "ui:autofocus": true,
+                    "ui:widget": "kendraio-textarea",
+                    "ui:rows": 4,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Excuse me, this field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                },
+                "id": {
+                    "ui:widget": "videoviewer"
+                },
+                "thumbnails": {
+                    "ui:widget": "thumbnailviewer"
+                },
+                "tags": {
+                    "ui:widget": "tags"
+                },
+                "playlist": {
+                    "ui:widget": "playlist"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{id: id, snippet: {title: title, description: description, categoryId: '22', tags: tags}, status:{privacyStatus: privacyStatus}}"
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "PUT",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/videos",
+                        "query": {
+                            "part": "snippet,status"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "id": "bl1JysracnItvndPkIIo",
+    "workflowId": "bl1JysracnItvndPkIIo",
+    "adapterName": "youtube",
+    "created": "2022-07-07T19:54:16.940Z",
+    "tags": [],
+    "updated": "2022-07-07T19:54:16.940Z",
+    "modified": "2022-07-07T19:54:16.940Z",
+    "title": "YouTube: Video: List and Edit"
+}

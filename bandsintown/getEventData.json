@@ -1,0 +1,65 @@
+{
+    "blocks": [
+        {
+            "type": "init",
+            "blockComment": "input data model: \n* data.id : artist ID\n* data.type : event type\n* data.status: event status"
+        },
+        {
+            "type": "variable-get",
+            "name": "[VARIABLE_NAME]"
+        },
+        {
+            "type": "context-save",
+            "key": "saved",
+            "blockComment": "save token to context"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\"id\":state.global.bandsintown.defaults.artist.id,\"type\":`PAST`,\"status\":`PUBLISHED`}",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "kendraio-bit-proxy.now.sh",
+                "valueGetters": {
+                    "pathname": "join('', ['/artist/', to_string(data.id), '/events'])",
+                    "query": "{ type: data.type, status: data.status }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.saved.token])"
+            },
+            "blockComment": "Get events"
+        }
+    ],
+    "id": "getEventData",
+    "workflowId": "getEventData",
+    "adapterName": "bandsintown",
+    "created": "2022-09-13T11:08:43.452Z",
+    "tags": [
+        "noui",
+        "bandsintown",
+        "events"
+    ],
+    "updated": "2022-09-13T11:08:43.452Z",
+    "modified": "2022-09-13T11:08:43.452Z",
+    "title": "Workflow"
+}

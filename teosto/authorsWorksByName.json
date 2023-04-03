@@ -1,0 +1,124 @@
+{
+    "blocks": [
+        {
+            "type": "load-auth",
+            "adapterName": "teosto",
+            "workflowId": "login"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Get author's works by name",
+                "type": "object",
+                "required": [
+                    "last_name"
+                ],
+                "properties": {
+                    "last_name": {
+                        "title": "Last name",
+                        "type": "string",
+                        "default": "HELISMAA"
+                    },
+                    "first_name": {
+                        "title": "First name",
+                        "type": "string",
+                        "default": "REINO"
+                    },
+                    "limit": {
+                        "title": "Number of results",
+                        "type": "integer",
+                        "default": 2
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "query",
+            "dataSource": {
+                "type": "remote",
+                "endpoint": {
+                    "protocol": "https:",
+                    "host": "teosto-cors-proxy-eilgg5e92.now.sh",
+                    "pathname": "/dev/rest/work/searchAuthor",
+                    "query": {
+                        "limit": 4
+                    },
+                    "valueGetters": {
+                        "query": "{limit: model.limit, last_name: model.last_name, first_name: model.first_name}"
+                    }
+                },
+                "authentication": {
+                    "type": "basic-auth",
+                    "valueGetters": {
+                        "username": "context.connect.teosto.login.username",
+                        "password": "context.connect.teosto.login.password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].{ workkey: workkey, titles: titles[?title_type=='OT'].work_title, performer: performers.name, right_owners: right_owners[].name }"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "headerCheckboxSelection": true,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Work key",
+                    "field": "workkey"
+                },
+                {
+                    "headerName": "Titles",
+                    "valueGetter": "titles"
+                },
+                {
+                    "headerName": "Performer",
+                    "valueGetter": "performer"
+                },
+                {
+                    "headerName": "Rights owners",
+                    "valueGetter": "right_owners"
+                }
+            ]
+        },
+        {
+            "type": "serialize",
+            "hasFormatSelection": true,
+            "formats": [
+                "json",
+                "csv",
+                "xml"
+            ],
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "authorsWorksByName",
+    "workflowId": "authorsWorksByName",
+    "adapterName": "teosto",
+    "created": "2020-06-29T09:47:26.363Z",
+    "tags": [],
+    "updated": "2020-06-29T09:47:26.363Z",
+    "modified": "2020-06-29T09:47:26.363Z",
+    "title": "Get author's works by name"
+}

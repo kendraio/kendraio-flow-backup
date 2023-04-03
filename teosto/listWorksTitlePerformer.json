@@ -1,0 +1,126 @@
+{
+    "blocks": [
+        {
+            "type": "load-auth",
+            "adapterName": "teosto",
+            "workflowId": "login"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Get works per title",
+                "type": "object",
+                "properties": {
+                    "term": {
+                        "title": "Search title",
+                        "type": "string",
+                        "default": "HEART"
+                    },
+                    "performer": {
+                        "title": "Performer",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "limit": {
+                        "title": "Limit",
+                        "type": "integer",
+                        "default": 10
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "query",
+            "dataSource": {
+                "type": "remote",
+                "endpoint": {
+                    "protocol": "https:",
+                    "host": "teosto-cors-proxy-eilgg5e92.now.sh",
+                    "pathname": "/dev/rest/work/perTitle/HEART",
+                    "query": {
+                        "limit": 4
+                    },
+                    "valueGetters": {
+                        "pathname": "join('', ['/dev/rest/work/perTitle/', model.term])",
+                        "query": "{limit: model.limit}"
+                    }
+                },
+                "authentication": {
+                    "type": "basic-auth",
+                    "valueGetters": {
+                        "username": "context.connect.teosto.login.username",
+                        "password": "context.connect.teosto.login.password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?performers.name && @.contains(toLower(to_string(performers.name)),toLower($.context.saved.performer))].{ workkey: workkey, titles: titles[?title_type=='OT'].work_title, performer: performers.name, right_owners: right_owners[].name, data: @ }"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "headerCheckboxSelection": true,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Work key",
+                    "field": "workkey"
+                },
+                {
+                    "headerName": "Titles",
+                    "valueGetter": "titles"
+                },
+                {
+                    "headerName": "Performer",
+                    "valueGetter": "performer"
+                },
+                {
+                    "headerName": "Rights owners",
+                    "valueGetter": "right_owners"
+                }
+            ]
+        },
+        {
+            "type": "serialize",
+            "hasFormatSelection": true,
+            "formats": [
+                "json",
+                "csv",
+                "xml"
+            ],
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "listWorksTitlePerformer",
+    "workflowId": "listWorksTitlePerformer",
+    "adapterName": "teosto",
+    "created": "2020-06-29T09:49:20.787Z",
+    "tags": [],
+    "updated": "2020-06-29T09:49:20.787Z",
+    "modified": "2020-06-29T09:49:20.787Z",
+    "title": "List works"
+}

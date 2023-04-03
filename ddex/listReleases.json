@@ -1,0 +1,42 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "List Releases",
+            "message": "Each release contains the details for an individual product (e.g. album, single, bundle) and each of its components (e.g. tracks). A release message will not contain multiple products, related or non-related. It includes complete metadata about the release and all resources contained within the release. In addition, it includes information about the 'deals' that describe when, where and how the release can be made available."
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://example.com/api/graphql",
+            "query": "",
+            "variables": {
+                "token": "context.authToken"
+            },
+            "headers": {},
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add Release",
+                    "color": "default",
+                    "blocks": []
+                }
+            ]
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "listReleases",
+    "workflowId": "listReleases",
+    "adapterName": "ddex",
+    "created": "2021-02-18T11:08:01.006Z",
+    "tags": [],
+    "updated": "2021-02-18T11:08:01.006Z",
+    "modified": "2021-02-18T11:08:01.006Z",
+    "title": "List Releases"
+}

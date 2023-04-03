@@ -1,0 +1,66 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ path: '/uploads' }"
+        },
+        {
+            "type": "context",
+            "contextPath": "dropboxAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "dropbox"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "debug",
+                    "open": 0,
+                    "showContext": true
+                },
+                {
+                    "type": "http",
+                    "method": "post",
+                    "notify": false,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "api.dropboxapi.com",
+                        "pathname": "/2/files/list_folder"
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.dropboxAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.entries"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "listUploads",
+    "adapter": "dropbox",
+    "org": "kendraio",
+    "workflowId": "listUploads",
+    "adapterName": "dropbox",
+    "created": "2019-11-27T08:23:27.690Z",
+    "updated": "2019-11-27T08:23:27.690Z",
+    "modified": "2019-11-27T08:23:27.690Z",
+    "title": "Dropbox List Uploads"
+}

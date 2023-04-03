@@ -1,0 +1,127 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query($token: String, $id: Int) { viewer(token: $token) { plan(id: $id) { id name note planProcesses { id } }}}",
+            "allowEmpty": true,
+            "variables": {
+                "id": "context.queryParams.planId",
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.plan"
+        },
+        {
+            "type": "message",
+            "title": "Original Word Count"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "wordCount": {
+                        "type": "string",
+                        "description": "* this is the initial word count. It will be updated after copyediting."
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && merge(data, {note: join('', [data.note, ', original word count ', to_string(data.wordCount)])})"
+        },
+        {
+            "type": "validator",
+            "test": "length(data) && not_null(data.wordCount) && length(data.wordCount)",
+            "message": "Validation Failed"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "mutation ($token: String!, $id: Int!, $name: String, $note: String) {  updatePlan(token: $token, id: $id, name: $name, note: $note) {  plan {   id    name   note planProcesses { id committedInputs(action:WORK) { id  } }  }  } }",
+            "variables": {
+                "id": "to_number(data.id)",
+                "name": "data.name",
+                "note": "data.note",
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.updatePlan.plan.planProcesses[].committedInputs[]"
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "graphql",
+                    "allowFirst": true,
+                    "endpoint": "https://valnet.lurker.dev/api/graphql",
+                    "query": "mutation ($token: String!, $id: Int!, $value: String) {  updateCommitment(token: $token, id: $id,  committedNumericValue: $value, committedUnitId:2) {  commitment {  id      action      committedQuantity {        numericValue      }}}}",
+                    "variables": {
+                        "id": "to_number(data.id)",
+                        "value": "context.saved.wordCount",
+                        "token": "context.vfAuth"
+                    }
+                }
+            ]
+        },
+        {
+            "type": "switch",
+            "valueGetter": "type(data) == `array`",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Next...",
+                                    "blocks": [
+                                        {
+                                            "type": "launch",
+                                            "adapter": "valueflows",
+                                            "workflowId": "selectProcessAgents",
+                                            "context": {
+                                                "planId": "context.queryParams.planId"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "updatePlanWordCount",
+    "workflowId": "updatePlanWordCount",
+    "adapterName": "valueflows",
+    "created": "2020-07-02T11:42:23.997Z",
+    "tags": [],
+    "updated": "2020-07-02T11:42:23.997Z",
+    "modified": "2020-07-02T11:42:23.997Z",
+    "title": "ValueFlows Update Plan"
+}

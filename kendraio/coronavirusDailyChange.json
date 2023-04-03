@@ -1,0 +1,29 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://covid19.mathdro.id/api/daily"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[{ data: pairwise(data[-300:])[?next!=`null`].{ label: next.reportDate, value: percentChange(current.totalConfirmed, next.totalConfirmed) }, label: 'confirmed (%change)' },{ data: pairwise(data[-300:])[?next!=`null`].{ label: next.reportDate, value: percentChange(current.deaths.total, next.deaths.total) }, label: 'deaths (%change)' }]"
+        },
+        {
+            "type": "chart",
+            "chartType": "line",
+            "multi": true
+        }
+    ],
+    "id": "coronavirusDailyChange",
+    "workflowId": "coronavirusDailyChange",
+    "adapterName": "kendraio",
+    "created": "2020-11-07T16:50:08.896Z",
+    "tags": [],
+    "updated": "2020-11-07T16:50:08.896Z",
+    "modified": "2020-11-07T16:50:08.896Z",
+    "title": "Coronavirus Daily Change"
+}

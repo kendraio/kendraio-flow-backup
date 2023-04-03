@@ -1,0 +1,44 @@
+{
+    "blocks": [
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Random UUID",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "markdown(join('\n',[state.local.all,uuid()]))"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Random UUID button"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data||' '",
+            "blockComment": "Start with no data until button press"
+        },
+        {
+            "type": "template",
+            "template": "<b><i>Random</i> UUID:</b><br>{{{data}}}",
+            "blockComment": "Shows results"
+        },
+        {
+            "type": "context-save",
+            "key": "state.all",
+            "blockComment": "Saves existing results for reuse"
+        }
+    ],
+    "id": "uuid4S",
+    "workflowId": "uuid4S",
+    "adapterName": "examples",
+    "created": "2022-02-16T11:16:50.958Z",
+    "tags": [],
+    "updated": "2022-02-16T11:16:50.958Z",
+    "modified": "2022-02-16T11:16:50.958Z",
+    "title": "Workflow"
+}

@@ -1,0 +1,62 @@
+{
+    "blocks": [
+        {
+            "label": "Connect",
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "client_id": {
+                        "type": "string",
+                        "title": "Client Id"
+                    },
+                    "client_secret": {
+                        "type": "string",
+                        "title": "Client Secret"
+                    }
+                }
+            },
+            "uiSchema": {
+                "client_secret": {
+                    "ui:widget": "password"
+                }
+            }
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "accounts.spotify.com",
+                "pathname": "/api/token"
+            },
+            "payload": "'grant_type=client_credentials'",
+            "headers": {
+                "Content-Type": "'application/x-www-form-urlencoded'",
+                "Authorization": "join('', ['Basic ', btoa(join('', [data.client_id, ':', data.client_secret]))])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.access_token"
+        },
+        {
+            "type": "variable-set",
+            "name": "accessToken"
+        }
+    ],
+    "id": "connect",
+    "adapter": "spotify-analytics",
+    "org": "kendraio",
+    "workflowId": "connect",
+    "adapterName": "spotify-analytics",
+    "created": "2020-02-26T11:50:54.085Z",
+    "updated": "2020-03-17T08:41:17.759Z",
+    "modified": "2020-03-17T08:41:17.759Z",
+    "title": "Spotify Analytics Connect"
+}

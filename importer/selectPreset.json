@@ -1,0 +1,28 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "importer",
+            "schema": "presets"
+        },
+        {
+            "type": "reference",
+            "labelField": "presetName",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "selectPreset",
+    "workflowId": "selectPreset",
+    "adapterName": "importer",
+    "created": "2021-10-21T15:54:05.672Z",
+    "tags": [
+        "importer"
+    ],
+    "updated": "2021-10-21T15:54:05.672Z",
+    "modified": "2021-10-21T15:54:05.672Z",
+    "title": "Select Preset"
+}

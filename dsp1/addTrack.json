@@ -1,0 +1,67 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "dsp1-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "input": {
+                        "type": "object",
+                        "properties": {
+                            "display_artist": {
+                                "type": "string",
+                                "title": "Artist"
+                            },
+                            "display_title": {
+                                "type": "string",
+                                "title": "Title"
+                            },
+                            "public": {
+                                "type": "boolean",
+                                "title": "public"
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "mutation MyMutation($input: tracks_insert_input!) {\n  insert_tracks_one(object: $input) {\n    __typename\n  }\n}\n",
+            "variables": {
+                "input": "data.input"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": true
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showContext": false
+        }
+    ],
+    "id": "addTrack",
+    "workflowId": "addTrack",
+    "adapterName": "dsp1",
+    "created": "2021-03-01T12:31:07.310Z",
+    "tags": [],
+    "updated": "2021-03-01T12:31:07.310Z",
+    "modified": "2021-03-01T12:31:07.310Z",
+    "title": "Add Track (DSP1)"
+}

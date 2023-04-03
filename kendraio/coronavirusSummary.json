@@ -1,0 +1,41 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://covid19.mathdro.id/api"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[{ label: 'Confirmed', value: data.confirmed.value},{ label: 'Recovered', value: data.recovered.value},{ label: 'Deaths', value: data.deaths.value}]"
+        },
+        {
+            "type": "batch",
+            "flex": true,
+            "blocks": [
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "{{ value }}",
+                            "message": "{{ label }}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "coronavirusSummary",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "coronavirusSummary",
+    "adapterName": "kendraio",
+    "created": "2020-04-03T06:09:58.406Z",
+    "updated": "2020-04-03T06:09:58.406Z",
+    "modified": "2020-04-03T06:09:58.406Z",
+    "title": "Coronavirus Summary"
+}

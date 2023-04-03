@@ -1,0 +1,87 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Enter Auth Key",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "authkey": {
+                        "type": "string",
+                        "title": "Auth key",
+                        "default": "the-key"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.gandi.net",
+                "pathname": "/v5/domain/domains"
+            },
+            "headers": {
+                "authorization": "join('', ['Apikey ', data.authkey])"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "[].fqdn",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "domains1",
+    "workflowId": "domains1",
+    "adapterName": "kendraio",
+    "created": "2023-01-16T14:54:45.851Z",
+    "tags": [
+        "Danny",
+        "hidden",
+        " delete"
+    ],
+    "updated": "2023-01-16T14:54:45.851Z",
+    "modified": "2023-01-16T14:54:45.851Z",
+    "title": "Domains : gandi"
+}

@@ -1,0 +1,139 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "gigs",
+            "schema": "gigs",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0] && merge(data[0], {bit: `false`})"
+        },
+        {
+            "type": "form",
+            "label": "Upload",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "bit": {
+                        "type": "boolean",
+                        "title": "Bandsintown"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "validator",
+            "test": "not_null(data)",
+            "message": "Validation Failed"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "fetch",
+                            "adapterName": "gigs",
+                            "schema": "gigs",
+                            "uuidGetter": "data.headline_artist"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0]"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "fetch",
+                            "adapterName": "gigs",
+                            "schema": "gigs",
+                            "uuidGetter": "data.venue"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0] && { type: `\"UPCOMING\"`, headline_artist_id: data[1].bit_id, headline_artist_name: data[1].name, description: data[0].description,  start_date: data[0].start_date,  start_time: data[0].start_time, status: `\"DRAFT\"`, tickets_manager: `[]`, venue_name: data[2].name, venue_city: data[2].city, venue_country: data[2].country, venue_latitude: data[2].latitude, venue_longitude: data[2].longitude, lineup: `[]`, streaming_event: `false` }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.headline_artist_id",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "http",
+                        "method": "post",
+                        "endpoint": {
+                            "protocol": "https:",
+                            "host": "kendraio-bit-proxy.now.sh",
+                            "valueGetters": {
+                                "pathname": "join('', ['/artist/', to_string(data.headline_artist_id), '/events'])"
+                            }
+                        },
+                        "headers": {
+                            "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+                        }
+                    },
+                    {
+                        "type": "debug"
+                    }
+                ]
+            }
+        }
+    ],
+    "id": "uploadGig",
+    "workflowId": "uploadGig",
+    "adapterName": "bandsintown",
+    "created": "2020-06-03T07:20:18.928Z",
+    "updated": "2020-06-03T07:20:18.928Z",
+    "modified": "2020-06-03T07:20:18.928Z",
+    "title": "Upload Gig"
+}

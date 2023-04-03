@@ -1,0 +1,204 @@
+{
+    "blocks": [
+        {
+            "type": "gosub",
+            "adapterName": "importer",
+            "workflowId": "loadPresets",
+            "blockComment": "Load preset data"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Import presets</h2>",
+            "blockComment": "Header"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "enabledGetter": "state.flags.devel"
+        },
+        {
+            "type": "grid",
+            "enabledGetter": "state.flags.presetCount",
+            "gridOptions": {
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "ID",
+                    "field": "uuid"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "presetName"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "List Items",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "itemsFromSchemaId",
+                                                "context": {
+                                                    "schemaId": "data.targetSchema"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Import Items",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "importer",
+                                                "workflowId": "importUsingPreset",
+                                                "context": {
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "importer",
+                                                "workflowId": "editPreset",
+                                                "context": {
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Import Presets",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "importPresets"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Create a Preset",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "addMappingPreset"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Export Presets",
+                    "color": "accent",
+                    "enabledGetter": "length(data)>`0`",
+                    "blocks": [
+                        {
+                            "type": "dialog",
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "message": "Export selected schemas as JSON"
+                                },
+                                {
+                                    "type": "debug"
+                                },
+                                {
+                                    "type": "file-export"
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Delete Preset Mapping",
+                    "color": "warn",
+                    "enabledGetter": "length(data)>`0`",
+                    "blocks": [
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "db",
+                                    "operation": "delete",
+                                    "adapterName": "importer",
+                                    "schema": "presets",
+                                    "uuidGetter": "data.uuid",
+                                    "skipFirst": false
+                                }
+                            ]
+                        },
+                        {
+                            "type": "dispatch",
+                            "action": "refreshWorkflow"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "importer",
+            "workflowId": "footer",
+            "blockComment": "importer footer"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "devel",
+            "workflowId": "flagsDisplay",
+            "blockComment": "Developer footer"
+        }
+    ],
+    "id": "listPresets",
+    "workflowId": "listPresets",
+    "adapterName": "importer",
+    "created": "2022-02-02T16:23:34.053Z",
+    "tags": [
+        "importer"
+    ],
+    "updated": "2022-02-02T16:23:34.053Z",
+    "modified": "2022-02-02T16:23:34.053Z",
+    "title": "List Presets"
+}

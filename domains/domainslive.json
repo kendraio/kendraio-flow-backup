@@ -1,0 +1,148 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Enter Dynadot Key",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "authkey": {
+                        "type": "string",
+                        "title": "Dynadot API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.dynadot.com",
+                "pathname": "/api3.json",
+                "query": {},
+                "valueGetters": {
+                    "query": "data.{command: 'list_domain', key: join('', [authkey]) }",
+                    "dummy": ""
+                }
+            },
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.ListDomainInfoResponse.MainDomains[*].[`Dynadot`, Name, Registration, Expiration]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "dynadot",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "`{}`",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Enter Gandi Key",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "gandikey": {
+                        "type": "string",
+                        "title": "Gandi API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.gandi.net",
+                "pathname": "/v5/domain/domains"
+            },
+            "headers": {
+                "authorization": "join('', ['Apikey ', data.gandikey])"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "*[].[`Gandi`, fqdn, dates.created_at, dates.registry_ends_at]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "gandi",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.dynadot[:],context.gandi[:]][]",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Service"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Domain"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "3",
+                    "headerName": "Expires"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "domainslive",
+    "workflowId": "domainslive",
+    "adapterName": "domains",
+    "created": "2023-02-12T11:10:45.844Z",
+    "tags": [
+        "hidden",
+        " delete"
+    ],
+    "updated": "2023-02-12T11:10:45.844Z",
+    "modified": "2023-02-12T11:10:45.844Z",
+    "title": "DomainsLive"
+}

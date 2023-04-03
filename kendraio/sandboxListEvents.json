@@ -1,0 +1,106 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "kendraio",
+            "workflowId": "sandboxSelectArtist"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "valueGetters": {
+                    "pathname": "join('', ['/artist/', to_string(data.id), '/events'])",
+                    "host": "context.saved.endpoint",
+                    "query": "{ \"x-api-key\": context.saved.key, type: 'PAST' }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.saved.token])"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.events"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "single"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Date",
+                    "field": "start_date"
+                },
+                {
+                    "headerName": "Time",
+                    "field": "start_time"
+                },
+                {
+                    "headerName": "Type",
+                    "field": "type"
+                },
+                {
+                    "headerName": "Venue Name",
+                    "field": "venue_name"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Edit",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "kendraio",
+                            "workflowId": "sandboxEditEvent",
+                            "context": {
+                                "id": "data.id",
+                                "artist": "data.headline_artist_id",
+                                "type": "data.type"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "sandboxListEvents",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "sandboxListEvents",
+    "adapterName": "kendraio",
+    "created": "2020-03-12T13:23:48.322Z",
+    "updated": "2020-03-17T12:43:32.888Z",
+    "modified": "2020-03-17T12:43:32.888Z",
+    "title": "Sandbox List Events"
+}

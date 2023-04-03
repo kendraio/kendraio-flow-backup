@@ -1,0 +1,209 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local",
+            "valueGetter": "{importComplete:`false`, imported:[], toImport:[], selectedCount: `0`, importReady: `false`}",
+            "blockComment": "local state init"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "importer",
+            "workflowId": "loadPresets",
+            "blockComment": "load presets"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Preset importer</h2>",
+            "blockComment": "Header"
+        },
+        {
+            "type": "file-input",
+            "label": "Select a preset file to import",
+            "accept": [
+                "json"
+            ],
+            "enabledGetter": "!(state.local.importComplete)",
+            "blockComment": ""
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@,{exists: contains($.state.global.importer.presets.uuids,uuid)})",
+            "blockComment": "Set exists flag"
+        },
+        {
+            "type": "grid",
+            "enabledGetter": "!(state.local.importComplete)",
+            "gridOptions": {
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "ID",
+                    "field": "uuid"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "presetName"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<ul> {{#each data}}<li>{{presetName}} : {{#if exists}}Will skip as it exists{{else}}Will import{{/if}} </li>{{/each}}</ul>",
+            "blockComment": "Skip or import"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.selectedCount",
+            "valueGetter": "length(data)",
+            "blockComment": "selectedCount"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?!exists]",
+            "blockComment": "Remove existing presets"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.toImport",
+            "blockTitle": "toImport",
+            "blockComment": "toImport list"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.importCount",
+            "valueGetter": "length(data)",
+            "blockComment": "importCount"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.importReady",
+            "valueGetter": "!(state.local.importComplete) && (state.local.toImport && length(state.local.toImport) > `0` || `false`)",
+            "blockTitle": "ImportReady",
+            "blockComment": "ImportReady"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Import",
+                    "color": "primary",
+                    "enabledGetter": "state.local.importReady",
+                    "blocks": [
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "template",
+                                    "template": "Importing: {{data.presetName}}"
+                                },
+                                {
+                                    "type": "db",
+                                    "operation": "add",
+                                    "adapterName": "importer",
+                                    "schema": "presets",
+                                    "skipFirst": false
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.imported",
+                                    "valueGetter": "[state.local.imported || [],[data]] []"
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.importComplete",
+                                    "valueGetter": "length(state.local.toImport) ==  length(state.local.imported)"
+                                },
+                                {
+                                    "type": "context-save",
+                                    "key": "state.local.importReady",
+                                    "valueGetter": "!(state.local.importComplete)"
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": false
+                },
+                {
+                    "label": "Cancel / Back to presets list",
+                    "enabledGetter": "!(state.local.importComplete)",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "listPresets"
+                        }
+                    ],
+                    "enabled": false
+                },
+                {
+                    "label": "Continue",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ],
+                    "enabledGetter": "state.local.importComplete",
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "devel",
+            "workflowId": "flagsDisplay",
+            "blockComment": "devel"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "valueGetter": "state.local",
+            "enabledGetter": "state.flags.devel",
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Key"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Value"
+                }
+            ],
+            "blockComment": "Devel : Local state "
+        }
+    ],
+    "id": "importPresets",
+    "workflowId": "importPresets",
+    "adapterName": "importer",
+    "created": "2022-02-07T16:16:47.755Z",
+    "tags": [],
+    "updated": "2022-02-07T16:16:47.755Z",
+    "modified": "2022-02-07T16:16:47.755Z",
+    "title": "Import Presets"
+}

@@ -1,0 +1,122 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Teosto Internal: Get Works by publisher",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Publisher",
+                        "type": "string",
+                        "default": "WARNER CHAPPELL MUSIC FINLAND OY"
+                    },
+                    "limit": {
+                        "title": "How many results to fetch?",
+                        "type": "integer",
+                        "default": 2
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "query",
+            "dataSource": {
+                "type": "remote",
+                "endpoint": {
+                    "protocol": "https:",
+                    "host": "teosto-cors-proxy-eilgg5e92.now.sh",
+                    "pathname": "/dev/rest/work/searchPublisher",
+                    "query": {
+                        "limit": 4
+                    },
+                    "valueGetters": {
+                        "query": "{PUBLISHER: model.name, limit: model.limit}"
+                    }
+                },
+                "authentication": {
+                    "type": "basic-auth",
+                    "valueGetters": {
+                        "username": "user.teosto.username",
+                        "password": "user.teosto.password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].{ workkey: workkey, titles: titles[?title_type=='OT'].work_title, performer: performers.name, right_owners_authors: right_owners[?type=='AUTHOR'].join(' ', [to_string(firstname),  to_string(name), '(' to_string(ipi_base_nbr) ')']), right_owners_publishers: right_owners[?type=='PUBLISHER'], iswc: iswc[*], isrc: isrc[*]}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "headerCheckboxSelection": true,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Work key",
+                    "field": "workkey"
+                },
+                {
+                    "headerName": "Titles",
+                    "valueGetter": "titles"
+                },
+                {
+                    "headerName": "Performer",
+                    "valueGetter": "performer"
+                },
+                {
+                    "headerName": "Rights owners (Author)",
+                    "valueGetter": "right_owners_authors"
+                },
+                {
+                    "headerName": "Rights owners (Publishers)",
+                    "valueGetter": "right_owners_publishers[].name"
+                },
+                {
+                    "headerName": "ISWC",
+                    "valueGetter": "iswc"
+                },
+                {
+                    "headerName": "ISRC",
+                    "valueGetter": "isrc"
+                }
+            ]
+        },
+        {
+            "type": "serialize",
+            "hasFormatSelection": true,
+            "formats": [
+                "json",
+                "csv",
+                "xml"
+            ],
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "worksInternal",
+    "workflowId": "worksInternal",
+    "adapterName": "teosto",
+    "created": "2020-04-28T14:33:32.333Z",
+    "updated": "2020-04-28T14:33:32.333Z",
+    "modified": "2020-04-28T14:33:32.333Z",
+    "title": "Teosto Internal: Works by publisher (with Export)"
+}

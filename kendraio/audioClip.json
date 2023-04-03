@@ -1,0 +1,41 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Save",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "clip": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {
+                "clip": {
+                    "ui:widget": "audio"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "db",
+            "operation": "put",
+            "adapterName": "kendraio",
+            "schema": "audio"
+        }
+    ],
+    "id": "audioClip",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "audioClip",
+    "adapterName": "kendraio",
+    "created": "2019-11-14T14:32:35.058Z",
+    "updated": "2019-11-14T14:32:35.058Z",
+    "modified": "2019-11-14T14:32:35.058Z",
+    "title": "Audio Clips"
+}

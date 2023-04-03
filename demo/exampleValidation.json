@@ -1,0 +1,59 @@
+{
+    "blocks": [
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Validate",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "init"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "faker",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "fullName": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "fullName"
+                ]
+            }
+        },
+        {
+            "type": "validate",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "fullName": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "fullName",
+                    "email"
+                ]
+            },
+            "onError": {
+                "adapterName": "kendraio",
+                "workflowId": "debugModal"
+            }
+        }
+    ],
+    "id": "exampleValidation",
+    "workflowId": "exampleValidation",
+    "adapterName": "demo",
+    "created": "2020-10-29T15:19:01.287Z",
+    "tags": [],
+    "updated": "2020-10-29T15:19:01.287Z",
+    "modified": "2020-10-29T15:19:01.287Z",
+    "title": "Example Validation"
+}

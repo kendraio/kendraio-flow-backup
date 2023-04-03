@@ -1,0 +1,65 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://covid19.mathdro.id/api/daily"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ data: data[*].{ value: confirmed.total, label: reportDate }, label: 'confirmed' }"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ data: data[*].{ value: deaths.total, label: reportDate }, label: 'deaths' }"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "chart",
+            "chartType": "line",
+            "multi": true
+        },
+        {
+            "type": "chart",
+            "chartType": "line",
+            "multi": true,
+            "options": {
+                "scales": {
+                    "yAxes": [
+                        {
+                            "type": "logarithmic",
+                            "ticks": {
+                                "callback": "value",
+                                "maxTicksLimit": 10
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "id": "coronavirusGlobal",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "coronavirusGlobal",
+    "adapterName": "kendraio",
+    "created": "2020-04-03T06:11:46.522Z",
+    "updated": "2020-04-03T06:11:46.522Z",
+    "modified": "2020-04-03T06:11:46.522Z",
+    "title": "Coronavirus Global"
+}

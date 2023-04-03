@@ -1,0 +1,92 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "dsp1-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "validator",
+            "test": "not_null(context.saved.access_token)",
+            "message": "Access Token Not Found - Please Login"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  tracks {\n    display_artist\n    display_title\n    id\n    user_id\n    user {\n        payment_pointer\n    }\n  }\n}\n\n",
+            "variables": {},
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.tracks"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "single"
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Artist",
+                    "field": "display_artist"
+                },
+                {
+                    "headerName": "Title",
+                    "field": "display_title"
+                },
+                {
+                    "headerName": "DSP",
+                    "field": "dummy"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].{ paymentPointer: user.payment_pointer, display_artist: display_artist, display_title: display_title, url: join('', ['https://dsp1-track-uploads.s3.amazonaws.com/', to_string(user_id), '/', to_string(id)]) }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "player",
+            "titleMapping": "data && join(' - ', [data.display_artist, data.display_title])",
+            "onError": [
+                {
+                    "type": "debug"
+                }
+            ],
+            "onPlay": [
+                {
+                    "type": "web-money"
+                }
+            ],
+            "onPause": [
+                {
+                    "type": "web-money",
+                    "enabled": false
+                }
+            ]
+        }
+    ],
+    "id": "allTracks",
+    "workflowId": "allTracks",
+    "adapterName": "dsp1",
+    "created": "2021-01-28T15:44:30.871Z",
+    "tags": [],
+    "updated": "2021-01-28T15:44:30.871Z",
+    "modified": "2021-01-28T15:44:30.871Z",
+    "title": "All Tracks (DSP1)"
+}

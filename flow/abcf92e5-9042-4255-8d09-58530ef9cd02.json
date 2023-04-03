@@ -1,0 +1,112 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "term": {
+                        "type": "string",
+                        "title": "Search term",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.term"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "searchTerm"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://app.kendra.io/api"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.searchTerm && (length(context.searchTerm) == `0` && data) || data[?contains(toLower(title), toLower(trim(_(&context.searchTerm))))]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 15,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "width": 300,
+                    "filter": true
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Launch",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "valueGetters": {
+                                                    "adapter": "data.adapterName",
+                                                    "workflowId": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Workflow ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Adapter",
+                    "field": "adapterName",
+                    "filter": true
+                },
+                {
+                    "headerName": "Created",
+                    "field": "created",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                },
+                {
+                    "headerName": "Modified",
+                    "field": "modified",
+                    "sort": "desc",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ]
+        }
+    ],
+    "id": "listWorkflows",
+    "uuid": "abcf92e5-9042-4255-8d09-58530ef9cd02",
+    "workflowId": "abcf92e5-9042-4255-8d09-58530ef9cd02",
+    "adapterName": "flow",
+    "created": "2020-04-22T11:16:27.979Z",
+    "updated": "2020-04-22T11:16:27.979Z",
+    "modified": "2020-04-22T11:16:27.979Z",
+    "title": "List Workflows"
+}

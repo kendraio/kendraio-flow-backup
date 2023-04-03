@@ -1,0 +1,78 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query ($token: String, $id: Int) {viewer(token: $token) { plan(id: $id) {   id    name    note    planProcesses {    id    name      committedInputs(action: WORK) {        id         provider {          id         name     }       committedQuantity {     numericValue}}}}}}",
+            "allowEmpty": true,
+            "variables": {
+                "id": "context.queryParams.planId",
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.plan"
+        },
+        {
+            "type": "debug",
+            "open": 0
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.planProcesses"
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "message",
+                    "title": "Choose {{data.name}}"
+                },
+                {
+                    "type": "gosub",
+                    "adapterName": "valueflows",
+                    "workflowId": "selectAgent"
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Save",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "valueflows",
+                            "workflowId": "editPlan",
+                            "context": {
+                                "planId": "context.queryParams.planId"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "selectProcessAgents",
+    "workflowId": "selectProcessAgents",
+    "adapterName": "valueflows",
+    "created": "2020-07-09T09:56:06.382Z",
+    "tags": [],
+    "updated": "2020-07-09T09:56:06.382Z",
+    "modified": "2020-07-09T09:56:06.382Z",
+    "title": "ValueFlows Update Plan"
+}

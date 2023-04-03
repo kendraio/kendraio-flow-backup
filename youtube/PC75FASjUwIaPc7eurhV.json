@@ -1,0 +1,141 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.queryParams.{playlistId: id}"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/playlistItems",
+                        "query": {
+                            "playlistId": "data.playlistId",
+                            "part": "snippet, status"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[].{thumbnail: snippet.thumbnails.default.url, id: snippet.resourceId.videoId, title: snippet.title,channelTitle: snippet.channelTitle,description: snippet.description, privacyStatus: status.privacyStatus, publishedAt: snippet.publishedAt}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 100,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "View Video",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "youtube",
+                                                "workflowId": "f0JcVjojBAKliWBSFE9z",
+                                                "context": {
+                                                    "videoId": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Thumbnail",
+                    "width": 150,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "image",
+                                "src": "{{thumbnail}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "filter": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Channel Title",
+                    "field": "channelTitle",
+                    "filter": true
+                },
+                {
+                    "headerName": "Published Date",
+                    "field": "publishedAt",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ]
+        }
+    ],
+    "id": "PC75FASjUwIaPc7eurhV",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "PC75FASjUwIaPc7eurhV",
+    "adapterName": "youtube",
+    "created": "2019-12-05T17:24:40.041Z",
+    "updated": "2019-12-05T17:55:55.822Z",
+    "modified": "2019-12-05T17:55:55.822Z",
+    "title": "TimTube: Tmp Playlist Items By Id (no form)"
+}

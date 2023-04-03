@@ -1,0 +1,140 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "file-input",
+            "label": "Import Gandi",
+            "accept": [
+                "csv",
+                "json",
+                "xml"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "*[].[fqdn, dates.created_at, dates.registry_ends_at]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "gandi",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "file-input",
+            "label": "Import Dynadot",
+            "accept": [
+                "csv",
+                "json",
+                "xml"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.ListDomainInfoResponse.MainDomains[*].[Name, Registration, Expiration]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "dynadot",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.dynadot[], context.gandi[]]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Domain"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Expires"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "gandiDynadotLocal",
+    "workflowId": "gandiDynadotLocal",
+    "adapterName": "localData",
+    "created": "2023-01-16T15:00:06.055Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-01-16T15:00:06.055Z",
+    "modified": "2023-01-16T15:00:06.055Z",
+    "title": "GandiDynadot"
+}

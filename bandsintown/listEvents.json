@@ -1,0 +1,158 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "bandsintown",
+            "workflowId": "selectArtist"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "label": "Search",
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "default": "PAST",
+                        "enum": [
+                            "PAST",
+                            "UPCOMING"
+                        ]
+                    },
+                    "status": {
+                        "type": "string",
+                        "default": "PUBLISHED",
+                        "enum": [
+                            "PUBLISHED",
+                            "DRAFT"
+                        ]
+                    }
+                }
+            },
+            "uiSchema": {
+                "id": {
+                    "ui:widget": "kendraio-hidden"
+                }
+            }
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "kendraio-bit-proxy.now.sh",
+                "valueGetters": {
+                    "pathname": "join('', ['/artist/', to_string(data.id), '/events'])",
+                    "query": "{ type: data.type, status: data.status }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.saved.token])"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.events"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "single"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Date",
+                    "field": "start_date"
+                },
+                {
+                    "headerName": "Time",
+                    "field": "start_time"
+                },
+                {
+                    "headerName": "Type",
+                    "field": "type"
+                },
+                {
+                    "headerName": "Status",
+                    "field": "status"
+                },
+                {
+                    "headerName": "Venue Name",
+                    "field": "venue_name"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Edit",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "bandsintown",
+                            "workflowId": "editEvent",
+                            "context": {
+                                "id": "data.id",
+                                "artist": "data.headline_artist_id",
+                                "type": "data.type"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Back to start page",
+                    "color": "secondary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "bandsintown",
+                            "workflowId": "start"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "listEvents",
+    "workflowId": "listEvents",
+    "adapterName": "bandsintown",
+    "created": "2022-09-16T10:01:44.535Z",
+    "tags": [],
+    "updated": "2022-09-16T10:01:44.535Z",
+    "modified": "2022-09-16T10:01:44.535Z",
+    "title": "List Events"
+}

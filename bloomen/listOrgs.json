@@ -1,0 +1,119 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "message",
+            "message": "Edit the group associated with an organisation. This has been restricted to only the music org. User management workflows can be used to assign org (and therefore group) to a user."
+        },
+        {
+            "type": "variable-get",
+            "name": "bloomenAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "bloomenAuth"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "bloomen.herokuapp.com",
+                "pathname": "/organisations"
+            },
+            "authentication": {
+                "type": "bearer",
+                "valueGetters": {
+                    "jwt": "context.bloomenAuth"
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?name=='music']"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 25,
+                "rowSelection": "single"
+            },
+            "columnDefs": [
+                {
+                    "headerCheckboxSelection": true,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "ID",
+                    "field": "_id"
+                },
+                {
+                    "headerName": "Hash",
+                    "field": "hash"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "title": "Edit group",
+            "label": "Save",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "group": {
+                        "type": "string",
+                        "title": "Group"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "omit(data, ['_id', '__v'])"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "http",
+            "skipInit": false,
+            "method": "put",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "bloomen.herokuapp.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/organisations/', data.name])"
+                }
+            },
+            "authentication": {
+                "type": "bearer",
+                "valueGetters": {
+                    "jwt": "context.bloomenAuth"
+                }
+            }
+        }
+    ],
+    "id": "listOrgs",
+    "adapter": "bloomen",
+    "org": "kendraio",
+    "workflowId": "listOrgs",
+    "adapterName": "bloomen",
+    "created": "2020-03-16T09:46:46.066Z",
+    "updated": "2020-03-16T10:00:36.767Z",
+    "modified": "2020-03-16T10:00:36.767Z",
+    "title": "List Orgs"
+}

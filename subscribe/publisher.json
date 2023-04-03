@@ -1,0 +1,59 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "message",
+            "message": "Publisher View",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[[`Fred`,`All`, `2022-05-05`, `\u20ac30/month`, `All you can eat`],\n[`Sally`,`\u010casoris`, `Monthly`, `\u20ac2 per month`, `Donation/Contribution`],\n[`Bob`,`Germany all`, `Continuous`, `\u20ac0.74`, `Pay per view`]]",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Subscriber"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Publisher"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Start Date"
+                },
+                {
+                    "field": "3",
+                    "headerName": "Fee"
+                },
+                {
+                    "field": "4",
+                    "headerName": "Mode"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "publisher",
+    "workflowId": "publisher",
+    "adapterName": "subscribe",
+    "created": "2023-03-05T13:34:56.973Z",
+    "tags": [],
+    "updated": "2023-03-05T13:34:56.972Z",
+    "modified": "2023-03-05T13:34:56.972Z",
+    "title": "Subscribe Publisher"
+}

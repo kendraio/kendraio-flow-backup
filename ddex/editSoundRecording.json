@@ -1,0 +1,223 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "ddex",
+            "schema": "batches",
+            "uuidGetter": "context.queryParams.batch"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].data.NewReleaseMessage.ResourceList.SoundRecording[?ResourceReference== $.context.queryParams.id] | [0]"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "SoundRecordingId": {
+                        "type": "object",
+                        "properties": {
+                            "ISRC": {
+                                "type": "string",
+                                "title": "ISRC"
+                            }
+                        }
+                    },
+                    "ReferenceTitle": {
+                        "type": "object",
+                        "properties": {
+                            "TitleText": {
+                                "type": "string",
+                                "title": "ReferenceTitle.TitleText"
+                            }
+                        }
+                    },
+                    "LanguageOfPerformance": {
+                        "type": "string",
+                        "title": "LanguageOfPerformance"
+                    },
+                    "Duration": {
+                        "type": "string",
+                        "title": "Duration"
+                    },
+                    "SoundRecordingDetailsByTerritory": {
+                        "type": "array",
+                        "title": "SoundRecordingDetailsByTerritory",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "TerritoryCode": {
+                                    "type": "string",
+                                    "title": "TerritoryCode"
+                                },
+                                "Title": {
+                                    "title": "Title",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "_TitleType": {
+                                                "type": "string",
+                                                "title": "Type",
+                                                "enum": [
+                                                    "FormalTitle",
+                                                    "DisplayTitle"
+                                                ]
+                                            },
+                                            "TitleText": {
+                                                "type": "string",
+                                                "title": "Text"
+                                            }
+                                        }
+                                    }
+                                },
+                                "DisplayArtist": {
+                                    "title": "DisplayArtist",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "PartyName": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "FullName": {
+                                                        "title": "FullName",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "ArtistRole": {
+                                                "type": "string",
+                                                "title": "ArtistRole"
+                                            }
+                                        }
+                                    }
+                                },
+                                "ResourceContributor": {
+                                    "title": "ResourceContributor",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "PartyName": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "FullName": {
+                                                        "type": "string",
+                                                        "title": "FullName"
+                                                    }
+                                                }
+                                            },
+                                            "ResourceContributorRole": {
+                                                "title": "Role",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "_Namespace": {
+                                                            "type": "string",
+                                                            "title": "Namespace"
+                                                        },
+                                                        "_UserDefinedValue": {
+                                                            "type": "string",
+                                                            "title": "Value"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "SoundRecordingDetailsByTerritory": {
+                    "items": {
+                        "Title": {
+                            "ui:widget": "table",
+                            "colHeadings": [
+                                "Title type",
+                                "Text"
+                            ]
+                        },
+                        "DisplayArtist": {
+                            "ui:widget": "table",
+                            "colHeadings": [
+                                "Display Artist",
+                                "Role"
+                            ]
+                        },
+                        "ResourceContributor": {
+                            "items": {
+                                "ResourceContributorRole": {
+                                    "ui:widget": "table",
+                                    "colHeadings": [
+                                        "Namespace",
+                                        "Value"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "set(context.saved[0], join('',\n['data.NewReleaseMessage.ResourceList.SoundRecording[',\nto_string(findIndex(context.saved[0].data.NewReleaseMessage.ResourceList.SoundRecording, { ResourceReference: context.queryParams.id })),\n']'\n]),\ndata)"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Save",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                },
+                {
+                    "label": "Cancel",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "editSoundRecording",
+    "workflowId": "editSoundRecording",
+    "adapterName": "ddex",
+    "created": "2021-03-11T14:03:41.797Z",
+    "tags": [],
+    "updated": "2021-03-11T14:03:41.797Z",
+    "modified": "2021-03-11T14:03:41.797Z",
+    "title": "Edit Sound Recording"
+}

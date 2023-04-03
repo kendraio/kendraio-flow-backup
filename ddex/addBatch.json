@@ -1,0 +1,127 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "batchName": {
+                        "type": "string",
+                        "title": "Batch name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "context-save",
+            "contextKey": "savedBatchName"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Manual",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{type:'Manual'}"
+                        }
+                    ]
+                },
+                {
+                    "label": "DDEX ERN3",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{type:'DDEX ERN3'}"
+                        },
+                        {
+                            "type": "context-save",
+                            "contextKey": "savedType"
+                        },
+                        {
+                            "type": "gosub",
+                            "adapterName": "ddex",
+                            "workflowId": "ernImportSub"
+                        }
+                    ]
+                },
+                {
+                    "label": "DDEX ERN4",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{type:'DDEX ERN4'}"
+                        },
+                        {
+                            "type": "context-save",
+                            "contextKey": "savedType"
+                        },
+                        {
+                            "type": "gosub",
+                            "adapterName": "ddex",
+                            "workflowId": "ernImportSub"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ data: data, created: now(), batchName: context.savedBatchName.batchName }\n"
+        },
+        {
+            "type": "message",
+            "message": "Data preview:"
+        },
+        {
+            "type": "debug",
+            "open": 0
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "adapterName": "ddex",
+                            "schema": "batches",
+                            "operation": "add"
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                },
+                {
+                    "label": "Cancel",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "ddex",
+                            "workflowId": "batches"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "addBatch",
+    "workflowId": "addBatch",
+    "adapterName": "ddex",
+    "created": "2021-04-01T11:49:42.978Z",
+    "tags": [],
+    "updated": "2021-04-01T11:49:42.978Z",
+    "modified": "2021-04-01T11:49:42.978Z",
+    "title": "Add Batch"
+}

@@ -1,0 +1,35 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "message",
+            "title": "COVID-19 Recoveries",
+            "message": "Locations with more than 50 recoveries"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://covid19.mathdro.id/api/recovered"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?recovered > `50` && lat != `null`].{ lat: lat, long: long, label: join(' ', [to_string(recovered), 'recovered in', combinedKey][? @ != null]) }"
+        },
+        {
+            "type": "map",
+            "height": 500,
+            "zoom": 2
+        }
+    ],
+    "id": "coronavirusRecoveries",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "coronavirusRecoveries",
+    "adapterName": "kendraio",
+    "created": "2020-04-03T06:14:58.042Z",
+    "updated": "2020-04-03T06:20:11.467Z",
+    "modified": "2020-04-03T06:20:11.467Z",
+    "title": "Coronavirus Recoveries (Map)"
+}

@@ -1,0 +1,81 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.github.repository"
+        },
+        {
+            "type": "form",
+            "label": "Select a gitHub repostitory",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "owner": {
+                        "type": "string",
+                        "title": "Repository owner",
+                        "default": "kendraio"
+                    },
+                    "repository": {
+                        "type": "string",
+                        "title": "Repository name",
+                        "default": "kendraio-app"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "context-save",
+            "contextKey": "github.repository"
+        },
+        {
+            "type": "variable-get",
+            "name": "github.token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "github.token"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://api.github.com/graphql",
+            "query": "query MyQuery($owner: String!, $repository: String!) {\r\n    repository(owner: $owner, name: $repository) {\r\n      issues(first: 100, states: [OPEN], orderBy:  {field: UPDATED_AT, direction: DESC}) {\r\n        totalCount\r\n        nodes {\r\n          number\r\n          id\r\n          title\r\n          url\r\n          createdAt\r\n          updatedAt   \r\n          comments(last: 5, orderBy: {field: UPDATED_AT, direction: DESC}) {\r\n            totalCount\r\n          } \r\n        }\r\n      }\r\n    } \r\n  }",
+            "variables": {
+                "token": "context.authToken",
+                "owner": "context.github.repository.owner",
+                "repository": "context.github.repository.repository"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.github.token])"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.repository.issues.nodes[].{number: number, title: title, url: url, createdAt: createdAt, updatedAt: updatedAt, comments: comments.totalCount}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            }
+        }
+    ],
+    "id": "githubRepoIssues",
+    "workflowId": "githubRepoIssues",
+    "adapterName": "github",
+    "created": "2021-06-03T15:42:16.465Z",
+    "tags": [],
+    "updated": "2021-06-03T15:42:16.465Z",
+    "modified": "2021-06-03T15:42:16.465Z",
+    "title": "Github Repository Issues"
+}

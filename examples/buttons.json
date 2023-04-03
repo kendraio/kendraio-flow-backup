@@ -1,0 +1,45 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "message": "pressing this button loads the blocks defined inside the action"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Press Me",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "button pressed",
+                            "message": "Another button..."
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "OK",
+                                    "blocks": [
+                                        {
+                                            "type": "init"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "buttons",
+    "workflowId": "buttons",
+    "adapterName": "examples",
+    "created": "2021-02-12T15:31:11.999Z",
+    "tags": [],
+    "updated": "2021-02-12T15:31:11.999Z",
+    "modified": "2021-02-12T15:31:11.999Z",
+    "title": "Button Example"
+}

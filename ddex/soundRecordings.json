@@ -1,0 +1,99 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "message",
+            "message": "Contributors"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "ddex",
+            "schema": "batches",
+            "uuidGetter": "context.queryParams.uuid"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].data.NewReleaseMessage.ResourceList.SoundRecording[].{ \n    id: join(':', [to_string($.data[0].uuid), to_string(ResourceReference)]), \n    isrc: SoundRecordingId.ISRC, \n    language: LanguageOfPerformance,\n    duration: Duration,\n    displayArtist: SoundRecordingDetailsByTerritory[0].DisplayArtist[].PartyName.FullName,\n    labelName: SoundRecordingDetailsByTerritory[0].LabelName,\n    pLine: SoundRecordingDetailsByTerritory[0].PLine.PLineText,\n    title: ReferenceTitle.TitleText, contributors: SoundRecordingDetailsByTerritory[].\n[ResourceContributor[].\n    {name: PartyName.FullName, role: [ResourceContributorRole[?type(@) == 'string'], ResourceContributorRole[?type(@) == 'object'].join('', [_Namespace, _UserDefinedValue])][]}, \n    IndirectResourceContributor\n][][] }\n"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title"
+                },
+                {
+                    "headerName": "Language",
+                    "field": "language"
+                },
+                {
+                    "headerName": "Duration",
+                    "field": "duration"
+                },
+                {
+                    "headerName": "Label name",
+                    "field": "labelName"
+                },
+                {
+                    "headerName": "Artist",
+                    "field": "displayArtist"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "ddex",
+                                                "workflowId": "editSoundRecording",
+                                                "context": {
+                                                    "batch": "context.queryParams.uuid",
+                                                    "id": "split(data.id, ':')[1]"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "id": "soundRecordings",
+    "workflowId": "soundRecordings",
+    "adapterName": "ddex",
+    "created": "2022-05-11T10:48:26.884Z",
+    "tags": [],
+    "updated": "2022-05-11T10:48:26.883Z",
+    "modified": "2022-05-11T10:48:26.883Z",
+    "title": "DDEX Sound Recordings"
+}

@@ -1,0 +1,54 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "faker",
+            "jsonSchema": {
+                "type": "array",
+                "minItems": 15,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "faker": "name.findName"
+                        },
+                        "account": {
+                            "type": "string",
+                            "faker": "finance.accountName"
+                        },
+                        "amount": {
+                            "type": "number",
+                            "faker": "finance.amount"
+                        },
+                        "currency": {
+                            "type": "string",
+                            "faker": "finance.currencyCode"
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "account",
+                        "amount",
+                        "currency"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "X5spLbkKebKOQ21Gl2Ef",
+    "adapter": "example",
+    "org": "kendraio",
+    "workflowId": "X5spLbkKebKOQ21Gl2Ef",
+    "adapterName": "example",
+    "created": "2019-11-14T12:06:39.245Z",
+    "updated": "2019-11-14T12:06:39.245Z",
+    "modified": "2019-11-14T12:06:39.245Z",
+    "title": "Basic Example"
+}

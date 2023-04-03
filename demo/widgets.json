@@ -1,0 +1,213 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "string": {
+                        "type": "string",
+                        "title": "string"
+                    },
+                    "number": {
+                        "type": "number",
+                        "title": "number"
+                    },
+                    "boolean": {
+                        "type": "boolean",
+                        "title": "boolean"
+                    },
+                    "null": {
+                        "type": "null",
+                        "title": "null"
+                    },
+                    "enum": {
+                        "type": "string",
+                        "title": "string as enum",
+                        "enum": [
+                            "1",
+                            "2"
+                        ]
+                    },
+                    "array": {
+                        "type": "array",
+                        "title": "array of string",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "object": {
+                        "type": "object",
+                        "title": "object",
+                        "properties": {
+                            "one": {
+                                "type": "string",
+                                "title": "string in object"
+                            },
+                            "two": {
+                                "type": "number",
+                                "title": "number in object"
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\r\n    \"string-readonly\":`readonly`,\r\n    \"tags\": [`one`,`two`],\r\n    \"string-password\":`hello`,\r\n    \"object-table\":[{        \r\n        \"one\":`one`,\r\n        \"two\":`2`\r\n    }],\r\n    \"object-paginated\":[{        \r\n        \"one\":`one`,\r\n        \"two\":`2`\r\n    }]\r\n    \r\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "string-textarea": {
+                        "type": "string",
+                        "title": "string with kendraio-textarea widget"
+                    },
+                    "string-password": {
+                        "type": "string",
+                        "title": "string with password widget"
+                    },
+                    "string-readonly": {
+                        "type": "string",
+                        "title": "string with readonly widget"
+                    },
+                    "number-money": {
+                        "type": "string",
+                        "title": "number money"
+                    },
+                    "number-percentage": {
+                        "type": "number",
+                        "title": "number percentage"
+                    },
+                    "boolean": {
+                        "type": "boolean",
+                        "title": "boolean"
+                    },
+                    "null": {
+                        "type": "null",
+                        "title": "null"
+                    },
+                    "enum": {
+                        "type": "string",
+                        "title": "string as enum",
+                        "enum": [
+                            "1",
+                            "2"
+                        ]
+                    },
+                    "array": {
+                        "type": "array",
+                        "title": "array of string",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "object-table": {
+                        "type": "array",
+                        "title": "array of objects as table",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "one": {
+                                    "type": "string",
+                                    "title": "string in object"
+                                },
+                                "two": {
+                                    "type": "number",
+                                    "title": "number in object"
+                                }
+                            }
+                        }
+                    },
+                    "object-paginated": {
+                        "type": "array",
+                        "title": "array of objects paginated",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "one": {
+                                    "type": "string",
+                                    "title": "string in object"
+                                },
+                                "two": {
+                                    "type": "number",
+                                    "title": "number in object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "string-textarea": {
+                    "ui:widget": "kendraio-textarea",
+                    "ui:rows": 10
+                },
+                "string-password": {
+                    "ui:widget": "kendraio-password"
+                },
+                "string-readonly": {
+                    "ui:widget": "readonly"
+                },
+                "number-money": {
+                    "ui:widget": "money"
+                },
+                "number-percentage": {
+                    "ui:widget": "percentage"
+                },
+                "array": {},
+                "object-table": {
+                    "ui:widget": "table"
+                },
+                "object-paginated": {
+                    "ui:widget": "paginated",
+                    "titleGetter": "one",
+                    "items": {
+                        "ui-widget": "table"
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        }
+    ],
+    "id": "widgets",
+    "workflowId": "widgets",
+    "adapterName": "demo",
+    "created": "2022-05-24T10:32:59.030Z",
+    "tags": [
+        "demo"
+    ],
+    "updated": "2022-05-24T10:32:59.029Z",
+    "modified": "2022-05-24T10:32:59.029Z",
+    "title": "Workflow"
+}

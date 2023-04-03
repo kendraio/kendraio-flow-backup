@@ -1,0 +1,76 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "message",
+            "title": "1. Generate some fake data..."
+        },
+        {
+            "type": "faker",
+            "jsonSchema": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "faker": "name.findName"
+                        },
+                        "address": {
+                            "type": "string",
+                            "faker": "address.streetAddress"
+                        },
+                        "city": {
+                            "type": "string",
+                            "faker": "address.city"
+                        },
+                        "country": {
+                            "type": "string",
+                            "faker": "address.country"
+                        }
+                    },
+                    "required": [
+                        "name",
+                        "address",
+                        "city",
+                        "country"
+                    ]
+                },
+                "minItems": 10
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].values(@)"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "message",
+            "title": "2. Download the template and add data after row 10..."
+        },
+        {
+            "type": "xlsx-template",
+            "template": "https://s3.amazonaws.com/portals-prod-useruploads/media_files/ISRC%20Ingest%20Form.xlsx",
+            "headerRows": 10
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "blank",
+    "workflowId": "blank",
+    "adapterName": "demo",
+    "created": "2020-07-10T12:26:06.373Z",
+    "tags": [],
+    "updated": "2020-07-10T12:26:06.373Z",
+    "modified": "2020-07-10T12:26:06.373Z",
+    "title": "Blank"
+}

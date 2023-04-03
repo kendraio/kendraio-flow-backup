@@ -1,0 +1,178 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "schema": "schemas",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data || { uuid: context.queryParams.id }"
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Schema name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "label": {
+                        "type": "string",
+                        "title": "Label property",
+                        "description": "key of propery to use as item label"
+                    },
+                    "properties": {
+                        "type": "array",
+                        "title": "Properties",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "title": "Key"
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "title": "Title"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "title": "Type",
+                                    "enum": [
+                                        "Text",
+                                        "Number",
+                                        "Date",
+                                        "Reference",
+                                        "Object",
+                                        "List",
+                                        "ListReference",
+                                        "ObjectReference"
+                                    ]
+                                },
+                                "config": {
+                                    "type": "string",
+                                    "title": "Config"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "properties": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Key",
+                        "Title",
+                        "Description",
+                        "Config"
+                    ]
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "switch",
+            "valueGetter": "length([context.saved][?uuid==$.data.uuid])",
+            "cases": [
+                {
+                    "value": 0,
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "add",
+                            "adapterName": "schemas",
+                            "schema": "schemas"
+                        }
+                    ]
+                },
+                {
+                    "value": 1,
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "schemas",
+                            "schema": "schemas"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": []
+            }
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to schema list",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Delete",
+                    "color": "warn",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "delete",
+                            "adapterName": "schemas",
+                            "schema": "schemas",
+                            "uuidGetter": "context.queryParams.id",
+                            "skipFirst": false
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ]
+        }
+    ],
+    "id": "edit",
+    "workflowId": "edit",
+    "adapterName": "schemas",
+    "created": "2022-06-07T16:35:08.042Z",
+    "tags": [
+        "importer"
+    ],
+    "updated": "2022-06-07T16:35:08.042Z",
+    "modified": "2022-06-07T16:35:08.042Z",
+    "title": "Edit Schema"
+}

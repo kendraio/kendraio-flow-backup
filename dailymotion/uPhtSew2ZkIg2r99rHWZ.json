@@ -1,0 +1,187 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "dailymotionToken"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "kendraio-dailymotion-cors-proxy-107j3dwob.now.sh",
+                "pathname": "/me/videos?fields=publish_date%2Cdescription%2Cid%2Cowner%2Ctitle%2Cthumbnail_480_url%2Cstatus%2Clikes_total%2Cowner.fullname%2Cviews_total%2Curl%2Ctags"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.dailymotionToken])",
+                "Content-Type": "join('/', ['application','json'])"
+            }
+        },
+        {
+            "type": "template",
+            "template": "You have {{data.total}} videos in your account."
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.list"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 100,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Thumbnail",
+                    "width": 150,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "image",
+                                "src": "{{thumbnail_480_url}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": false
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "filter": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "URL",
+                    "field": "url"
+                },
+                {
+                    "headerName": "Likes",
+                    "field": "likes_total"
+                },
+                {
+                    "headerName": "Views",
+                    "field": "views_total"
+                }
+            ]
+        },
+        {
+            "type": "context-save",
+            "contextKey": "model"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Video Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "title",
+                        "description": "dailymotion",
+                        "type": "string"
+                    },
+                    "title": {
+                        "title": "Title",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "minLength": 2,
+                        "maxLength": 3000
+                    },
+                    "tags": {
+                        "type": "string",
+                        "title": "Tags "
+                    }
+                }
+            },
+            "uiSchema": {
+                "title": {
+                    "ui:placeholder": "Enter the Video Title",
+                    "ui:errMessage": {
+                        "required": "This is my Required Field error message.",
+                        "minLength": "This a custom Min length error message."
+                    }
+                },
+                "description": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Description",
+                    "ui:autofocus": true,
+                    "ui:widget": "k-textarea",
+                    "ui:rows": 4,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Excuse me, this field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                },
+                "id": {
+                    "ui:widget": "videoviewerDM",
+                    "adapter": "dailymotion"
+                },
+                "tags": {
+                    "ui:widget": "tags"
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{id:id,title: title, description: description, tags: tags}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "qs(data)"
+        },
+        {
+            "type": "http",
+            "method": "POST",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.dailymotion.com/video/', context.model[0].id, '?fields=title%2Cdescription%2Ctags'])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.dailymotionToken])",
+                "Content-Type": "join('/', ['application','x-www-form-urlencoded'])"
+            }
+        }
+    ],
+    "id": "uPhtSew2ZkIg2r99rHWZ",
+    "adapter": "dailymotion",
+    "org": "kendraio",
+    "workflowId": "uPhtSew2ZkIg2r99rHWZ",
+    "adapterName": "dailymotion",
+    "created": "2020-01-13T14:09:50.446Z",
+    "updated": "2020-01-15T16:02:28.507Z",
+    "modified": "2020-01-15T16:02:28.507Z",
+    "title": "Daily Motion: Get:Edit My Videos"
+}

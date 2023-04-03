@@ -1,0 +1,40 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "<hr />",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to start page",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "start"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Importer footer"
+        }
+    ],
+    "id": "footer",
+    "workflowId": "footer",
+    "adapterName": "importer",
+    "created": "2022-02-02T15:58:29.152Z",
+    "tags": [
+        "sub",
+        "importer",
+        "hidden",
+        "ui"
+    ],
+    "updated": "2022-02-02T15:58:29.152Z",
+    "modified": "2022-02-02T15:58:29.152Z",
+    "title": "Back to importer start"
+}

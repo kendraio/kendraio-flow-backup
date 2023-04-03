@@ -1,0 +1,42 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist",
+                "valueGetters": {
+                    "host": "data.endpoint",
+                    "query": "{ \"x-api-key\": data.key }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', data.token])"
+            }
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select artist",
+            "labelGetter": "name",
+            "valueField": "id",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "sandboxSelectArtist",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "sandboxSelectArtist",
+    "adapterName": "kendraio",
+    "created": "2020-03-04T10:37:10.447Z",
+    "updated": "2020-03-04T10:43:42.571Z",
+    "modified": "2020-03-04T10:43:42.571Z",
+    "title": "Sandbox Select Artist"
+}

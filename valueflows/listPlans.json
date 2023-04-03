@@ -1,0 +1,79 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "allowEmpty": true,
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query ($token: String) { viewer(token: $token) {   myAgent {     id    }  allPlans {    id      name     note    createdBy {       id     }  } }}",
+            "variables": {
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.allPlans[?createdBy.id == $.data.data.viewer.myAgent.id].{ id, name, note}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Note",
+                    "field": "note"
+                },
+                {
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Launch",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "valueflows",
+                                                "workflowId": "selectProcessAgents",
+                                                "context": {
+                                                    "planId": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "id": "listPlans",
+    "workflowId": "listPlans",
+    "adapterName": "valueflows",
+    "created": "2020-07-09T09:54:18.363Z",
+    "tags": [],
+    "updated": "2020-07-09T09:54:18.363Z",
+    "modified": "2020-07-09T09:54:18.363Z",
+    "title": "List Plans"
+}

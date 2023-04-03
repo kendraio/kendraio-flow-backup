@@ -1,0 +1,116 @@
+{
+    "blocks": [
+        {
+            "type": "load-auth",
+            "adapterName": "teosto",
+            "workflowId": "login"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Get authors works from IPI",
+                "type": "object",
+                "properties": {
+                    "limit": {
+                        "title": "How many results to fetch?",
+                        "type": "integer",
+                        "default": 2
+                    },
+                    "ipi": {
+                        "type": "string",
+                        "title": "IPI number",
+                        "default": "18873266"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "query",
+            "dataSource": {
+                "type": "remote",
+                "endpoint": {
+                    "protocol": "https:",
+                    "host": "teosto-cors-proxy-eilgg5e92.now.sh",
+                    "pathname": "/dev/rest/work/searchAuthor_IPI",
+                    "query": {
+                        "limit": 4
+                    },
+                    "valueGetters": {
+                        "query": "{IPI: data.ipi, limit: model.limit}"
+                    }
+                },
+                "authentication": {
+                    "type": "basic-auth",
+                    "valueGetters": {
+                        "username": "context.connect.teosto.login.username",
+                        "password": "context.connect.teosto.login.password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].{ workkey: workkey, titles: titles[?title_type=='OT'].work_title, performer: performers.name, right_owners: right_owners[].name }"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "headerCheckboxSelection": true,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Work key",
+                    "field": "workkey"
+                },
+                {
+                    "headerName": "Titles",
+                    "valueGetter": "titles"
+                },
+                {
+                    "headerName": "Performer",
+                    "valueGetter": "performer"
+                },
+                {
+                    "headerName": "Rights owners",
+                    "valueGetter": "right_owners"
+                }
+            ]
+        },
+        {
+            "type": "serialize",
+            "hasFormatSelection": true,
+            "formats": [
+                "json",
+                "csv",
+                "xml"
+            ],
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "authorsWorksFromIpi",
+    "workflowId": "authorsWorksFromIpi",
+    "adapterName": "teosto",
+    "created": "2020-06-29T09:47:49.977Z",
+    "tags": [],
+    "updated": "2020-06-29T09:47:49.977Z",
+    "modified": "2020-06-29T09:47:49.977Z",
+    "title": "Author's works from IPI"
+}

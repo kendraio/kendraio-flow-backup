@@ -1,0 +1,102 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "accessToken"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "spotifyAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ uri: 'spotify:artist:28KtnfdwBHptsGPPWjeovU' }"
+        },
+        {
+            "type": "form",
+            "label": "Fetch",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "uri": {
+                        "type": "string",
+                        "title": "Spotify URI",
+                        "description": "E.g. spotify:artist:########################"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "provider-api.spotify.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/v1/analytics/aggregated/', data.uri])"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyAuth])"
+            }
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.believe.\"mi7 records\".total.all[].{ label: '', value: @ }"
+                        },
+                        {
+                            "type": "message",
+                            "title": "Total plays (last month)"
+                        },
+                        {
+                            "type": "chart",
+                            "chartType": "line"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.believe.\"mi7 records\".age.zip(keys(@), values(@))[*].{ label: [0], value: sum([1]) }"
+                        },
+                        {
+                            "type": "message",
+                            "title": "Number of plays (by age)"
+                        },
+                        {
+                            "type": "chart",
+                            "chartType": "pie"
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "debug",
+                            "open": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "dashboard",
+    "adapter": "spotify-analytics",
+    "org": "kendraio",
+    "workflowId": "dashboard",
+    "adapterName": "spotify-analytics",
+    "created": "2020-02-26T13:08:47.715Z",
+    "updated": "2020-03-03T10:56:28.447Z",
+    "modified": "2020-03-03T10:56:28.447Z",
+    "title": "Dashboard"
+}

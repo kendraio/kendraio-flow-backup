@@ -1,0 +1,102 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Enter Gandi Key",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "authkey": {
+                        "type": "string",
+                        "title": "Gandi API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "http",
+            "label": "Enter Gandi Key",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.gandi.net",
+                "pathname": "/v5/domain/domains"
+            },
+            "headers": {
+                "authorization": "join('', ['Apikey ', data.authkey])"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "*[].[`Gandi`, fqdn, dates.created_at, dates.registry_ends_at]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Service"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Domain"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "3",
+                    "headerName": "Expires"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "gandi",
+    "workflowId": "gandi",
+    "adapterName": "domains",
+    "created": "2023-02-12T10:50:24.344Z",
+    "tags": [],
+    "updated": "2023-02-12T10:50:24.344Z",
+    "modified": "2023-02-12T10:50:24.344Z",
+    "title": "Gandi Domains"
+}

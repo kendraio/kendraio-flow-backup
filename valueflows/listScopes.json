@@ -1,0 +1,84 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query($token: String) { \n viewer(token: $token) { \n  allOrganizations { \n  id \n       name \n       image \n       note \n       type \n isContext    }  }}",
+            "variables": {
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.allOrganizations[?isContext==`true`]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Note",
+                    "field": "note"
+                },
+                {
+                    "headerName": "Type",
+                    "field": "type"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "List Commitments",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "valueflows",
+                                                "workflowId": "listCommitments",
+                                                "context": {
+                                                    "scopeId": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "id": "listScopes",
+    "adapter": "valueflows",
+    "org": "kendraio",
+    "workflowId": "listScopes",
+    "adapterName": "valueflows",
+    "created": "2020-04-06T08:47:39.906Z",
+    "updated": "2020-04-08T10:55:21.504Z",
+    "modified": "2020-04-08T10:55:21.504Z",
+    "title": "ValueFlows List Scopes"
+}

@@ -1,0 +1,116 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "simple": true,
+            "key": "https://docs.google.com/spreadsheets/d/1YIQCavPvOzTArBc1d2dlbP3bhHVHI65o3-AEHp_urXA/"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].{asset: Asset, width: \"Width (mm)\", height: \"Height (mm)\", medium: Medium, after: After, location: Location, owner: { name: Owner, split: \"Financial Splits Rights Owner\"}, marketPlatforms: \"Market Platform(s)\".split(@, ','), beneficiaries: Beneficiaries.split(@, ',')[].{ name: @} , assetManager: \"Asset Manager\", licenseDetails: \"License Details\"  }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "type": "string",
+                        "title": "Asset"
+                    },
+                    "width": {
+                        "type": "number",
+                        "title": "Width (mm)"
+                    },
+                    "height": {
+                        "type": "number",
+                        "title": "Height (mm)"
+                    },
+                    "medium": {
+                        "type": "string",
+                        "title": "Medium"
+                    },
+                    "after": {
+                        "type": "string",
+                        "title": "After"
+                    },
+                    "location": {
+                        "type": "string",
+                        "title": "Location"
+                    },
+                    "owner": {
+                        "title": "Owner",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "title": "Name"
+                            },
+                            "split": {
+                                "type": "string",
+                                "title": "Split"
+                            }
+                        }
+                    },
+                    "beneficiaries": {
+                        "title": "Beneficiaries",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "title": "Name"
+                                },
+                                "split": {
+                                    "type": "string",
+                                    "title": "Split"
+                                }
+                            }
+                        }
+                    },
+                    "marketPlatforms": {
+                        "type": "array",
+                        "title": "Market platforms",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "assetManager": {
+                        "type": "string",
+                        "title": "Asset manager"
+                    },
+                    "licenseDetails": {
+                        "type": "string",
+                        "title": "License details"
+                    }
+                }
+            },
+            "uiSchema": {
+                "location": {
+                    "ui:widget": "remote-image"
+                }
+            }
+        }
+    ],
+    "id": "editItem",
+    "workflowId": "editItem",
+    "adapterName": "culturebanked",
+    "created": "2020-06-25T15:23:36.837Z",
+    "updated": "2020-06-25T15:23:36.837Z",
+    "modified": "2020-06-25T15:23:36.837Z",
+    "title": "Edit Item"
+}

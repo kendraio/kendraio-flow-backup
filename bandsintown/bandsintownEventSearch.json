@@ -1,0 +1,127 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "app_id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{appId: data}"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "artistName": {
+                        "type": "string",
+                        "title": "Artist name"
+                    },
+                    "appId": {
+                        "type": "string",
+                        "title": "App ID"
+                    }
+                }
+            },
+            "uiSchema": {
+                "appId": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "rest.bandsintown.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/artists/', data.artistName, '/events'])",
+                    "query": "{ app_id: data.appId }"
+                }
+            }
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Venue",
+                    "field": "venue.name"
+                },
+                {
+                    "headerName": "Artists",
+                    "field": "lineup"
+                },
+                {
+                    "headerName": "Address",
+                    "filter": true,
+                    "valueGetter": "join(', ', [venue.city, venue.country])"
+                },
+                {
+                    "headerName": "On sale datetime",
+                    "field": "on_sale_datetime",
+                    "sort": true
+                },
+                {
+                    "headerName": "URL",
+                    "field": "url"
+                },
+                {
+                    "headerName": "Offers",
+                    "valueGetter": "join(', ', [offers[0].type, offers[0].status, offers[0].url])"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "dialog",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "<h1>{{venue.name}}</h1>"
+                },
+                {
+                    "type": "debug",
+                    "open": 1,
+                    "showContext": false
+                },
+                {
+                    "type": "actions",
+                    "buttons": [
+                        {
+                            "label": "Close",
+                            "blocks": [
+                                {
+                                    "type": "init"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "bandsintownEventSearch",
+    "adapter": "bandsintown",
+    "org": "kendraio",
+    "workflowId": "bandsintownEventSearch",
+    "adapterName": "bandsintown",
+    "created": "2019-11-14T12:07:11.470Z",
+    "updated": "2019-12-16T13:05:31.168Z",
+    "modified": "2019-12-16T13:05:31.168Z",
+    "title": "Bandsintown Event Search"
+}

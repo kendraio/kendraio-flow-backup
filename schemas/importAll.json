@@ -1,0 +1,75 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "schemas",
+            "blockComment": "Get list of existing schemas"
+        },
+        {
+            "type": "context-save",
+            "key": "existing_schemas",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "Existing schemas:",
+            "blockComment": "Existing schemas label"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "`[{\"schema\":{\"uuid\":\"6a0a2dc0-de40-447d-aca3-d50144fb1229\",\"properties\":[{\"key\":\"query\",\"title\":\"query\",\"type\":\"Text\"},{\"key\":\"timestamp\",\"title\":\"timestamp\",\"type\":\"Date\"},{\"key\":\"title\",\"title\":\"title\",\"type\":\"Text\"},{\"key\":\"source\",\"title\":\"source\",\"type\":\"Text\"}],\"name\":\"searches\",\"description\":\"Saved searches\",\"label\":\"query\"},\"records\":[{\"uuid\":\"0d807b3e-91ce-542b-b3d3-bc52eb93a515\",\"query\":\"another search\",\"title\":\"another search\",\"timestamp\":\"Thu, 17 Mar 2022 13:23:08 GMT\",\"source\":\"listWorkflows\"},{\"uuid\":\"804558ff-005c-5212-be3e-8bd882f1db42\",\"query\":\"test 123\",\"title\":\"test 123\",\"timestamp\":\"Thu, 03 Mar 2022 15:09:54 GMT\",\"source\":\"listWorkflows\"}]},{\"schema\":{\"uuid\":\"e0668ca6-7f08-4d1f-9ae6-49f7f934ae98\",\"properties\":[{\"key\":\"test\",\"title\":\"test\",\"type\":\"Text\"}],\"name\":\"test\",\"label\":\"test\"},\"records\":[{\"uuid\":\"597c3980-43d8-416c-a19c-1fc80c082dc6\",\"test\":\"test string\"},{\"uuid\":\"83107ac0-1346-4503-a753-fd5285df4be4\",\"test\":\"another test string\"}]}]`",
+            "blockComment": "JSON literal until encoder is fixed.\nwas get schemas and data from URLparseQs(context.app.location.search).data"
+        },
+        {
+            "type": "template",
+            "template": "Input data:",
+            "blockComment": "Input data label"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?contains($.context.existing_schemas[].uuid,schema.uuid)==`false`]",
+            "blockComment": "List only unloaded schemas / removes previously loaded schemas"
+        },
+        {
+            "type": "template",
+            "template": "Schemas remaining to import:",
+            "blockComment": "Schemas remaining to import label"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "importAll",
+    "workflowId": "importAll",
+    "adapterName": "schemas",
+    "created": "2022-04-01T12:42:35.460Z",
+    "tags": [],
+    "updated": "2022-04-01T12:42:35.460Z",
+    "modified": "2022-04-01T12:42:35.460Z",
+    "title": "Import Schemas and Data"
+}

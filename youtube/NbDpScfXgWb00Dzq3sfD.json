@@ -1,0 +1,254 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Show Playlists",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "default": "snippet,status,contentDetails"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "maxResults": {
+                        "title": "No of records",
+                        "type": "number",
+                        "default": 25
+                    }
+                }
+            },
+            "uiSchema": {
+                "mine": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/playlists",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.items[].{itemCount: contentDetails.itemCount, thumbnail: snippet.thumbnails.default.url, id: id,title: snippet.title,description: snippet.description, privacyStatus: status.privacyStatus}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 100,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Show Videos",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "youtube",
+                                                "workflowId": "VdCYe3Zt07RFaUzcPu3C",
+                                                "context": {
+                                                    "id": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Thumbnail",
+                    "width": 150,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "image",
+                                "src": "{{thumbnail}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Count",
+                    "field": "itemCount",
+                    "filter": true
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "filter": true
+                },
+                {
+                    "headerName": "description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Privacy",
+                    "field": "privacyStatus"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0].{ id: id, title: title, description: description, privacyStatus: privacyStatus}"
+        },
+        {
+            "type": "form",
+            "label": "Update Playlist",
+            "jsonSchema": {
+                "title": "Playlist Details",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "title": {
+                        "title": "Title",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "minLength": 2,
+                        "maxLength": 3000
+                    },
+                    "privacyStatus": {
+                        "type": "string",
+                        "title": "Privacy Status",
+                        "enum": [
+                            "private",
+                            "public",
+                            "unlisted"
+                        ]
+                    }
+                }
+            },
+            "uiSchema": {
+                "id": {
+                    "ui:widget": "k-hidden"
+                },
+                "title": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Enter the Video Title",
+                    "ui:errMessage": {
+                        "required": "This is my Required Field error message.",
+                        "minLength": "This a custom Min length error message."
+                    }
+                },
+                "description": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Enter the Video Description",
+                    "ui:autofocus": true,
+                    "ui:widget": "k-textarea",
+                    "ui:rows": 8,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Excuse me, this field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{id: id, snippet: {title: title, description: description}, status: {privacyStatus: privacyStatus}}"
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "PUT",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/playlists",
+                        "query": {
+                            "part": "snippet,status"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "id": "NbDpScfXgWb00Dzq3sfD",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "NbDpScfXgWb00Dzq3sfD",
+    "adapterName": "youtube",
+    "created": "2019-11-21T14:21:24.742Z",
+    "updated": "2019-12-16T12:31:23.351Z",
+    "modified": "2019-12-16T12:31:23.351Z",
+    "title": "YouTube: Playlist: List and Edit"
+}

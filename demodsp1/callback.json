@@ -1,0 +1,28 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "parseQs(context.fragment)"
+        },
+        {
+            "type": "variable-set",
+            "name": "demodsp1-auth"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        }
+    ],
+    "id": "callback",
+    "workflowId": "callback",
+    "adapterName": "demodsp1",
+    "created": "2020-11-09T17:22:41.953Z",
+    "tags": [],
+    "updated": "2020-11-09T17:22:41.953Z",
+    "modified": "2020-11-09T17:22:41.953Z",
+    "title": "Auth Callback"
+}

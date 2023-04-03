@@ -1,0 +1,235 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "init"
+                        },
+                        {
+                            "type": "message",
+                            "title": "Parties"
+                        },
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "party"
+                        },
+                        {
+                            "type": "grid",
+                            "columnDefs": [
+                                {
+                                    "headerName": "Name",
+                                    "field": "name"
+                                },
+                                {
+                                    "width": 200,
+                                    "resizable": false,
+                                    "cellRenderer": "workflowRenderer",
+                                    "cellRendererParams": {
+                                        "blocks": [
+                                            {
+                                                "type": "actions",
+                                                "buttons": [
+                                                    {
+                                                        "label": "Edit",
+                                                        "blocks": [
+                                                            {
+                                                                "type": "launch",
+                                                                "adapter": "culturebanked",
+                                                                "workflowId": "editParty",
+                                                                "context": {
+                                                                    "id": "data.uuid"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "init"
+                        },
+                        {
+                            "type": "message",
+                            "title": "Licenses"
+                        },
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "license"
+                        },
+                        {
+                            "type": "grid",
+                            "columnDefs": [
+                                {
+                                    "headerName": "Name",
+                                    "field": "name"
+                                },
+                                {
+                                    "width": 200,
+                                    "resizable": false,
+                                    "cellRenderer": "workflowRenderer",
+                                    "cellRendererParams": {
+                                        "blocks": [
+                                            {
+                                                "type": "actions",
+                                                "buttons": [
+                                                    {
+                                                        "label": "Edit",
+                                                        "blocks": [
+                                                            {
+                                                                "type": "launch",
+                                                                "adapter": "culturebanked",
+                                                                "workflowId": "editLicense",
+                                                                "context": {
+                                                                    "id": "data.uuid"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "init"
+                        },
+                        {
+                            "type": "message",
+                            "title": "Market platforms"
+                        },
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "platform"
+                        },
+                        {
+                            "type": "grid",
+                            "columnDefs": [
+                                {
+                                    "headerName": "Name",
+                                    "field": "name"
+                                },
+                                {
+                                    "width": 200,
+                                    "resizable": false,
+                                    "cellRenderer": "workflowRenderer",
+                                    "cellRendererParams": {
+                                        "blocks": [
+                                            {
+                                                "type": "actions",
+                                                "buttons": [
+                                                    {
+                                                        "label": "Edit",
+                                                        "blocks": [
+                                                            {
+                                                                "type": "launch",
+                                                                "adapter": "culturebanked",
+                                                                "workflowId": "editPlatform",
+                                                                "context": {
+                                                                    "id": "data.uuid"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "init"
+                        },
+                        {
+                            "type": "message",
+                            "title": "Works"
+                        },
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "work"
+                        },
+                        {
+                            "type": "grid",
+                            "columnDefs": [
+                                {
+                                    "headerName": "Asset",
+                                    "field": "asset"
+                                },
+                                {
+                                    "headerName": "Medium",
+                                    "field": "medium"
+                                },
+                                {
+                                    "width": 200,
+                                    "resizable": false,
+                                    "cellRenderer": "workflowRenderer",
+                                    "cellRendererParams": {
+                                        "blocks": [
+                                            {
+                                                "type": "actions",
+                                                "buttons": [
+                                                    {
+                                                        "label": "Edit",
+                                                        "blocks": [
+                                                            {
+                                                                "type": "launch",
+                                                                "adapter": "culturebanked",
+                                                                "workflowId": "editWork",
+                                                                "context": {
+                                                                    "id": "data.uuid"
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "database",
+    "workflowId": "database",
+    "adapterName": "culturebanked",
+    "created": "2020-06-26T09:05:12.034Z",
+    "updated": "2020-06-26T09:05:12.033Z",
+    "modified": "2020-06-26T09:05:12.033Z",
+    "title": "Database"
+}

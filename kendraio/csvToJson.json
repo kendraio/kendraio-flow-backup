@@ -1,0 +1,60 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "CSV to JSON",
+            "message": "Paste in comma (or tab) separated data below to convert to JSON."
+        },
+        {
+            "type": "form",
+            "label": "Convert",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {
+                "data": {
+                    "ui:widget": "kendraio-textarea",
+                    "ui:rows": "10"
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data.data, type: 'text/csv' }"
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true,
+                "dynamicTyping": false,
+                "transform": false
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "csvToJson",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "csvToJson",
+    "adapterName": "kendraio",
+    "created": "2020-03-19T07:58:01.152Z",
+    "updated": "2020-03-19T07:58:54.704Z",
+    "modified": "2020-03-19T07:58:54.704Z",
+    "title": "CSV to JSON"
+}

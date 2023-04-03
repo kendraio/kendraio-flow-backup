@@ -1,0 +1,64 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: '' }"
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Artist name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist/search",
+                "valueGetters": {
+                    "host": "context.sandboxAuth.endpoint",
+                    "query": "{ \"x-api-key\": context.sandboxAuth.key, name: data.name }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+            }
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select artist",
+            "labelGetter": "name",
+            "valueField": "id",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "sandboxFindArtist",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "sandboxFindArtist",
+    "adapterName": "kendraio",
+    "created": "2020-03-04T14:48:36.356Z",
+    "updated": "2020-03-04T14:48:36.356Z",
+    "modified": "2020-03-04T14:48:36.356Z",
+    "title": "Sandbox Find Artist"
+}

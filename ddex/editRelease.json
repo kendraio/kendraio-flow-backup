@@ -1,0 +1,73 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "SoundRecordings": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "SoundRecordingId": {
+                                    "title": "Sound Recording ID",
+                                    "type": "object",
+                                    "properties": {
+                                        "ISRC": {
+                                            "type": "string",
+                                            "title": "ISRC"
+                                        },
+                                        "CatalogNumber": {
+                                            "title": "Catalogue Number",
+                                            "type": "object",
+                                            "properties": {
+                                                "Namespace": {
+                                                    "type": "string",
+                                                    "title": "Namespace"
+                                                },
+                                                "Value": {
+                                                    "type": "string",
+                                                    "title": "Value"
+                                                }
+                                            }
+                                        },
+                                        "ProprietaryId": {
+                                            "title": "Proprietary Id",
+                                            "type": "object",
+                                            "properties": {
+                                                "Namespace": {
+                                                    "type": "string",
+                                                    "title": "Namespace",
+                                                    "description": "the Namespace attribute for a proprietary identifier should contain the DPID (without a namespace prefix) of the organisation controlling the identifier system used"
+                                                },
+                                                "Value": {
+                                                    "type": "string",
+                                                    "title": "Value"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "editRelease",
+    "workflowId": "editRelease",
+    "adapterName": "ddex",
+    "created": "2021-03-04T12:55:02.147Z",
+    "tags": [],
+    "updated": "2021-03-04T12:55:02.147Z",
+    "modified": "2021-03-04T12:55:02.147Z",
+    "title": "Edit Release"
+}

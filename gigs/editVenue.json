@@ -1,0 +1,91 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "gigs",
+            "schema": "venues",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "city": {
+                        "type": "string",
+                        "title": "City"
+                    },
+                    "country": {
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "latitude": {
+                        "type": "string",
+                        "title": "Latitude"
+                    },
+                    "longitude": {
+                        "type": "string",
+                        "title": "Longitude"
+                    }
+                },
+                "required": [
+                    "name",
+                    "city",
+                    "country",
+                    "latitude",
+                    "longitude"
+                ]
+            },
+            "uiSchema": {
+                "uuid": {
+                    "ui:widget": "readonly"
+                }
+            }
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Save",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "gigs",
+                            "schema": "venues"
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "gigs",
+                            "workflowId": "venueList"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "editVenue",
+    "workflowId": "editVenue",
+    "adapterName": "gigs",
+    "created": "2020-05-27T08:15:08.350Z",
+    "updated": "2020-05-27T08:15:08.350Z",
+    "modified": "2020-05-27T08:15:08.350Z",
+    "title": "Edit Venue"
+}

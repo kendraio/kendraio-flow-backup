@@ -1,0 +1,84 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "accessToken"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "spotifyAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ uri: 'spotify:artist:28KtnfdwBHptsGPPWjeovU' }"
+        },
+        {
+            "type": "form",
+            "label": "Fetch",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "uri": {
+                        "type": "string",
+                        "title": "Spotify URI",
+                        "description": "E.g. spotify:artist:########################"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "provider-api.spotify.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/v1/analytics/aggregated/', data.uri])"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyAuth])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.believe.\"mi7 records\".total.all[].{ label: '', value: @ }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "message",
+            "title": "Total plays (last month)"
+        },
+        {
+            "type": "chart",
+            "chartType": "line"
+        }
+    ],
+    "id": "analyticsLine",
+    "adapter": "spotify-analytics",
+    "org": "kendraio",
+    "workflowId": "analyticsLine",
+    "adapterName": "spotify-analytics",
+    "created": "2020-02-26T12:58:10.601Z",
+    "updated": "2020-02-26T13:06:35.339Z",
+    "modified": "2020-02-26T13:06:35.339Z",
+    "title": "Spotify Analytics (Line)"
+}

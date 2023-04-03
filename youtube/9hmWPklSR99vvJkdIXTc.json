@@ -1,0 +1,82 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "default": "snippet,contentDetails"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                }
+            },
+            "uiSchema": {
+                "mine": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "debug",
+                    "showContext": true
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/subscriptions",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        }
+    ],
+    "id": "9hmWPklSR99vvJkdIXTc",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "9hmWPklSR99vvJkdIXTc",
+    "adapterName": "youtube",
+    "created": "2019-11-21T15:42:08.798Z",
+    "updated": "2019-12-05T17:56:29.789Z",
+    "modified": "2019-12-05T17:56:29.789Z",
+    "title": "TimTube: Get my Subscriptions"
+}

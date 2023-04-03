@@ -1,0 +1,70 @@
+{
+    "blocks": [
+        {
+            "type": "app-layout",
+            "tabs": [
+                {
+                    "icon": "groups",
+                    "title": "Bubbles",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "My list of my Bubbles and all my contacts in them."
+                        }
+                    ]
+                },
+                {
+                    "icon": "stacked_bar_chart",
+                    "title": "Chart",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "kendraio",
+                            "workflowId": "coronavirusByCountry"
+                        }
+                    ]
+                },
+                {
+                    "icon": "verified",
+                    "title": "Pass",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "My verified health facts."
+                        }
+                    ]
+                },
+                {
+                    "icon": "health_and_safety",
+                    "title": "Control",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "My control group status."
+                        }
+                    ]
+                },
+                {
+                    "icon": "person",
+                    "title": "Account",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "My account."
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "app",
+    "workflowId": "app",
+    "adapterName": "bubblersapp",
+    "created": "2021-06-25T10:20:25.254Z",
+    "tags": [
+        "app"
+    ],
+    "updated": "2021-06-25T10:20:25.254Z",
+    "modified": "2021-06-25T10:20:25.254Z",
+    "title": "BubblersApp"
+}

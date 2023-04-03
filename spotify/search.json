@@ -1,0 +1,192 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "spotifyToken"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ searchTerm: '' }"
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "searchTerm": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.spotify.com",
+                "pathname": "/v1/search",
+                "valueGetters": {
+                    "query": "{ type: 'track', q: data.searchTerm }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyToken])"
+            }
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 6,
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "checkboxSelection": true
+                },
+                {
+                    "width": 100,
+                    "headerName": "Image",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<img src=\"{{data.album.images.[2].url}}\" />"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Artists",
+                    "valueGetter": "artists[].name"
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Popularity",
+                    "field": "popularity"
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ tracks: data }"
+        },
+        {
+            "type": "form",
+            "title": "Add tracks to playlist",
+            "label": "Add tracks",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "playlist": {
+                        "type": "string"
+                    },
+                    "tracks": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "playlist": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "adapterName": "spotify",
+                        "blocks": [
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "variable-get",
+                                "name": "access_token"
+                            },
+                            {
+                                "type": "http",
+                                "method": "get",
+                                "endpoint": "https://api.spotify.com/v1/me/playlists",
+                                "headers": {
+                                    "Authorization": "join('', ['Bearer ', data])"
+                                }
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "data.items"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Playlist",
+                                "labelField": "name",
+                                "valueField": "id"
+                            }
+                        ]
+                    }
+                },
+                "tracks": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "id",
+                        "name"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ playlist: data.playlist, tracks: data.tracks[].uri }"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "skipInit": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.spotify.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/v1/playlists/', data.playlist ,'/tracks'])"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyToken])"
+            },
+            "payload": "data.tracks"
+        }
+    ],
+    "id": "search",
+    "adapter": "spotify",
+    "org": "kendraio",
+    "workflowId": "search",
+    "adapterName": "spotify",
+    "created": "2019-12-19T08:14:27.274Z",
+    "updated": "2019-12-19T11:04:56.724Z",
+    "modified": "2019-12-19T11:04:56.724Z",
+    "title": "Search"
+}

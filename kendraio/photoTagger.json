@@ -1,0 +1,35 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Save",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "photo": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {
+                "photo": {
+                    "ui:widget": "image"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "photoTagger",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "photoTagger",
+    "adapterName": "kendraio",
+    "created": "2019-11-14T14:36:56.694Z",
+    "updated": "2019-11-14T14:36:56.694Z",
+    "modified": "2019-11-14T14:36:56.694Z",
+    "title": "Photo Tagger"
+}

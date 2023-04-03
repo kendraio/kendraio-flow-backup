@@ -1,0 +1,44 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth",
+            "blockComment": "Load auth token"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist",
+                "host": "kendraio-bit-proxy.now.sh"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', data.token])"
+            },
+            "blockComment": "get artist list"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        }
+    ],
+    "id": "getArtists",
+    "workflowId": "getArtists",
+    "adapterName": "bandsintown",
+    "created": "2022-09-21T15:09:18.895Z",
+    "tags": [
+        "artist",
+        "bandsintown",
+        "noui"
+    ],
+    "updated": "2022-09-21T15:09:18.895Z",
+    "modified": "2022-09-21T15:09:18.895Z",
+    "title": "Workflow"
+}

@@ -1,0 +1,100 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "`transparence`"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "searchTerm"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://app.kendra.io/api"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.searchTerm && (length(context.searchTerm) == `0` && data) || data[?contains(toLower(title), toLower(trim($.context.searchTerm))) || contains(toLower(adapterName), toLower(trim($.context.searchTerm)))]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?!(tags[?@ == 'deleted'])]"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 15,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "width": 300,
+                    "filter": true
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Launch",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "valueGetters": {
+                                                    "adapter": "data.adapterName",
+                                                    "workflowId": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Workflow ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Adapter",
+                    "field": "adapterName",
+                    "filter": true
+                },
+                {
+                    "headerName": "Created",
+                    "field": "created",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                },
+                {
+                    "headerName": "Modified",
+                    "field": "modified",
+                    "sort": "desc",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ]
+        }
+    ],
+    "id": "workflowList",
+    "workflowId": "workflowList",
+    "adapterName": "transparence",
+    "created": "2021-06-25T11:21:56.607Z",
+    "tags": [],
+    "updated": "2021-06-25T11:21:56.607Z",
+    "modified": "2021-06-25T11:21:56.607Z",
+    "title": "Transparence Workflows"
+}

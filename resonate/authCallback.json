@@ -1,0 +1,67 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "resonate-auth-state"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "length([data][?uuid==$.context.queryParams.state])",
+            "cases": [
+                {
+                    "value": 1,
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "auth state matches"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{ code: context.queryParams.code }"
+                        },
+                        {
+                            "type": "variable-set",
+                            "name": "resonate-auth",
+                            "notify": false
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Continue",
+                                    "color": "primary",
+                                    "blocks": [
+                                        {
+                                            "type": "launch",
+                                            "adapter": "resonate",
+                                            "workflowId": "dashboard"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "message",
+                        "message": "auth state does not match"
+                    }
+                ]
+            }
+        }
+    ],
+    "id": "authCallback",
+    "workflowId": "authCallback",
+    "adapterName": "resonate",
+    "created": "2021-05-07T12:10:04.448Z",
+    "tags": [],
+    "updated": "2021-05-07T12:10:04.448Z",
+    "modified": "2021-05-07T12:10:04.448Z",
+    "title": "Auth Callback"
+}

@@ -1,0 +1,109 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "adminSecret"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "type(data) == `string` && length(data) > `0` && data != `clear`",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Auth token is set"
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Clear auth",
+                                    "blocks": [
+                                        {
+                                            "type": "init"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "`clear`"
+                                        },
+                                        {
+                                            "type": "variable-set",
+                                            "name": "adminSecret"
+                                        },
+                                        {
+                                            "type": "dispatch",
+                                            "action": "refreshWorkflow"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": false,
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ adminSecret: `` }"
+                        },
+                        {
+                            "type": "form",
+                            "jsonSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "adminSecret": {
+                                        "type": "string",
+                                        "title": "Admin secret"
+                                    }
+                                }
+                            },
+                            "uiSchema": {
+                                "adminSecret": {
+                                    "ui:widget": "password"
+                                }
+                            }
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.adminSecret"
+                        },
+                        {
+                            "type": "variable-set",
+                            "name": "adminSecret"
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Refresh",
+                                    "blocks": [
+                                        {
+                                            "type": "dispatch",
+                                            "action": "refreshWorkflow"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "transparence",
+    "created": "2020-07-10T08:14:24.136Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2020-07-10T08:14:24.136Z",
+    "modified": "2020-07-10T08:14:24.136Z",
+    "title": "Transparence Connect"
+}

@@ -1,0 +1,75 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "gigs",
+            "schema": "artists",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "uuid": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "bit_id": {
+                        "type": "string",
+                        "title": "Bandsintown ID"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "uiSchema": {
+                "uuid": {
+                    "ui:widget": "readonly"
+                }
+            }
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Save",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "gigs",
+                            "schema": "artists"
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "gigs",
+                            "workflowId": "artistList"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "editArtist",
+    "workflowId": "editArtist",
+    "adapterName": "gigs",
+    "created": "2020-05-27T12:55:08.061Z",
+    "updated": "2020-05-27T12:55:08.060Z",
+    "modified": "2020-05-27T12:55:08.060Z",
+    "title": "Edit Artist"
+}

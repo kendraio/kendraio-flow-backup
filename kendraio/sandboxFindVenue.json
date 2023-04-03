@@ -1,0 +1,64 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: '' }"
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Venue name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/venue/search",
+                "valueGetters": {
+                    "host": "context.sandboxAuth.endpoint",
+                    "query": "{ \"x-api-key\": context.sandboxAuth.key, name: data.name }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+            }
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select venue",
+            "labelGetter": "join(', ', [name, city, region, country, postal_code])",
+            "valueField": "id",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "sandboxFindVenue",
+    "adapter": "kendraio",
+    "org": "kendraio",
+    "workflowId": "sandboxFindVenue",
+    "adapterName": "kendraio",
+    "created": "2020-03-04T09:54:06.541Z",
+    "updated": "2020-03-04T10:29:01.389Z",
+    "modified": "2020-03-04T10:29:01.389Z",
+    "title": "Sandbox Find Venue"
+}

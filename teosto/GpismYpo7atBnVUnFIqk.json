@@ -1,0 +1,114 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Teosto Internal: Get works by author name",
+                "type": "object",
+                "required": [
+                    "last_name"
+                ],
+                "properties": {
+                    "last_name": {
+                        "title": "Last name",
+                        "type": "string",
+                        "default": "HELISMAA"
+                    },
+                    "first_name": {
+                        "title": "First name",
+                        "type": "string",
+                        "default": "REINO"
+                    },
+                    "limit": {
+                        "title": "Number of results",
+                        "type": "integer",
+                        "default": 2
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "query",
+            "dataSource": {
+                "type": "remote",
+                "endpoint": {
+                    "protocol": "https:",
+                    "host": "teosto-cors-proxy-eilgg5e92.now.sh",
+                    "pathname": "/dev/rest/work/searchAuthor",
+                    "query": {
+                        "limit": 4
+                    },
+                    "valueGetters": {
+                        "query": "{limit: model.limit, last_name: model.last_name, first_name: model.first_name}"
+                    }
+                },
+                "authentication": {
+                    "type": "basic-auth",
+                    "valueGetters": {
+                        "username": "user.teosto.username",
+                        "password": "user.teosto.password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].{ workkey: workkey, titles: titles[*].work_title, performer: performers.name, right_owners_authors: right_owners[?type=='AUTHOR'].join(' ', [to_string(firstname),  to_string(name),  '(' to_string(ipi_base_nbr) ')' ]), right_owners_publishers: right_owners[?type=='PUBLISHER'], iswc: iswc[*], isrc: isrc[*] }"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Work key",
+                    "field": "workkey"
+                },
+                {
+                    "headerName": "Titles",
+                    "valueGetter": "titles"
+                },
+                {
+                    "headerName": "Performer",
+                    "valueGetter": "performer"
+                },
+                {
+                    "headerName": "Rights owners (Author)",
+                    "valueGetter": "right_owners_authors"
+                },
+                {
+                    "headerName": "Rights owners (Publishers)",
+                    "valueGetter": "right_owners_publishers[].name"
+                },
+                {
+                    "headerName": "ISWC",
+                    "valueGetter": "iswc"
+                },
+                {
+                    "headerName": "ISRC",
+                    "valueGetter": "isrc"
+                }
+            ]
+        }
+    ],
+    "id": "GpismYpo7atBnVUnFIqk",
+    "adapter": "teosto",
+    "org": "kendraio",
+    "workflowId": "GpismYpo7atBnVUnFIqk",
+    "adapterName": "teosto",
+    "created": "2019-11-14T12:04:48.031Z",
+    "updated": "2019-11-14T12:04:48.031Z",
+    "modified": "2019-11-14T12:04:48.031Z",
+    "title": "Teosto Internal: Works by author"
+}

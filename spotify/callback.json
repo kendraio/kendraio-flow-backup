@@ -1,0 +1,31 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "parseQs(context.fragment).access_token"
+        },
+        {
+            "type": "variable-set",
+            "name": "access_token"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "launch",
+            "adapter": "spotify",
+            "workflowId": "listPlaylists"
+        }
+    ],
+    "id": "callback",
+    "adapter": "spotify",
+    "org": "kendraio",
+    "workflowId": "callback",
+    "adapterName": "spotify",
+    "created": "2019-12-09T16:11:10.679Z",
+    "updated": "2019-12-09T16:12:13.000Z",
+    "modified": "2019-12-09T16:12:13.000Z",
+    "title": "Auth Callback"
+}

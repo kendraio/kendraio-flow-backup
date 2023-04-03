@@ -1,0 +1,151 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "github.token"
+        },
+        {
+            "type": "validator",
+            "test": "type(context.github.token) == `string` && length(context.github.token) > `0`",
+            "message": "No GitHub token available"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "github.token"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "type(context.github.token) == `string` && length(context.github.token) > `0` && context.github.token != `clear`",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "graphql",
+                            "endpoint": "https://api.github.com/graphql",
+                            "query": "query MyQuery {\r\n    viewer { \r\n        login \r\n        }\r\n}",
+                            "variables": {
+                                "token": "context.github.token"
+                            },
+                            "headers": {
+                                "Authorization": "join(' ', [`Bearer`, context.github.token])"
+                            },
+                            "allowFirst": true,
+                            "allowEmpty": true
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.data.viewer.login"
+                        },
+                        {
+                            "type": "context-save",
+                            "contextKey": "github.viewer"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "switch",
+            "valueGetter": "type(context.github.viewer) == `string` && length(context.github.viewer) > `0` && context.github.viewer != `clear`",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "Connected to Github as: {{context.github.viewer}}"
+                        }
+                    ]
+                },
+                {
+                    "value": false,
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "To access GitHub, you'll need to generate an access token."
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{ token: ''}"
+                        },
+                        {
+                            "type": "form",
+                            "label": "Github Authentication",
+                            "jsonSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "title": "Personal access token",
+                                        "pattern": "^gh.?_.*"
+                                    }
+                                }
+                            },
+                            "uiSchema": {
+                                "token": {
+                                    "ui:widget": "password"
+                                }
+                            }
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.token"
+                        },
+                        {
+                            "type": "context-save",
+                            "contextKey": "github.token"
+                        },
+                        {
+                            "type": "debug"
+                        },
+                        {
+                            "type": "switch",
+                            "valueGetter": "type(data) == `string` && length(data) > `0`",
+                            "cases": [
+                                {
+                                    "value": true,
+                                    "blocks": [
+                                        {
+                                            "type": "variable-set",
+                                            "name": "github.token"
+                                        },
+                                        {
+                                            "type": "dispatch",
+                                            "action": "refreshWorkflow"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "value": false,
+                                    "blocks": [
+                                        {
+                                            "type": "template",
+                                            "template": "Token not updated"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        }
+    ],
+    "id": "githubUser",
+    "workflowId": "githubUser",
+    "adapterName": "github",
+    "created": "2021-06-04T11:34:12.633Z",
+    "tags": [],
+    "updated": "2021-06-04T11:34:12.633Z",
+    "modified": "2021-06-04T11:34:12.633Z",
+    "title": "Github Authentication"
+}

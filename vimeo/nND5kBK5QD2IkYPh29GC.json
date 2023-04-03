@@ -1,0 +1,173 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vimeoToken"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.vimeo.com/me', '/'])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{thumbnail: pictures.sizes[3].link ,link: link, name: name, bio: bio,  short_bio: short_bio, location: location,account:account, created_time: created_time}"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "User Profile",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "thumbnail": {
+                        "title": "",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "id": {
+                        "title": "",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "",
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 150
+                    },
+                    "bio": {
+                        "type": "string",
+                        "title": "Bio",
+                        "minLength": 2,
+                        "maxLength": 3000
+                    },
+                    "short_bio": {
+                        "type": "string",
+                        "title": "Short Bio",
+                        "minLength": 2,
+                        "maxLength": 3000
+                    },
+                    "location": {
+                        "type": "string",
+                        "title": "Location",
+                        "minLength": 2,
+                        "maxLength": 30
+                    },
+                    "link": {
+                        "title": "User Page",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "account": {
+                        "title": "Account Type",
+                        "description": "",
+                        "type": "string"
+                    },
+                    "created_time": {
+                        "title": "Joined",
+                        "description": "",
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {
+                "thumbnail": {
+                    "ui:widget": "k-image"
+                },
+                "name": {
+                    "ui:placeholder": "Enter the Video Title",
+                    "ui:errMessage": {
+                        "required": "This is my Required Field error message.",
+                        "minLength": "This a custom Min length error message."
+                    }
+                },
+                "bio": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Bio",
+                    "ui:autofocus": true,
+                    "ui:widget": "k-textarea",
+                    "ui:rows": 4,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Excuse me, this field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                },
+                "short_bio": {
+                    "ui:disabled": false,
+                    "ui:placeholder": "Short Bio",
+                    "ui:autofocus": true,
+                    "ui:widget": "k-textarea",
+                    "ui:rows": 4,
+                    "ui:cols": 3,
+                    "ui:errMessage": {
+                        "required": "Yikes! This field is required!!",
+                        "minLength": "Please enter more Characters",
+                        "maxLength": "This field cannot except that many Characters. ",
+                        "pattern": "Incorrect format! Should be 555-555-555"
+                    }
+                },
+                "link": {
+                    "ui:widget": "null"
+                },
+                "account": {
+                    "ui:widget": "null"
+                },
+                "created_time": {
+                    "ui:widget": "null"
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{name: name, bio: bio, short_bio: short_bio, location: location}"
+        },
+        {
+            "type": "http",
+            "method": "PATCH",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.vimeo.com/', 'me' ])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])",
+                "Content-Type": "join('/', ['application','json'])",
+                "Accept": "join('/', ['application', join('+',  ['vnd.vimeo.*', 'json;version=3.4'])])"
+            }
+        }
+    ],
+    "id": "nND5kBK5QD2IkYPh29GC",
+    "adapter": "vimeo",
+    "org": "kendraio",
+    "workflowId": "nND5kBK5QD2IkYPh29GC",
+    "adapterName": "vimeo",
+    "created": "2019-12-20T12:20:07.969Z",
+    "updated": "2019-12-20T16:02:57.448Z",
+    "modified": "2019-12-20T16:02:57.448Z",
+    "title": "Vimeo: Get:Edit: My User Profile"
+}

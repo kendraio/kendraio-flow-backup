@@ -1,0 +1,63 @@
+{
+    "id": "testWorkflow",
+    "modified": "2021-02-11T12:27:01.432Z",
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "1. Load Excel (Master Format)",
+            "binary": true,
+            "arrayBuffer": false,
+            "accept": [
+                "xlsx"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.Sheet1[6:].[$.data.Sheet1[5], @].map(&fromPairs(zip([0], [1])), @)[?not_null(\"LICENSOR NAME\")]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && {  \n    licensor: uniqBy(data[].{      id: uuid(), name: \"LICENSOR NAME\"     }, 'name'), \nparties: uniqBy(data[].{    id: uuid(),  first_name: \"FIRST NAME\",    \n  last_name: \"LAST NAME\", fullName: join(' ', [\"FIRST NAME\", \"LAST NAME\"])     }, 'fullName'),  \n   album: uniq(data[].\"ALBUM\")[].{ name: @,  id: uuid() },   label: uniq(data[].\"DISTRIBUTING LABEL\")[].{ name: @, id: uuid() },  \n    country: uniq(data[].split(\"RELEASE COUNTRY\" || '', `/`)[].trim(@))[?@], \n      artist: uniq(data[].[\"ALBUM ARTIST\", \"TRACK ARTIST\"][][].trim(@))[].{ name: @, id: uuid() },   \n      track: data[]}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.{ licensor, album, parties, label, country, artist, data: uniqBy($.data.track[*].merge(@, { key: join('|', map(&to_string(@), [\"TRACK TITLE\", \"TRACK ARTIST\", \"ISRC\"])) }), 'key'), track: $.data.track[].{ id: uuid(), key: join('|', map(&to_string(@), [\"TRACK TITLE\", \"TRACK ARTIST\", \"ISRC\"])), licensor_uuid: find($.data.licensor, 'name', \"LICENSOR NAME\").id,   track_title: \"TRACK TITLE\",  track_artist_uuid: find($.data.artist, 'name', \"TRACK ARTIST\").id,  album_uuid: find($.data.album, 'name', \"ALBUM\").id,  distributing_label_uuid: find($.data.label, 'name', \"DISTRIBUTING LABEL\").id,   isrc: \"ISRC\",   upc: to_string(\"UPC\"),   release_country: \"RELEASE COUNTRY\",   album_uuid: find($.data.album, 'name', \"ALBUM\").id,  initial_release_date: parseDate(\"INITIAL RELEASE DATE \")} }\n"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && merge(data, {track: uniqBy(data.track, 'key')})"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, { contributions: $.data.data[].{\n     party_uuid: find($.data.parties, 'fullName',  join(' ', [\"FIRST NAME\", \"LAST NAME\"])).id,\n     rightsholder_percent: product(\"%\", `100`),\n     backing_vocals: trim(\"BCK VOCALS\") == 'Yes',\n     musician:  trim(\"MUSICIAN\") == 'Yes',\n     role: \"ROLE (PERFORMED)\",\n     instrument: \"INSTRUMENT\",\n     track_uuid: find($.data.track, 'key',  join('|', map(&to_string(@), [\"TRACK TITLE\", \"TRACK ARTIST\", \"ISRC\"]))).id\n  },\n  track: $.data.track[].omit(@, ['key']),\n  parties: $.data.parties[].omit(@, ['fullName'])\n})"
+        },
+        {
+            "type": "message",
+            "title": "Data extracted for import:"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        }
+    ],
+    "workflowId": "testWorkflow",
+    "adapterName": "test",
+    "created": "2021-02-11T12:08:35.855Z",
+    "tags": [],
+    "updated": "2021-02-11T12:27:01.432Z",
+    "title": "Test Workflow"
+}

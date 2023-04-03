@@ -1,0 +1,75 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data || `{}`"
+        },
+        {
+            "type": "form",
+            "label": "Connect",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "title": "Username",
+                        "default": ""
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {
+                "password": {
+                    "ui:widget": "password"
+                }
+            }
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": "https://kendraio-bit-proxy.vercel.app/auth",
+            "payload": "{ username: data.username, password: data.password, type: 'EMAIL' }",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "merge(data, context.saved)"
+        },
+        {
+            "type": "validator",
+            "test": "not_null(data.token)",
+            "message": "Validation Failed"
+        },
+        {
+            "type": "variable-set",
+            "name": "sandboxAuth"
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "bandsintown",
+    "created": "2023-04-03T10:53:09.134Z",
+    "tags": [
+        "connect",
+        "test"
+    ],
+    "updated": "2023-04-03T10:53:09.132Z",
+    "modified": "2023-04-03T10:53:09.132Z",
+    "title": "Bandsintown Connect"
+}

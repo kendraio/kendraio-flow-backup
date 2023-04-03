@@ -1,0 +1,45 @@
+{
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "Import",
+            "accept": [
+                "json"
+            ]
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, { random: uuid() }) | sort_by(@, &random) | [0:100]"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].omit(@, ['random'])"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "file-export",
+            "label": "Export",
+            "fileName": "exported"
+        }
+    ],
+    "id": "randomSample",
+    "workflowId": "randomSample",
+    "adapterName": "demo",
+    "created": "2021-06-24T14:15:03.747Z",
+    "tags": [],
+    "updated": "2021-06-24T14:15:03.747Z",
+    "modified": "2021-06-24T14:15:03.747Z",
+    "title": "Random Sample"
+}

@@ -1,0 +1,86 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "spotifyToken"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.queryParams.id || '3z8PBjiSjR33oMyppDKHqH'"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.spotify.com/v1/playlists/', data])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.spotifyToken])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "message",
+            "title": "Playlist: {{data.name}}",
+            "message": "{{description}}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.tracks.items"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Image",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<img src=\"{{data.track.album.images.[2].url}}\" />"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Name",
+                    "field": "track.name"
+                },
+                {
+                    "headerName": "ID",
+                    "field": "track.id"
+                },
+                {
+                    "headerName": "Artists",
+                    "valueGetter": "track.artists[].name"
+                },
+                {
+                    "headerName": "ISRC",
+                    "valueGetter": "track.external_ids.isrc"
+                }
+            ]
+        }
+    ],
+    "id": "viewPlaylist",
+    "adapter": "spotify",
+    "org": "kendraio",
+    "workflowId": "Heymv0ridwh43YSYut24",
+    "adapterName": "spotify",
+    "created": "2019-12-16T08:56:36.080Z",
+    "updated": "2019-12-16T08:56:36.080Z",
+    "modified": "2019-12-16T08:56:36.080Z",
+    "title": "View playlist"
+}

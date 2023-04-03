@@ -1,0 +1,36 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockComment": "Load schemas"
+        },
+        {
+            "type": "mapping",
+            "mapping": "join(` ; `,data[*].join(join(` `,[`; `,name,` `,`  --> `]),[``,properties[?type==`Object` || type==`List` || type==`ObjectReference` || type==`ListReference`].config][])|[?@!=``])",
+            "blockComment": ""
+        },
+        {
+            "type": "mermaid",
+            "graphGetter": "data",
+            "diagramType": "graph",
+            "diagramDirection": "LR",
+            "svgId": "Dependencies",
+            "blockComment": ""
+        }
+    ],
+    "id": "dependenciesMermaid",
+    "workflowId": "dependenciesMermaid",
+    "adapterName": "schemas",
+    "created": "2022-06-13T11:42:19.433Z",
+    "tags": [
+        "mermaid"
+    ],
+    "updated": "2022-06-13T11:42:19.433Z",
+    "modified": "2022-06-13T11:42:19.433Z",
+    "title": "Workflow"
+}

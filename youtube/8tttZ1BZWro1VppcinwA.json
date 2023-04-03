@@ -1,0 +1,85 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "default": "snippet,statistics"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                }
+            },
+            "uiSchema": {
+                "mine": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "debug",
+                    "showContext": true
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/channels",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        }
+    ],
+    "id": "8tttZ1BZWro1VppcinwA",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "8tttZ1BZWro1VppcinwA",
+    "adapterName": "youtube",
+    "created": "2019-11-21T14:31:05.935Z",
+    "updated": "2019-12-05T17:58:12.530Z",
+    "modified": "2019-12-05T17:58:12.530Z",
+    "title": "TimTube: Get my Channels"
+}

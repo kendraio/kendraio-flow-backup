@@ -1,0 +1,236 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://localloop.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  transactions_with_organisations {\n    amount\n    from_organisation\n    to_organisation\n  }\n}\n    ",
+            "variables": {},
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.transactions_with_organisations",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<h3>Existing transactions",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://localloop.hasura.app/v1/graphql",
+            "query": "query GetOrganisations {\n  organisations {\n    name\n\t\tid\n  }\n}\n    ",
+            "variables": {},
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.organisations",
+            "blockComment": "Get just the organisations list"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{oneOf:data[*].{ title: name, type: 'integer', enum: [id] }}",
+            "blockComment": "Transforms the organisations list into JSON Schema oneOf array fragment"
+        },
+        {
+            "type": "context-save",
+            "key": "orgs",
+            "blockComment": "Save orgs"
+        },
+        {
+            "type": "form",
+            "hasSubmit": true,
+            "label": "Submit",
+            "emitOnInit": false,
+            "skipInit": false,
+            "confirm": false,
+            "jsonSchema": {
+                "definitions": {
+                    "context": {
+                        "app": {
+                            "adapterName": "local-loop",
+                            "workflowId": "addTransaction",
+                            "location": {
+                                "origin": "https://app.kendra.io",
+                                "protocol": "https:",
+                                "host": "app.kendra.io",
+                                "port": "",
+                                "pathname": "/local-loop/addTransaction",
+                                "search": "",
+                                "hash": "",
+                                "href": "https://app.kendra.io/local-loop/addTransaction"
+                            },
+                            "connections": []
+                        },
+                        "queryParams": {},
+                        "fragment": null,
+                        "orgs": {
+                            "oneOf": [
+                                {
+                                    "title": "Acme",
+                                    "type": "integer",
+                                    "enum": [
+                                        1
+                                    ]
+                                },
+                                {
+                                    "title": "Widgets Inc",
+                                    "type": "integer",
+                                    "enum": [
+                                        2
+                                    ]
+                                },
+                                {
+                                    "title": "Foo Bar",
+                                    "type": "integer",
+                                    "enum": [
+                                        3
+                                    ]
+                                },
+                                {
+                                    "title": "Organic Food Shop",
+                                    "type": "integer",
+                                    "enum": [
+                                        14
+                                    ]
+                                },
+                                {
+                                    "title": "Dil Green",
+                                    "type": "integer",
+                                    "enum": [
+                                        15
+                                    ]
+                                }
+                            ]
+                        },
+                        "__key": "aef79da7-6185-4a8a-be8b-dd0dcaacadc4"
+                    }
+                },
+                "type": "object",
+                "title": "Add transaction",
+                "properties": {
+                    "from_organisation_id": {
+                        "title": "From organisation",
+                        "$ref": "#/definitions/context/orgs"
+                    },
+                    "to_organisation_id": {
+                        "title": "To organisation",
+                        "$ref": "#/definitions/context/orgs"
+                    },
+                    "amount": {
+                        "type": "integer",
+                        "title": "Amount"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Allows selecting an org from the list, returning an object containing an org_id"
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showContext": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\"from_organisation_id\":data.from_organisation_id, \"to_organisation_id\":data.to_organisation_id,amount:data.amount}",
+            "blockComment": "Ensure we only have the required keys"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://localloop.hasura.app/v1/graphql",
+            "query": "mutation MyMutation($input: transactions_insert_input!) {\n  insert_transactions_one(object: $input) {\n    id\n    amount\n    from_organisation_id\n    to_organisation_id\n  }\n}\n",
+            "variables": {
+                "input": "data"
+            },
+            "headers": {},
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://localloop.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  transactions_with_organisations {\n    amount\n    from_organisation\n    to_organisation\n  }\n}\n    ",
+            "variables": {},
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.transactions_with_organisations",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Main",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "local-loop",
+                            "workflowId": "main"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Filter transactions by organisation",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "local-loop",
+                            "workflowId": "filterTransactionsByOrg"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Add a new organisation",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "local-loop",
+                            "workflowId": "addOrg"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "addTransaction",
+    "workflowId": "addTransaction",
+    "adapterName": "local-loop",
+    "created": "2023-01-25T16:08:24.326Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2023-01-25T16:08:24.325Z",
+    "modified": "2023-01-25T16:08:24.325Z",
+    "title": "Add transaction"
+}

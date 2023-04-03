@@ -1,0 +1,86 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "part": {
+                        "type": "string",
+                        "default": "snippet"
+                    },
+                    "mine": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "myRating": {
+                        "type": "string",
+                        "default": "like"
+                    }
+                }
+            },
+            "uiSchema": {
+                "mine": {
+                    "ui:widget": "k-hidden"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "debug",
+                    "showContext": true
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/youtube/v3/videos",
+                        "valueGetters": {
+                            "query": "data"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "type": "mapping",
+            "mapping": "data"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        }
+    ],
+    "id": "cbtL3KxAiSKh8WWXuXgB",
+    "adapter": "youtube",
+    "org": "kendraio",
+    "workflowId": "cbtL3KxAiSKh8WWXuXgB",
+    "adapterName": "youtube",
+    "created": "2019-11-21T14:56:09.329Z",
+    "updated": "2019-12-05T17:57:48.629Z",
+    "modified": "2019-12-05T17:57:48.629Z",
+    "title": "TimTube: Get Videos I Like"
+}

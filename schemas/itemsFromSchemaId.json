@@ -1,0 +1,145 @@
+{
+    "blocks": [
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockComment": "Load schemas"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Database contents</h2>"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?uuid==$.context.queryParams.schemaId] | [0]",
+            "blockComment": "Filter schema to url param"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "schema",
+            "blockComment": "save our specific schema"
+        },
+        {
+            "type": "message",
+            "title": "List items from schema: {{ context.schema.name }}"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schemaGetter": "context.schema.name",
+            "blockComment": "Load data from schema"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[].merge(@, { label: get(@, $.context.schema.label)})",
+            "blockComment": "Get the \"title\" "
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 40
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Label",
+                    "field": "label"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "editItem",
+                                                "context": {
+                                                    "schemaId": "context.queryParams.schemaId",
+                                                    "id": "data.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "uuid"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add Item",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "editItem",
+                            "context": {
+                                "schemaId": "context.queryParams.schemaId",
+                                "id": "uuid()"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "List all schemas",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "importer",
+            "workflowId": "footer",
+            "blockComment": "Footer\n"
+        }
+    ],
+    "id": "itemsFromSchemaId",
+    "workflowId": "itemsFromSchemaId",
+    "adapterName": "schemas",
+    "created": "2022-06-21T09:53:21.462Z",
+    "tags": [
+        "importer"
+    ],
+    "updated": "2022-06-21T09:53:21.462Z",
+    "modified": "2022-06-21T09:53:21.462Z",
+    "title": "List Items"
+}

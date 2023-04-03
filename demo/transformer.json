@@ -1,0 +1,35 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "jsonplaceholder.typicode.com",
+                "pathname": "/posts",
+                "query": {
+                    "userId": 1
+                }
+            }
+        },
+        {
+            "type": "transformer",
+            "code": "const Titles = data.map(v => ({ Title: v.title }));\nvar i = 0;\nlocalStorage.get('secretThing');\nTitles.forEach(v => {\n    v.test = ++i;\n});\nreturn Titles;\n"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        }
+    ],
+    "id": "transformer",
+    "workflowId": "transformer",
+    "adapterName": "demo",
+    "created": "2021-04-08T10:38:17.591Z",
+    "tags": [],
+    "updated": "2021-04-08T10:38:17.590Z",
+    "modified": "2021-04-08T10:38:17.590Z",
+    "title": "Transformer Demo"
+}

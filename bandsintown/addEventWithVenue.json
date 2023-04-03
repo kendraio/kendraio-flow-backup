@@ -1,0 +1,237 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth"
+        },
+        {
+            "type": "form",
+            "label": "Add event",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "headline_artist": {
+                        "type": "string",
+                        "title": "Headline Artist"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "description": "Format: 2019-10-01",
+                        "title": "Start Date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "Start Time"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "enum": [
+                            "PUBLISHED",
+                            "DRAFT",
+                            "SCHEDULED",
+                            "DELETED"
+                        ]
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Type",
+                        "enum": [
+                            "PAST",
+                            "UPCOMING"
+                        ]
+                    },
+                    "venue": {
+                        "type": "string",
+                        "title": "Venue ID"
+                    },
+                    "venue_name": {
+                        "type": "string",
+                        "title": "Venue Name"
+                    },
+                    "venue_city": {
+                        "type": "string",
+                        "title": "Venue City"
+                    },
+                    "venue_country": {
+                        "type": "string",
+                        "title": "Venue Country"
+                    },
+                    "venue_latitude": {
+                        "type": "string",
+                        "title": "Venue Latitude"
+                    },
+                    "venue_longitude": {
+                        "type": "string",
+                        "title": "Venue Longitude"
+                    },
+                    "lineup": {
+                        "type": "array",
+                        "title": "Lineup",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "bio": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "tickets_manager": {
+                        "type": "array",
+                        "title": "Tickets Manager",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "link": {
+                                    "type": "string",
+                                    "title": "Link"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "title": "Tickets Manager",
+                                    "enum": [
+                                        "TICKETS",
+                                        "TICKETS 2",
+                                        "PRESALE",
+                                        "VIP",
+                                        "FAN CLUB",
+                                        "FREE",
+                                        "SOLD OUT"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "headline_artist": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "adapterName": "kendraio",
+                        "blocks": [
+                            {
+                                "type": "card",
+                                "blocks": [
+                                    {
+                                        "type": "message",
+                                        "title": "Select artist:"
+                                    },
+                                    {
+                                        "type": "gosub",
+                                        "adapterName": "kendraio",
+                                        "workflowId": "sandboxSelectArtist"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "lineup": {
+                    "items": {
+                        "ui:widget": "blocks",
+                        "blocksConfig": {
+                            "adapterName": "kendraio",
+                            "blocks": [
+                                {
+                                    "type": "card",
+                                    "blocks": [
+                                        {
+                                            "type": "message",
+                                            "title": "Search and select artist:"
+                                        },
+                                        {
+                                            "type": "gosub",
+                                            "adapterName": "kendraio",
+                                            "workflowId": "sandboxFindArtist"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{ type: type, streaming_event: `false`, headline_artist_id: headline_artist.id, headline_artist_name: headline_artist.name, description: description,start_date: start_date,start_time: start_time,status: status, tickets_manager: tickets_manager, venue_name: venue_name, venue_city: venue_city, venue_region: venue_region, venue_country: venue_country,venue_postal_code: venue_postal_code, venue_latitude: venue_latitude, venue_longitude: venue_longitude, lineup: lineup[*].{id: id, name: name } }"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.headline_artist_id",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "http",
+                        "method": "post",
+                        "endpoint": {
+                            "protocol": "https:",
+                            "host": "kendraio-bit-proxy.now.sh",
+                            "valueGetters": {
+                                "pathname": "join('', ['/artist/', to_string(data.headline_artist_id), '/events'])"
+                            }
+                        },
+                        "headers": {
+                            "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+                        },
+                        "onError": {
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "{ message: data.message, status: data.status, errors: data.error.message[*].{ property: property, constraints: constraints } }"
+                                },
+                                {
+                                    "type": "card",
+                                    "blocks": [
+                                        {
+                                            "type": "template",
+                                            "template": "Error with submission:<ul>{{#each data.errors}}<li>{{property}}<ul>{{#each constraints}}{{this}}{{/each}}</ul></li>{{/each}}</ul>"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "id": "addEventWithVenue",
+    "workflowId": "addEventWithVenue",
+    "adapterName": "bandsintown",
+    "created": "2020-06-16T07:00:09.803Z",
+    "updated": "2020-06-16T07:00:09.803Z",
+    "modified": "2020-06-16T07:00:09.803Z",
+    "title": "Add Event (Custom Venue)"
+}

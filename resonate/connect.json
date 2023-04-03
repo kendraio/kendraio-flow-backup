@@ -1,0 +1,88 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Connect",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "basicAuth": {
+                        "title": "Basic Auth",
+                        "type": "object",
+                        "properties": {
+                            "username": {
+                                "type": "string",
+                                "title": "Username"
+                            },
+                            "password": {
+                                "type": "string",
+                                "title": "Password"
+                            }
+                        }
+                    },
+                    "resonateId": {
+                        "title": "Resonate ID",
+                        "type": "object",
+                        "properties": {
+                            "username": {
+                                "type": "string",
+                                "title": "Username"
+                            },
+                            "password": {
+                                "type": "string",
+                                "title": "Password"
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "basicAuth": {
+                    "password": {
+                        "ui:widget": "password"
+                    }
+                },
+                "resonateId": {
+                    "password": {
+                        "ui:widget": "password"
+                    }
+                }
+            }
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "useProxy": true,
+            "proxyUrl": "http://localhost:3000/",
+            "requestType": "application/x-www-form-urlencoded",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "id.resonate.ninja",
+                "pathname": "/v1/oauth/tokens"
+            },
+            "payload": "{       username: data.resonateId.username,      password: data.resonateId.password,    grant_type: `password`,     scope: `stream2own`    }",
+            "authentication": {
+                "type": "basic-auth",
+                "valueGetters": {
+                    "username": "data.basicAuth.username",
+                    "password": "data.basicAuth.password"
+                }
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "resonate",
+    "created": "2021-04-23T10:21:02.655Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2021-04-23T10:21:02.655Z",
+    "modified": "2021-04-23T10:21:02.655Z",
+    "title": "Connect"
+}

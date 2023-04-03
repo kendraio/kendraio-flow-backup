@@ -1,0 +1,143 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "access_token"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vimeoToken"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.queryParams.video_id || '380291987'"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "join('', ['https://api.vimeo.com/videos/', data, '/pictures'])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data[].{thumbnail: sizes[3].link, id: replaceMe(uri)}"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "sizeColumnsToFit": true,
+                "rowSelection": "single",
+                "rowHeight": 100,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Thumbnail",
+                    "width": 150,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "image",
+                                "src": "{{thumbnail}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id",
+                    "filter": false
+                },
+                {
+                    "headerName": "Link",
+                    "field": "link",
+                    "filter": false
+                },
+                {
+                    "headerName": "Title",
+                    "field": "name",
+                    "filter": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "description"
+                },
+                {
+                    "headerName": "Published Date",
+                    "field": "created_time",
+                    "valueFormatter": "formatDate(value, 'ff')"
+                }
+            ]
+        },
+        {
+            "type": "http",
+            "method": "POST",
+            "endpoint": {
+                "valueGetter": "join('/', ['https://api.vimeo.com/videos', context.queryParams.video_id, 'pictures'])"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.vimeoToken])",
+                "Content-Type": "join('/', ['application','json'])",
+                "Accept": "join('/', ['application', join('+',  ['vnd.vimeo.*', 'json;version=3.4'])])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "title": "Add New Thumbnail",
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "time": {
+                        "title": "Time (secs)",
+                        "description": "",
+                        "type": "number",
+                        "min": "1"
+                    },
+                    "active": {
+                        "title": "Active",
+                        "description": "",
+                        "type": "boolean",
+                        "default": true
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "message",
+            "title": "Thumbnails: {{data.name}}",
+            "message": "{{description}}"
+        }
+    ],
+    "id": "vimeo_get_edit_thumbnails",
+    "adapter": "vimeo",
+    "org": "kendraio",
+    "workflowId": "Z6MdRqoL4ePcJXzTKgGS",
+    "adapterName": "vimeo",
+    "created": "2019-12-23T13:08:01.750Z",
+    "updated": "2019-12-23T13:08:01.750Z",
+    "modified": "2019-12-23T13:08:01.750Z",
+    "title": "Vimeo: Get:Edit Thumbnails By Video_Id"
+}

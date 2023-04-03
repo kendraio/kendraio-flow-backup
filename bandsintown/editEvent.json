@@ -1,0 +1,185 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "kendraio-bit-proxy.now.sh",
+                "valueGetters": {
+                    "pathname": "join('', ['/artist/', to_string(context.queryParams.artist), '/events/', to_string(context.queryParams.id)])",
+                    "query": "{ type: context.queryParams.type }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.saved.token])"
+            }
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": true
+        },
+        {
+            "type": "form",
+            "title": "Update Event",
+            "label": "Update Event",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "ID"
+                    },
+                    "headline_artist_id": {
+                        "type": "string",
+                        "title": "Headline Artist ID"
+                    },
+                    "headline_artist_name": {
+                        "type": "string",
+                        "title": "Headline Artist Name"
+                    },
+                    "venue_id": {
+                        "type": "string",
+                        "title": "Venue ID"
+                    },
+                    "venue_name": {
+                        "type": "string",
+                        "title": "Venue Name"
+                    },
+                    "venue_city": {
+                        "type": "string",
+                        "title": "Venue City"
+                    },
+                    "venue_country": {
+                        "type": "string",
+                        "title": "Venue Country"
+                    },
+                    "venue_latitude": {
+                        "type": "number",
+                        "title": "Venue Latitude"
+                    },
+                    "venue_longitude": {
+                        "type": "number",
+                        "title": "Venue Longitude"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "description": "Format: 2019-10-01",
+                        "title": "Start Date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "Start Time"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "enum": [
+                            "PUBLISHED",
+                            "DRAFT",
+                            "SCHEDULED",
+                            "DELETED"
+                        ]
+                    },
+                    "tickets_manager": {
+                        "type": "array",
+                        "title": "Tickets Manager",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "link": {
+                                    "type": "string",
+                                    "title": "Link"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "title": "Tickets Manager",
+                                    "enum": [
+                                        "TICKETS",
+                                        "TICKETS 2",
+                                        "PRESALE",
+                                        "VIP",
+                                        "FAN CLUB",
+                                        "FREE",
+                                        "SOLD OUT"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "http",
+                        "method": "patch",
+                        "endpoint": {
+                            "protocol": "https:",
+                            "host": "partnerapi.artists.bandsintown.com",
+                            "valueGetters": {
+                                "pathname": "join('', ['/artist/', to_string(data.headline_artist_id), '/events/', to_string(data.id)])",
+                                "query": "{ \"x-api-key\": context.saved.key }"
+                            }
+                        },
+                        "headers": {
+                            "Authorization": "join('', ['Bearer ', context.saved.token])"
+                        },
+                        "onError": {
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "{ message: data.message, status: data.status, errors: data.error.message[*].{ property: property, constraints: constraints } }"
+                                },
+                                {
+                                    "type": "card",
+                                    "blocks": [
+                                        {
+                                            "type": "template",
+                                            "template": "Error with submission:<ul>{{#each data.errors}}<li>{{property}}<ul>{{#each constraints}}{{this}}{{/each}}</ul></li>{{/each}}</ul>"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "id": "editEvent",
+    "workflowId": "editEvent",
+    "adapterName": "bandsintown",
+    "created": "2020-06-16T07:00:33.701Z",
+    "updated": "2020-06-16T07:00:33.701Z",
+    "modified": "2020-06-16T07:00:33.701Z",
+    "title": "Edit Event"
+}

@@ -1,0 +1,33 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "['1','2','3']"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "{{data}}"
+                }
+            ]
+        }
+    ],
+    "id": "testBatch",
+    "workflowId": "testBatch",
+    "adapterName": "development",
+    "created": "2021-07-28T12:23:56.474Z",
+    "tags": [],
+    "updated": "2021-07-28T12:23:56.474Z",
+    "modified": "2021-07-28T12:23:56.474Z",
+    "title": "Workflow"
+}

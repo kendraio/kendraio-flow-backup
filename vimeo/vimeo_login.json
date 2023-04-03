@@ -1,0 +1,36 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ state: uuid() }"
+        },
+        {
+            "type": "variable-set",
+            "name": "temp-auth-state"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ state: data.state, client_id: 'b846f8262797f09515f71ea6a2e696e20a036d41' }"
+        },
+        {
+            "type": "template",
+            "template": "<!-- <a style=\"display:none\" href=\"https://api.vimeo.com/oauth/authorize?response_type=code&client_id={{data.client_id}}&redirect_uri=https://dev.app.kendra.io/vimeo/vimeo_auth&state={{data.state}}&scope={{data.scope_list}}\">Connect</a> -->"
+        },
+        {
+            "type": "template",
+            "template": "<hr><a href=\"https://api.vimeo.com/oauth/authorize?response_type=token&client_id={{data.client_id}}&redirect_uri=https://dev.app.kendra.io/vimeo/vimeo_grant_imp&state={{data.state}}&scope=public private edit upload\">Connect to Vimeo With Implicit Grant</a>"
+        }
+    ],
+    "id": "vimeo_login",
+    "adapter": "vimeo",
+    "org": "kendraio",
+    "workflowId": "vimeo_login",
+    "adapterName": "vimeo",
+    "created": "2019-12-17T09:49:38.854Z",
+    "updated": "2020-01-12T16:53:36.571Z",
+    "modified": "2020-01-12T16:53:36.571Z",
+    "title": "Vimeo: Step 1: Connect"
+}

@@ -1,0 +1,78 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query ($token: String, $id: Int) {viewer(token: $token) { resourceClassification(id: $id) { name  classificationFacets { id  name  description facetValues { id description value }}}}}",
+            "variables": {
+                "id": "context.queryParams.recipeId",
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.resourceClassification.classificationFacets"
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "message",
+                    "title": "{{name}}",
+                    "message": "{{description}}"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data.facetValues"
+                },
+                {
+                    "type": "reference",
+                    "labelGetter": "value",
+                    "valueField": "id",
+                    "outputGetter": "@"
+                }
+            ]
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Go",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "valueflows",
+                            "workflowId": "editPlan"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "selectRecipeWork",
+    "adapter": "valueflows",
+    "org": "kendraio",
+    "workflowId": "selectRecipeWork",
+    "adapterName": "valueflows",
+    "created": "2020-04-16T09:41:21.568Z",
+    "updated": "2020-04-17T07:55:57.940Z",
+    "modified": "2020-04-17T07:55:57.940Z",
+    "title": "ValueFlows Select Type of Recipe"
+}

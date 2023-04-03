@@ -1,0 +1,61 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://disease.sh/v2/historical"
+        },
+        {
+            "type": "mapping",
+            "mapping": "sort_by(data[?province == `null`], &country)"
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select country",
+            "labelGetter": "country",
+            "valueField": "country",
+            "outputGetter": "timeline"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data == `null` && { cases: `{}`, deaths: `{}`, recovered: `{}`} || data"
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(values(data)) == `0` && { cases: `{}`, deaths: `{}`, recovered: `{}`} || data"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[{data: toPairs(data.cases)[-100:].{value: @[1], label: @[0]}, label: 'cases'},{data: toPairs(data.deaths)[-100:].{value: @[1], label: @[0]}, label: 'deaths'},{data: toPairs(data.recovered)[-100:].{value: @[1], label: @[0]}, label: 'recovered'}]"
+        },
+        {
+            "type": "chart",
+            "chartType": "line",
+            "multi": true,
+            "options": {
+                "scales": {
+                    "yAxes": [
+                        {
+                            "type": "linear",
+                            "ticks": {
+                                "callback": "value",
+                                "maxTicksLimit": 10
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "id": "coronavirusByCountry",
+    "workflowId": "coronavirusByCountry",
+    "adapterName": "kendraio",
+    "created": "2020-11-07T16:53:53.496Z",
+    "tags": [],
+    "updated": "2020-11-07T16:53:53.496Z",
+    "modified": "2020-11-07T16:53:53.496Z",
+    "title": "Coronavirus By Country"
+}

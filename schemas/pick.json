@@ -1,0 +1,26 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "schemas"
+        },
+        {
+            "type": "reference",
+            "labelField": "name",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "pick",
+    "workflowId": "pick",
+    "adapterName": "schemas",
+    "created": "2021-06-25T08:14:40.325Z",
+    "tags": [],
+    "updated": "2021-06-25T08:14:40.324Z",
+    "modified": "2021-06-25T08:14:40.324Z",
+    "title": "Pick Schema"
+}

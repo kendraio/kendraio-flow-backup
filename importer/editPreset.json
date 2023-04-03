@@ -1,0 +1,62 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "importer",
+            "schema": "presets",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[0]"
+        },
+        {
+            "type": "form",
+            "label": "Save Preset",
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "data.form"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "db",
+            "operation": "update",
+            "adapterName": "importer",
+            "schema": "presets"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to preset list",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "importer",
+                            "workflowId": "listPresets"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "editPreset",
+    "workflowId": "editPreset",
+    "adapterName": "importer",
+    "created": "2021-10-15T15:09:37.405Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2021-10-15T15:09:37.405Z",
+    "modified": "2021-10-15T15:09:37.405Z",
+    "title": "Edit Preset"
+}

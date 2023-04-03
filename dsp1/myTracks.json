@@ -1,0 +1,132 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "dsp1-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  my_tracks {\n    created_at\n    display_artist\n    display_title\n    id\n    updated_at\n    url\n    user_id\n    public\n  }\n}\n",
+            "variables": {},
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.my_tracks"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Artist",
+                    "field": "display_artist"
+                },
+                {
+                    "headerName": "Title",
+                    "field": "display_title"
+                },
+                {
+                    "headerName": "Updated at",
+                    "field": "updated_at"
+                },
+                {
+                    "headerName": "Created at",
+                    "field": "created_at"
+                },
+                {
+                    "headerName": "public",
+                    "field": "public"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "dsp1",
+                                                "workflowId": "editTrack",
+                                                "context": {
+                                                    "id": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Upload",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "dsp1",
+                                                "workflowId": "uploadTrack",
+                                                "context": {
+                                                    "id": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Stream",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "dsp1",
+                                                "workflowId": "streamTrack",
+                                                "context": {
+                                                    "id": "data.id"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add Track",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "dsp1",
+                            "workflowId": "addTrack"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "myTracks",
+    "workflowId": "myTracks",
+    "adapterName": "dsp1",
+    "created": "2021-03-01T12:21:22.616Z",
+    "tags": [],
+    "updated": "2021-03-01T12:21:22.616Z",
+    "modified": "2021-03-01T12:21:22.616Z",
+    "title": "My Tracks (DSP1)"
+}

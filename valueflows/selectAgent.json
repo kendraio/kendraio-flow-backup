@@ -1,0 +1,44 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "vfAuth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "vfAuth"
+        },
+        {
+            "type": "graphql",
+            "allowFirst": true,
+            "allowEmpty": true,
+            "endpoint": "https://valnet.lurker.dev/api/graphql",
+            "query": "query($token: String) { viewer(token: $token) { allAgents { id name type }}}",
+            "variables": {
+                "token": "context.vfAuth"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.viewer.allAgents[?type==`Person`]"
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select member",
+            "labelGetter": "name",
+            "valueField": "id",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "selectAgent",
+    "workflowId": "selectAgent",
+    "adapterName": "valueflows",
+    "created": "2020-07-09T09:35:05.773Z",
+    "tags": [],
+    "updated": "2020-07-09T09:35:05.773Z",
+    "modified": "2020-07-09T09:35:05.773Z",
+    "title": "ValueFlows Select Agent"
+}

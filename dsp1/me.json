@@ -1,0 +1,79 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "dsp1-auth"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  me {\n    id\n    created_at\n    name\n    last_seen\n    updated_at\n    payment_pointer\n  }\n}\n",
+            "variables": {},
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.me[0]"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showContext": false
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "name"
+                    },
+                    "payment_pointer": {
+                        "type": "string",
+                        "title": "My payment pointer"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "query": "mutation MyMutation($id: String!, $me: me_set_input) {\n  update_me(where: {id: {_eq: $id}}, _set: $me)\n  {\n      affected_rows\n  }\n}\n",
+            "variables": {
+                "id": "data.id",
+                "me": "pick(data, ['name', 'payment_pointer'])"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showContext": false
+        }
+    ],
+    "id": "me",
+    "workflowId": "me",
+    "adapterName": "dsp1",
+    "created": "2021-01-22T12:51:19.702Z",
+    "tags": [],
+    "updated": "2021-01-22T12:51:19.701Z",
+    "modified": "2021-01-22T12:51:19.701Z",
+    "title": "Me (DSP1)"
+}

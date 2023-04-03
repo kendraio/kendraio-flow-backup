@@ -1,0 +1,36 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ state: uuid() }"
+        },
+        {
+            "type": "variable-set",
+            "name": "temp-auth-state"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ state: data.state, client_id: '183158f83e44b4934d2a' }"
+        },
+        {
+            "type": "template",
+            "template": "<!-- <a href=\"https://api.vimeo.com/oauth/authorize?response_type=code&client_id={{data.client_id}}&redirect_uri=https://dev.app.kendra.io/vimeo/vimeo_auth&state={{data.state}}&scope={{data.scope_list}}\">Connect</a> -->"
+        },
+        {
+            "type": "template",
+            "template": "<hr><a href=\"https://www.dailymotion.com/oauth/authorize?response_type=code&client_id={{data.client_id}}&redirect_uri=https://dev.app.kendra.io/dailymotion/dailymotion_start&display=popup&scope=userinfo+manage_videos\">Connect to Daily Motion with Code Grant</a>"
+        }
+    ],
+    "id": "dailymotion_authorize",
+    "adapter": "dailymotion",
+    "org": "kendraio",
+    "workflowId": "dailymotion_authorize",
+    "adapterName": "dailymotion",
+    "created": "2020-01-02T11:56:31.589Z",
+    "updated": "2020-01-14T11:13:35.593Z",
+    "modified": "2020-01-14T11:13:35.593Z",
+    "title": "Daily Motion: Step 1: Authorise"
+}

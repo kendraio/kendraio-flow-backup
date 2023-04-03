@@ -1,0 +1,86 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": "true",
+            "endpoint": "https://drive.google.com/uc?export=view&id=1Kv1UjvvQJHliacNfsUgwIaod7HlOWUk9"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": true,
+            "firstRowHeaders": false
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "import": {
+                    "type": "boolean",
+                    "title": "Import default schemas",
+                    "default": false
+                }
+            },
+            "uiSchema": {},
+            "hasSubmit": true,
+            "emitOnInit": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "db",
+                    "operation": "add",
+                    "adapterName": "schemas",
+                    "schema": "schemas",
+                    "skipFirst": false
+                }
+            ]
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to list",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "init",
+    "workflowId": "init",
+    "adapterName": "schemas",
+    "created": "2021-10-07T12:54:08.956Z",
+    "tags": [],
+    "updated": "2021-10-07T12:54:08.955Z",
+    "modified": "2021-10-07T12:54:08.955Z",
+    "title": "Initialise schemas"
+}

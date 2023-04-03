@@ -1,0 +1,176 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "template",
+            "template": "<h2>Meta Schemas</h2>",
+            "blockComment": "Header"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "metaschemas",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "width": 25,
+                    "resizable": true,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Parent Schema Name",
+                    "field": "parentSchema.name"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "New record",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "editMetaSchemaItem",
+                                                "context": {
+                                                    "schemaId": "data.uuid",
+                                                    "id": "uuid()"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    },
+                                    {
+                                        "label": "Parent",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "editItem",
+                                                "context": {
+                                                    "schemaId": "data.parentSchemaId",
+                                                    "id": "data.parentRecordId"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "UUID",
+                    "field": "uuid"
+                },
+                {
+                    "headerName": "Parent Schema ID",
+                    "field": "parentSchemaId"
+                },
+                {
+                    "headerName": "Parent Record ID",
+                    "field": "parentRecordId"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.saved",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "List all Meta Schema records",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "metaSchemaRecordList"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "List Schemas",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "list"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Delete",
+                    "enabledGetter": "length(data)>`0`",
+                    "color": "warn",
+                    "blocks": [
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "db",
+                                    "operation": "delete",
+                                    "adapterName": "schemas",
+                                    "schema": "metaschemas",
+                                    "uuidGetter": "data.uuid",
+                                    "skipFirst": false
+                                },
+                                {
+                                    "type": "dispatch",
+                                    "action": "refreshWorkflow"
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": false
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "metaschemaList",
+    "workflowId": "metaschemaList",
+    "adapterName": "schemas",
+    "created": "2022-09-05T22:06:44.447Z",
+    "tags": [
+        "importer",
+        "\u2b50"
+    ],
+    "updated": "2022-09-05T22:06:44.447Z",
+    "modified": "2022-09-05T22:06:44.447Z",
+    "title": "List Meta Schemas"
+}

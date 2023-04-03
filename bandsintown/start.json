@@ -1,0 +1,150 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth",
+            "blockComment": "Load bandsintown auth data"
+        },
+        {
+            "type": "template",
+            "template": "<h1>Bandsintown</h1>",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data || `{}`",
+            "blockComment": "Set default value"
+        },
+        {
+            "type": "context-save",
+            "key": "state.flags.bandsintown.connected",
+            "valueGetter": "data.token != null",
+            "blockComment": "Set connected flag"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "state.flags.bandsintown.connected",
+            "cases": [
+                {
+                    "value": false,
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "<h2>Login Required</h2>Log into your bandsintown.com artist or manager account on the <a href='/connect'>Kendraio Accounts page</a>."
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": []
+            },
+            "blockComment": "Display login if needed"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Load managed artists",
+                    "color": "default",
+                    "enabledGetter": "false && !(state.flags.bandsintown.artistExists)",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "loading"
+                        },
+                        {
+                            "type": "gosub",
+                            "adapterName": "bandsintown",
+                            "workflowId": "getArtists"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "state.local.artistList"
+                        },
+                        {
+                            "type": "debug"
+                        }
+                    ],
+                    "enabled": null
+                }
+            ],
+            "blockComment": "Load artists actions"
+        },
+        {
+            "type": "context-save",
+            "key": "state.flags.bandsintown.artistExists",
+            "valueGetter": "state.local.artistList[0].id != null",
+            "blockComment": "Set bandsintown.artistExists flag"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.bandsintown.defaults.artist",
+            "valueGetter": "data[0]",
+            "blockComment": "Save default artist"
+        },
+        {
+            "type": "mapping",
+            "mapping": "state.local.artistList",
+            "blockComment": "Pull artist list from state"
+        },
+        {
+            "type": "template",
+            "template": "{{#if state.flags.bandsintown.artistExists}}<h2>Your artists</h2>{{/if}}",
+            "blockComment": "Your artists header"
+        },
+        {
+            "type": "grid",
+            "enabledGetter": "state.flags.bandsintown.artistExists",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<h2>Artist actions</h2><p>If you are, or manage, a Bandsintown registerd artist, you can use these pages to view and update your data. ",
+            "blockComment": "Artist actions header"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Existing Events",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "bandsintown",
+                            "workflowId": "listEvents"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Add Event",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "bandsintown",
+                            "workflowId": "addEvent"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Aritst Actions"
+        }
+    ],
+    "id": "start",
+    "workflowId": "start",
+    "adapterName": "bandsintown",
+    "created": "2022-09-22T07:23:51.899Z",
+    "tags": [],
+    "updated": "2022-09-22T07:23:51.898Z",
+    "modified": "2022-09-22T07:23:51.898Z",
+    "title": "Bandsintown"
+}

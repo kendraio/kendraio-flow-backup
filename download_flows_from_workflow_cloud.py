@@ -9,14 +9,18 @@ for flow in flows:
     flow_name = flow['adapterName']
     flow_id = flow['id']
     print(f"{flow_name} {flow_id}")
-    response = requests.get(f"{API}/{flow_name}/{flow_id}")
-    code = json.dumps(response.json(), indent=4)
 
-    # Create a directory for the flow_name if it doesn't exist
-    if not os.path.exists(flow_name):
-        os.makedirs(flow_name)
+    try:
+        response = requests.get(f"{API}/{flow_name}/{flow_id}")
+        code = json.dumps(response.json(), indent=4)
 
-    # Save the JSON file in the flow_name directory with flow_id as the filename
-    filename = f"{flow_name}/{flow_id}.json"
-    with open(filename, 'w') as file:
-        file.write(code)
+        # Create a directory for the flow_name if it doesn't exist
+        if not os.path.exists(flow_name):
+            os.makedirs(flow_name)
+
+        # Save the JSON file in the flow_name directory with flow_id as the filename
+        filename = f"{flow_name}/{flow_id}.json"
+        with open(filename, 'w') as file:
+            file.write(code)
+    except json.decoder.JSONDecodeError as e:
+        print(f"Error parsing JSON for flow '{flow_name} {flow_id}': {e}")

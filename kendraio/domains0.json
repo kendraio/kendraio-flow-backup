@@ -1,0 +1,121 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Enter Auth Key",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "authkey": {
+                        "type": "string",
+                        "title": "Auth key",
+                        "default": "the-key"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.dynadot.com",
+                "pathname": "/api3.json",
+                "query": {},
+                "valueGetters": {
+                    "query": "data.{command: 'list_domain', key: join('', [authkey]) }",
+                    "dummy": ""
+                }
+            },
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{type:`application/json`,content:data.body}",
+            "blockComment": ""
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.ListDomainInfoResponse.MainDomains",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].[Name, Expiration, Registration]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Name"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Expiration"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Registration"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "domains0",
+    "workflowId": "domains0",
+    "adapterName": "kendraio",
+    "created": "2023-01-18T12:54:05.815Z",
+    "tags": [
+        "Danny",
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-01-18T12:54:05.814Z",
+    "modified": "2023-01-18T12:54:05.814Z",
+    "title": "Domains :dynadot"
+}

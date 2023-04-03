@@ -1,0 +1,267 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "culturebanked",
+            "schema": "work",
+            "uuidGetter": "context.queryParams.id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "asset": {
+                        "title": "Asset",
+                        "type": "string"
+                    },
+                    "width": {
+                        "title": "Width (mm)",
+                        "type": "string"
+                    },
+                    "height": {
+                        "title": "Height (mm)",
+                        "type": "string"
+                    },
+                    "medium": {
+                        "title": "Medium",
+                        "type": "string"
+                    },
+                    "after": {
+                        "title": "After",
+                        "type": "string"
+                    },
+                    "location": {
+                        "title": "Location",
+                        "type": "string"
+                    },
+                    "owner": {
+                        "title": "Owner",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "partyId": {
+                                    "type": "string",
+                                    "title": "Party"
+                                },
+                                "split": {
+                                    "type": "string",
+                                    "title": "split"
+                                }
+                            }
+                        }
+                    },
+                    "beneficiaries": {
+                        "title": "Beneficiaries",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "partyId": {
+                                    "type": "string",
+                                    "title": "Party"
+                                },
+                                "split": {
+                                    "type": "string",
+                                    "title": "split"
+                                }
+                            }
+                        }
+                    },
+                    "marketPlatforms": {
+                        "type": "array",
+                        "title": "Market platforms",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "assetManager": {
+                        "type": "string",
+                        "title": "Asset manager"
+                    },
+                    "licenseDetails": {
+                        "type": "string",
+                        "title": "License details"
+                    }
+                }
+            },
+            "uiSchema": {
+                "location": {
+                    "ui:widget": "remote-image"
+                },
+                "assetManager": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "culturebanked",
+                                "schema": "party"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select asset manager",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "licenseDetails": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "context-save",
+                                "contextKey": "defaultValue"
+                            },
+                            {
+                                "type": "db",
+                                "skipFirst": false,
+                                "operation": "get",
+                                "adapterName": "culturebanked",
+                                "schema": "license"
+                            },
+                            {
+                                "type": "reference",
+                                "fieldLabel": "Select license",
+                                "labelGetter": "name",
+                                "valueField": "uuid",
+                                "outputGetter": "uuid"
+                            }
+                        ]
+                    }
+                },
+                "marketPlatforms": {
+                    "items": {
+                        "ui:widget": "blocks",
+                        "blocksConfig": {
+                            "blocks": [
+                                {
+                                    "type": "context-save",
+                                    "contextKey": "defaultValue"
+                                },
+                                {
+                                    "type": "db",
+                                    "skipFirst": false,
+                                    "operation": "get",
+                                    "adapterName": "culturebanked",
+                                    "schema": "platform"
+                                },
+                                {
+                                    "type": "reference",
+                                    "fieldLabel": "Select market platform",
+                                    "labelGetter": "name",
+                                    "valueField": "uuid",
+                                    "outputGetter": "uuid"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "owner": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Owner",
+                        "Split"
+                    ],
+                    "items": {
+                        "partyId": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "context-save",
+                                        "contextKey": "defaultValue"
+                                    },
+                                    {
+                                        "type": "db",
+                                        "skipFirst": false,
+                                        "operation": "get",
+                                        "adapterName": "culturebanked",
+                                        "schema": "party"
+                                    },
+                                    {
+                                        "type": "reference",
+                                        "fieldLabel": "Select owner",
+                                        "labelGetter": "name",
+                                        "valueField": "uuid",
+                                        "outputGetter": "uuid"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "beneficiaries": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Beneficiary",
+                        "Split"
+                    ],
+                    "items": {
+                        "partyId": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "context-save",
+                                        "contextKey": "defaultValue"
+                                    },
+                                    {
+                                        "type": "db",
+                                        "skipFirst": false,
+                                        "operation": "get",
+                                        "adapterName": "culturebanked",
+                                        "schema": "party"
+                                    },
+                                    {
+                                        "type": "reference",
+                                        "fieldLabel": "Select beneficiary",
+                                        "labelGetter": "name",
+                                        "valueField": "uuid",
+                                        "outputGetter": "uuid"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "type": "db",
+            "operation": "update",
+            "adapterName": "culturebanked",
+            "schema": "work"
+        },
+        {
+            "type": "launch",
+            "workflowId": "database",
+            "adapter": "culturebanked"
+        }
+    ],
+    "id": "editWork",
+    "workflowId": "editWork",
+    "adapterName": "culturebanked",
+    "created": "2020-06-26T10:29:18.509Z",
+    "updated": "2020-06-26T10:29:18.508Z",
+    "modified": "2020-06-26T10:29:18.508Z",
+    "title": "Edit Work Details"
+}

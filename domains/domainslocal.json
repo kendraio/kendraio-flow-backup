@@ -1,0 +1,142 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "file-input",
+            "label": "Import Gandi",
+            "accept": [
+                "csv",
+                "json",
+                "xml"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "mapping",
+            "mapping": "*[].[`Gandi`, fqdn, dates.created_at, dates.registry_ends_at]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "gandi",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "file-input",
+            "label": "Import Dynadot",
+            "accept": [
+                "csv",
+                "json",
+                "xml"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.ListDomainInfoResponse.MainDomains[*].[`Dynadot`, Name, Registration, Expiration]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "dynadot",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": false,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.dynadot[:],context.gandi[:]][]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Service"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Domain"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "3",
+                    "headerName": "Expires"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "domainslocal",
+    "workflowId": "domainslocal",
+    "adapterName": "domains",
+    "created": "2023-02-06T20:12:34.196Z",
+    "tags": [],
+    "updated": "2023-02-06T20:12:34.196Z",
+    "modified": "2023-02-06T20:12:34.196Z",
+    "title": "DomainsLocal"
+}
