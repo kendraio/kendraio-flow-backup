@@ -35,7 +35,7 @@
             "endpoint": {
                 "protocol": "https:",
                 "pathname": "/venue/search",
-                "host": "kendraio-bit-proxy.now.sh",
+                "host": "kendraio-bit-proxy.vercel.app",
                 "valueGetters": {
                     "query": "{ name: data.name }"
                 }

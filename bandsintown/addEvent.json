@@ -202,7 +202,7 @@
                         "method": "post",
                         "endpoint": {
                             "protocol": "https:",
-                            "host": "kendraio-bit-proxy.now.sh",
+                            "host": "kendraio-bit-proxy.vercel.app",
                             "valueGetters": {
                                 "pathname": "join('', ['/artist/', to_string(data.headline_artist_id), '/events'])"
                             }

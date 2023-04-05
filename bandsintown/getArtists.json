@@ -14,7 +14,7 @@
             "endpoint": {
                 "protocol": "https:",
                 "pathname": "/artist",
-                "host": "kendraio-bit-proxy.now.sh"
+                "host": "kendraio-bit-proxy.vercel.app"
             },
             "headers": {
                 "Authorization": "join('', ['Bearer ', data.token])"
