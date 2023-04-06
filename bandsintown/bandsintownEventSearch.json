@@ -116,12 +116,11 @@
         }
     ],
     "id": "bandsintownEventSearch",
-    "adapter": "bandsintown",
-    "org": "kendraio",
     "workflowId": "bandsintownEventSearch",
     "adapterName": "bandsintown",
-    "created": "2019-11-14T12:07:11.470Z",
-    "updated": "2019-12-16T13:05:31.168Z",
-    "modified": "2019-12-16T13:05:31.168Z",
+    "created": "2023-04-04T13:56:03.585Z",
+    "tags": [],
+    "updated": "2023-04-04T13:56:03.585Z",
+    "modified": "2023-04-04T13:56:03.585Z",
     "title": "Bandsintown Event Search"
 }

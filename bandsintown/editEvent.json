@@ -178,8 +178,9 @@
     "id": "editEvent",
     "workflowId": "editEvent",
     "adapterName": "bandsintown",
-    "created": "2020-06-16T07:00:33.701Z",
-    "updated": "2020-06-16T07:00:33.701Z",
-    "modified": "2020-06-16T07:00:33.701Z",
+    "created": "2023-04-04T13:56:15.272Z",
+    "tags": [],
+    "updated": "2023-04-04T13:56:15.272Z",
+    "modified": "2023-04-04T13:56:15.272Z",
     "title": "Edit Event"
 }

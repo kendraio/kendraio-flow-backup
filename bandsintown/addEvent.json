@@ -239,9 +239,9 @@
     "id": "addEvent",
     "workflowId": "addEvent",
     "adapterName": "bandsintown",
-    "created": "2022-11-04T10:23:32.774Z",
+    "created": "2023-04-04T13:55:57.814Z",
     "tags": [],
-    "updated": "2022-11-04T10:23:32.774Z",
-    "modified": "2022-11-04T10:23:32.774Z",
+    "updated": "2023-04-04T13:55:57.814Z",
+    "modified": "2023-04-04T13:55:57.814Z",
     "title": "Add Event"
 }

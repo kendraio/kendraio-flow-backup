@@ -55,8 +55,9 @@
     "id": "findArtist",
     "workflowId": "findArtist",
     "adapterName": "bandsintown",
-    "created": "2020-06-03T07:19:43.123Z",
-    "updated": "2020-06-03T07:19:43.123Z",
-    "modified": "2020-06-03T07:19:43.123Z",
+    "created": "2023-04-04T13:56:16.709Z",
+    "tags": [],
+    "updated": "2023-04-04T13:56:16.709Z",
+    "modified": "2023-04-04T13:56:16.709Z",
     "title": "Find Artist"
 }

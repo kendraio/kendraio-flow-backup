@@ -150,9 +150,9 @@
     "id": "listEvents",
     "workflowId": "listEvents",
     "adapterName": "bandsintown",
-    "created": "2022-09-16T10:01:44.535Z",
+    "created": "2023-04-04T13:56:24.113Z",
     "tags": [],
-    "updated": "2022-09-16T10:01:44.535Z",
-    "modified": "2022-09-16T10:01:44.535Z",
+    "updated": "2023-04-04T13:56:24.113Z",
+    "modified": "2023-04-04T13:56:24.113Z",
     "title": "List Events"
 }

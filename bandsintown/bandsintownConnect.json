@@ -90,8 +90,9 @@
     "id": "bandsintownConnect",
     "workflowId": "bandsintownConnect",
     "adapterName": "bandsintown",
-    "created": "2020-05-14T11:16:14.525Z",
-    "updated": "2020-05-14T11:16:14.525Z",
-    "modified": "2020-05-14T11:16:14.525Z",
+    "created": "2023-04-04T13:56:01.987Z",
+    "tags": [],
+    "updated": "2023-04-04T13:56:01.987Z",
+    "modified": "2023-04-04T13:56:01.987Z",
     "title": "Bandsintown Connect"
 }

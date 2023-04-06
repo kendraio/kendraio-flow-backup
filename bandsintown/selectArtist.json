@@ -13,7 +13,7 @@
             "endpoint": {
                 "protocol": "https:",
                 "pathname": "/artist",
-                "host": "kendraio-bit-proxy.now.sh"
+                "host": "kendraio-bit-proxy.vercel.app"
             },
             "headers": {
                 "Authorization": "join('', ['Bearer ', data.token])"
@@ -30,8 +30,9 @@
     "id": "selectArtist",
     "workflowId": "selectArtist",
     "adapterName": "bandsintown",
-    "created": "2020-06-03T07:18:16.328Z",
-    "updated": "2020-06-03T07:18:16.328Z",
-    "modified": "2020-06-03T07:18:16.328Z",
+    "created": "2023-04-05T07:41:34.197Z",
+    "tags": [],
+    "updated": "2023-04-05T07:41:34.197Z",
+    "modified": "2023-04-05T07:41:34.197Z",
     "title": "Select Artist"
 }

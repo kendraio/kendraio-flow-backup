@@ -32,13 +32,13 @@
     "id": "getArtists",
     "workflowId": "getArtists",
     "adapterName": "bandsintown",
-    "created": "2022-09-21T15:09:18.895Z",
+    "created": "2023-04-04T13:56:19.463Z",
     "tags": [
         "artist",
         "bandsintown",
         "noui"
     ],
-    "updated": "2022-09-21T15:09:18.895Z",
-    "modified": "2022-09-21T15:09:18.895Z",
+    "updated": "2023-04-04T13:56:19.463Z",
+    "modified": "2023-04-04T13:56:19.463Z",
     "title": "Workflow"
 }

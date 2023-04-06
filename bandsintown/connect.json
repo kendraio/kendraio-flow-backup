@@ -64,12 +64,12 @@
     "id": "connect",
     "workflowId": "connect",
     "adapterName": "bandsintown",
-    "created": "2023-04-03T10:53:09.134Z",
+    "created": "2023-04-04T13:56:09.014Z",
     "tags": [
         "connect",
         "test"
     ],
-    "updated": "2023-04-03T10:53:09.132Z",
-    "modified": "2023-04-03T10:53:09.132Z",
+    "updated": "2023-04-04T13:56:09.014Z",
+    "modified": "2023-04-04T13:56:09.014Z",
     "title": "Bandsintown Connect"
 }
