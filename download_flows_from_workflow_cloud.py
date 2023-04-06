@@ -22,5 +22,5 @@ for flow in flows:
         filename = f"{flow_name}/{flow_id}.json"
         with open(filename, 'w') as file:
             file.write(code)
-    except json.decoder.JSONDecodeError as e:
+    except requests.exceptions.JSONDecodeError as e:
         print(f"Error parsing JSON for flow '{flow_name} {flow_id}': {e}")
