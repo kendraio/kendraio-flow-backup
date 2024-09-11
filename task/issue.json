@@ -1,0 +1,243 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "issue",
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.source",
+            "cases": [
+                {
+                    "value": "Linear",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.merge(@, {assignee: assignee.name})"
+                        },
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "title": "{{data.title}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "{{data.createdAtRead}}"
+                                },
+                                {
+                                    "type": "switch",
+                                    "valueGetter": "data.assignee",
+                                    "cases": [
+                                        {
+                                            "value": null,
+                                            "blocks": []
+                                        }
+                                    ],
+                                    "default": {
+                                        "blocks": [
+                                            {
+                                                "type": "message",
+                                                "message": "Assigned to {{data.assignee}}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "template",
+                                    "template": "{{data.description}}"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "Google Drive",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.merge(@, {assignee: assignee.name})"
+                        },
+                        {
+                            "type": "message",
+                            "title": "{{data.asset}}"
+                        },
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "message": "{{data.content}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "- {{data.author.displayName}}, {{data.createdAtRead}}"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.replies"
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "card",
+                                    "blocks": [
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "data.merge(@, { createdTime: formatDate(createdTime, 'T, dd/MM/yyyy')})"
+                                        },
+                                        {
+                                            "type": "switch",
+                                            "valueGetter": "data.content",
+                                            "cases": [
+                                                {
+                                                    "value": "",
+                                                    "blocks": [
+                                                        {
+                                                            "type": "switch",
+                                                            "valueGetter": "data.action",
+                                                            "cases": [
+                                                                {
+                                                                    "value": null,
+                                                                    "blocks": []
+                                                                },
+                                                                {
+                                                                    "value": "resolve",
+                                                                    "blocks": [
+                                                                        {
+                                                                            "type": "message",
+                                                                            "message": "Resolved by {{data.author.displayName}}"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "default": {
+                                                                "blocks": [
+                                                                    {
+                                                                        "type": "message",
+                                                                        "message": "{{data.action}}"
+                                                                    },
+                                                                    {
+                                                                        "type": "message",
+                                                                        "message": "- {{data.author.displayName}}"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "default": {
+                                                "blocks": [
+                                                    {
+                                                        "type": "message",
+                                                        "message": "{{data.content}}"
+                                                    },
+                                                    {
+                                                        "type": "message",
+                                                        "message": "- {{data.author.displayName}}"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "type": "message",
+                                            "message": "{{data.createdTime}}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "GitHub",
+                    "blocks": [
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "title": "Issue {{data.number}} - {{data.title}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "{{data.bodyText}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "{{data.url}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "Created at {{data.createdAtRead}} by {{author.login}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "Edited at {{updatedAt}}"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.comments.nodes[*].merge(@, {createdAt: formatDate(createdAt, 'T, dd/MM/yyyy')})"
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "card",
+                                    "blocks": [
+                                        {
+                                            "type": "message",
+                                            "title": "{{author.login}} commented at {{createdAt}}:",
+                                            "message": "{{bodyText}}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": []
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Dashboard",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "task",
+                            "workflowId": "dashboard"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "issue",
+    "workflowId": "issue",
+    "adapterName": "task",
+    "created": "2024-09-04T16:51:15.940Z",
+    "tags": [],
+    "updated": "2024-09-04T16:51:15.940Z",
+    "modified": "2024-09-04T16:51:15.940Z",
+    "title": "Kendraio Task Issue Details"
+}

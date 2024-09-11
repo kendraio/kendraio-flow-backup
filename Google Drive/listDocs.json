@@ -1,0 +1,75 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "clientID": {
+                        "type": "string",
+                        "title": "Google Drive Client ID",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 10,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "www.googleapis.com",
+                "pathname": "/drive/v3/files"
+            },
+            "headers": {
+                "authorization": "join('', ['Bearer ', data.clientID])"
+            },
+            "q": "\u2019trashed%3Dfalse\u2019",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 10,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.files",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false
+        }
+    ],
+    "id": "listDocs",
+    "workflowId": "listDocs",
+    "adapterName": "Google Drive",
+    "created": "2023-10-11T15:03:40.817Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-10-11T15:03:40.817Z",
+    "modified": "2023-10-11T15:03:40.817Z",
+    "title": "List Documents"
+}

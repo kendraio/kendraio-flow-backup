@@ -1,0 +1,93 @@
+{
+    "blocks": [
+        {
+            "type": "context-save",
+            "key": "state.local.projectSelected",
+            "blockComment": "local.projectSelected"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "query": {
+                    "user_field_names": "true"
+                },
+                "valueGetters": {
+                    "pathname": "data.projectsPathname"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.errorMessage}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.results[*]\n",
+            "blockComment": "results"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": data[*].{\n    \"title\": Name,\n    \"const\": Name\n  }\n}",
+            "blockComment": "anyOf"
+        },
+        {
+            "type": "context-save",
+            "key": "projectsList",
+            "blockComment": "projectsList"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"projectSelected\": state.local.projectSelected\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "projectSelected": {
+                        "title": "Select a project",
+                        "$ref": "#/definitions/context/projectsList"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "selectProject",
+    "workflowId": "selectProject",
+    "adapterName": "contributions",
+    "created": "2024-07-22T08:39:32.587Z",
+    "tags": [],
+    "updated": "2024-07-22T08:39:32.587Z",
+    "modified": "2024-07-22T08:39:32.587Z",
+    "title": "Select Project"
+}

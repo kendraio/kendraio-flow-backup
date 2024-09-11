@@ -1,0 +1,215 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query MyQuery($id: Int!) {\n  backstage_gigs_by_pk(id: $id) {\n    id\n    description\n    start_date\n    start_time\n    status\n    lineup\n    tickets_manager\n    venue_id\n    venue {\n        name\n        city\n        country\n        latitude\n        longitude\n    }\n    headline_artist_id\n    headline_artist {\n        name\n    }\n  }\n}",
+            "variables": {
+                "id": "data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "data.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "context-save",
+            "key": "gig",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_gigs_by_pk.merge(@, {\n    venue: venue.name,\n    headline_artist_name: headline_artist.name\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "contextErrorKey": "formErrors.message",
+            "label": "Update event",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "headline_artist_id": {
+                        "type": "string",
+                        "title": "Headline Artist"
+                    },
+                    "venue": {
+                        "type": "string",
+                        "title": "Venue"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "description": "Format: 2019-10-01",
+                        "title": "Start Date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "Start Time"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "enum": [
+                            "PUBLISHED",
+                            "DRAFT",
+                            "SCHEDULED",
+                            "DELETED"
+                        ]
+                    },
+                    "lineup": {
+                        "type": "array",
+                        "title": "Lineup",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "tickets_manager": {
+                        "type": "array",
+                        "title": "Tickets Manager",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "venue": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "adapterName": "backstage",
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "backstage",
+                                "workflowId": "findvenue"
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "data.id"
+                            },
+                            {
+                                "type": "variable-set",
+                                "name": "venue_id"
+                            },
+                            {
+                                "type": "context-save",
+                                "key": "state.venue_id"
+                            }
+                        ]
+                    }
+                },
+                "headline_artist_id": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "adapterName": "backstage",
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "backstage",
+                                "workflowId": "findartist"
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "data.id"
+                            },
+                            {
+                                "type": "variable-set",
+                                "name": "headline_artist_id"
+                            },
+                            {
+                                "type": "context-save",
+                                "key": "state.headline_artist_id"
+                            }
+                        ]
+                    }
+                },
+                "lineup": {
+                    "items": {
+                        "ui:widget": "blocks",
+                        "blocksConfig": {
+                            "adapterName": "backstage",
+                            "blocks": [
+                                {
+                                    "type": "gosub",
+                                    "adapterName": "backstage",
+                                    "workflowId": "findartist"
+                                },
+                                {
+                                    "type": "mapping",
+                                    "mapping": "data.id"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "mutation MyMutation(\n    $headline_artist_id: Int,\n    $venue_id: Int!,\n    $description: String,\n    $start_date: String,\n    $start_time: String,\n    $status: String,\n    $lineup: [Int!],\n    $tickets_manager: [String],\n    $id: Int!\n) {\n    update_backstage_gigs_by_pk(\n        pk_columns: {\n            id: $id\n        },\n        _set: {\n            headline_artist_id: $headline_artist_id,\n            venue_id: $venue_id,\n            description: $description,\n            start_date: $start_date,\n            start_time: $start_time,\n            status: $status,\n            lineup: $lineup,\n            tickets_manager: $tickets_manager\n        }\n    ) {\n        headline_artist_id\n        venue_id\n        description\n        start_date\n        start_time\n        status\n        lineup\n        tickets_manager\n    }\n}\n",
+            "variables": {
+                "headline_artist_id": "state.local.headline_artist_id || context.gig.data.backstage_gigs_by_pk.headline_artist_id",
+                "venue_id": "state.local.venue_id || context.gig.data.backstage_gigs_by_pk.venue_id",
+                "description": "data.description",
+                "start_date": "data.start_date",
+                "start_time": "data.start_time",
+                "status": "data.status",
+                "lineup": "data.lineup",
+                "tickets_manager": "data.tickets_manager",
+                "id": "context.flow_data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.flow_data.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Dashboard",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "backstage",
+                            "workflowId": "dashboard"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "updategig",
+    "workflowId": "updategig",
+    "adapterName": "backstage",
+    "created": "2024-05-16T15:02:50.440Z",
+    "tags": [],
+    "updated": "2024-05-16T15:02:50.440Z",
+    "modified": "2024-05-16T15:02:50.440Z",
+    "title": "Kendraio Backstage Update Gig"
+}

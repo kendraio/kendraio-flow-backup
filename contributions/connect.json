@@ -1,0 +1,57 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "form",
+            "label": "Authenticate",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "apikey": {
+                        "type": "string",
+                        "title": "API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {
+                "apikey": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.merge(@, {\n    \"apikey\": join('', [`\"Token \"`, @.apikey]),\n    \"contributorsPathname\": `/rows/table/268132/`,\n    \"projectsPathname\": `/rows/table/268133/`,\n    \"contributionsPathname\": `/rows/table/268134/`\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "contributionsAuth",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "contributions",
+    "created": "2024-07-16T08:56:00.747Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2024-07-16T08:56:00.747Z",
+    "modified": "2024-07-16T08:56:00.747Z",
+    "title": "Contributions Connect"
+}

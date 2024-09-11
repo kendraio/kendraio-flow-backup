@@ -1,0 +1,51 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "{   type: `\"object\"`,\n    title: `\"Projects Contributions - Edit Item\"`,\n    \"properties\": {\n            \"Name\": { \"type\": `\"string\"`, \"title\": `Name`, \"default\": `Gigi`},\n            \"Notes\": { \"type\": `\"string\"`, \"title\": `Notes`, \"default\": `some notes`},\n            \"Active\": { \"type\": `\"string\"`, \"title\": `Active`, \"default\": \"true\"},\n            \"Contribution Unit\": { \"type\": `\"string\"`, \"title\": `Contribution Unit`, \"default\": `some other stuff`}\n    }\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context",
+            "contextPath": "originalRow",
+            "contextBlocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "data",
+                    "blockComment": ""
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "debug",
+                    "open": 0,
+                    "showContext": true
+                },
+                {
+                    "type": "form",
+                    "label": "Edit",
+                    "hasSubmit": true,
+                    "emitOnInit": false,
+                    "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                            "formFields": {
+                                "$ref": "#/definitions/context/originalRow"
+                            }
+                        }
+                    },
+                    "uiSchema": {}
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "testReactivityContext",
+    "workflowId": "testReactivityContext",
+    "adapterName": "kendraio",
+    "created": "2024-05-29T12:02:39.662Z",
+    "tags": [],
+    "updated": "2024-05-29T12:02:39.662Z",
+    "modified": "2024-05-29T12:02:39.662Z",
+    "title": "test form with context block"
+}

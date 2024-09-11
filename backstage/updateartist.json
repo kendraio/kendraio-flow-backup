@@ -1,0 +1,97 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query MyQuery($id: Int!) {\n    backstage_artists_by_pk(id: $id) {\n        name\n    }\n}",
+            "variables": {
+                "id": "data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "data.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_artists_by_pk",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "contextErrorKey": "formErrors.message",
+            "label": "Update Artist",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "mutation MyMutation(\n    $name: String,\n    $id: Int!\n) {\n    update_backstage_artists_by_pk(\n        pk_columns: {\n            id: $id\n        },\n        _set: {\n            name: $name\n        }\n    ) {\n        id\n        name\n    }\n}\n",
+            "variables": {
+                "name": "data.name",
+                "id": "context.flow_data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.flow_data.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "launch",
+            "adapter": "backstage",
+            "workflowId": "manageartists",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Dashboard",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "backstage",
+                            "workflowId": "dashboard"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "updateartist",
+    "workflowId": "updateartist",
+    "adapterName": "backstage",
+    "created": "2024-04-26T14:40:10.264Z",
+    "tags": [],
+    "updated": "2024-04-26T14:40:10.264Z",
+    "modified": "2024-04-26T14:40:10.264Z",
+    "title": "Kendraio Backstage Update Artist"
+}

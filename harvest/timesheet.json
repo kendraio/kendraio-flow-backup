@@ -1,0 +1,212 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "employee_list": {
+                        "type": "string",
+                        "title": "headline employee"
+                    },
+                    "from": {
+                        "type": "string",
+                        "title": "yyyymmdd",
+                        "default": "20230401"
+                    },
+                    "to": {
+                        "type": "string",
+                        "title": "yyyymmdd",
+                        "default": "20240301"
+                    }
+                }
+            },
+            "uiSchema": {
+                "employee_list": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "adapterName": "kendraio",
+                        "blocks": [
+                            {
+                                "type": "card",
+                                "blocks": [
+                                    {
+                                        "type": "message",
+                                        "title": "Select employee:"
+                                    },
+                                    {
+                                        "type": "gosub",
+                                        "adapterName": "kendraio",
+                                        "workflowId": "kendraioEmployees"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "init",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "formData",
+            "blockComment": "FormData"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.formData.employee_list",
+            "blockComment": "Creating employee array"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    \"accountID\": @.harvest_account_id,\n    \"token\": join('', [`\"Bearer\"`, `\" \"`, @.harvest_api_key])\n    }) | [].omit(@, [\n        'harvest_account_id',\n        'harvest_api_key'\n    ])",
+            "blockComment": "Renaming account ID and token"
+        },
+        {
+            "type": "context-save",
+            "key": "employeeList",
+            "blockComment": "Saving employee list"
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "get",
+                    "skipInit": false,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "api.harvestapp.com/api/v2",
+                        "pathname": "/reports/time/team",
+                        "valueGetters": {
+                            "query": "{ from: context.formData.from, to: context.formData.to }"
+                        }
+                    },
+                    "useProxy": true,
+                    "headers": {
+                        "Content-Type": "'application/json'",
+                        "User-Agent": "'Harvest API Example'",
+                        "harvest-account-ID": "data.accountID",
+                        "authorization": "data.token"
+                    },
+                    "onError": {
+                        "blocks": [
+                            {
+                                "type": "card",
+                                "blocks": [
+                                    {
+                                        "type": "template",
+                                        "template": "Error with submission:<p>{{data.error.error}} - {{data.error.error_description}}</p>"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": "Multiple calls to Harvest API"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data[]",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "API call was successful!"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].results[*][]",
+            "blockComment": "Get the results"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@,{\n    \"accountInfo\": find($.context.employeeList, 'name', join('', [@.user_name]))\n    })",
+            "blockComment": "Add user account info to each employee"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "multiple"
+            },
+            "columnDefs": [
+                {
+                    "field": "user_name",
+                    "headerName": "Name"
+                },
+                {
+                    "field": "billable_hours",
+                    "headerName": "Total billable hours"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Detail",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "harvest",
+                                                "workflowId": "timesheetDetail",
+                                                "context": {
+                                                    "name": "data.accountInfo.name",
+                                                    "accountId": "data.accountInfo.accountID",
+                                                    "token": "data.accountInfo.token",
+                                                    "from": "context.formData.from",
+                                                    "to": "context.formData.to"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "timesheet",
+    "workflowId": "timesheet",
+    "adapterName": "harvest",
+    "created": "2024-02-02T14:34:52.532Z",
+    "tags": [],
+    "updated": "2024-02-02T14:34:52.532Z",
+    "modified": "2024-02-02T14:34:52.532Z",
+    "title": "Harvest timesheet"
+}

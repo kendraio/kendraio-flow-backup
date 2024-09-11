@@ -51,9 +51,9 @@
     "id": "publisher",
     "workflowId": "publisher",
     "adapterName": "subscribe",
-    "created": "2023-03-05T13:34:56.973Z",
+    "created": "2023-06-07T20:50:23.055Z",
     "tags": [],
-    "updated": "2023-03-05T13:34:56.972Z",
-    "modified": "2023-03-05T13:34:56.972Z",
+    "updated": "2023-06-07T20:50:23.054Z",
+    "modified": "2023-06-07T20:50:23.054Z",
     "title": "Subscribe Publisher"
 }

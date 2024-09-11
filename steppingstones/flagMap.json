@@ -1,0 +1,120 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "Stepping Stones",
+            "message": "Developing a map to display nuclear disarmament data",
+            "blockComment": "Show note on purpose of the map"
+        },
+        {
+            "type": "mapping",
+            "mapping": "`{\n    \"uk\": {\n        \"lat\": 51.5074,\n        \"long\": -0.1278,\n        \"label\": \"London, UK\",\n        \"customPin\": \"\ud83c\uddec\ud83c\udde7\"\n    },\n    \"france\": {\n        \"lat\": 48.8566,\n        \"long\": 2.3522,\n        \"label\": \"Paris, France\",\n        \"customPin\": \"\ud83c\uddeb\ud83c\uddf7\"\n    },\n    \"italy\": {\n        \"lat\": 41.9028,\n        \"long\": 12.4964,\n        \"label\": \"Rome, Italy\",\n        \"customPin\": \"\ud83c\uddee\ud83c\uddf9\"\n    },\n    \"japan\": {\n        \"lat\": 35.6895,\n        \"long\": 139.6917,\n        \"label\": \"Tokyo, Japan\",\n        \"customPin\": \"\ud83c\uddef\ud83c\uddf5\"\n    },\n    \"usa\": {\n        \"lat\": 39.91,\n        \"long\": -77.02,\n        \"label\": \"Washington DC, USA\",\n        \"customPin\": \"\ud83c\uddfa\ud83c\uddf8\"\n    },\n    \"russia\": {\n            \"lat\": 55.45,\n        \"long\": 37.35,\n        \"label\": \"Moscow, Russia\",\n        \"customPin\": \"\ud83c\uddf7\ud83c\uddfa\"\n    },\n    \"sweden\": {\n                \"lat\": 59.20,\n        \"long\": 18.03,\n        \"label\": \"Stockholm, Sweden\",\n        \"customPin\": \"\ud83c\uddf8\ud83c\uddea\"\n    },\n    \"germany\": {\n        \n        \"lat\": 52.30,\n        \"long\": 13.25,\n        \"label\": \"Berlin, Germany\",\n        \"customPin\": \"\ud83c\udde9\ud83c\uddea\"\n    },\n    \"india\": {\n                \"lat\": 28.37,\n        \"long\": 77.13,\n        \"label\": \"New Delhi, India\",\n        \"customPin\": \"\ud83c\uddee\ud83c\uddf3\"\n    },\n    \"pakistan\": {\n                \"lat\": 33.40,\n        \"long\": 73.10,\n        \"label\": \"Islamabad, Pakistan\",\n        \"customPin\": \"\ud83c\uddf5\ud83c\uddf0\"\n    },\n    \"china\": {\n       \n        \"lat\": 39.55,\n        \"long\": 116.20,\n        \"label\": \"Beijing, China\",\n        \"customPin\": \"\ud83c\udde8\ud83c\uddf3\"\n    }\n}\n`",
+            "blockComment": "Defines data for countries by country name with 3 letter country ISO name, capital location, and flag emojis"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Freeze for smaller NAS",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.uk, data.france]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "NSNW",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.sweden, data.germany, data.russia, data.usa, data.india, data.pakistan]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Strategic dialogue declaration",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.china, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Reporting on strategic stability talks",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Renewed US-Russia commitments to arms control",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "New START",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "INF compliance",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Switch between different lists of countries when pressed, using country data"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "Review data Map uses as input for map rendering"
+        },
+        {
+            "type": "map",
+            "height": 500,
+            "zoom": 2,
+            "blockComment": "Turns provided data into a map"
+        }
+    ],
+    "id": "flagMap",
+    "workflowId": "flagMap",
+    "adapterName": "steppingstones",
+    "created": "2024-07-23T10:05:05.000Z",
+    "tags": [],
+    "updated": "2024-07-23T10:05:05.000Z",
+    "modified": "2024-07-23T10:05:05.000Z",
+    "title": "Stepping Stones Nuclear Disarmament Data"
+}

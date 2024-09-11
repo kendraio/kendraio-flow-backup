@@ -9,7 +9,8 @@
         },
         {
             "type": "context-save",
-            "contextKey": "saved"
+            "contextKey": "auth",
+            "blockComment": ""
         },
         {
             "type": "http",
@@ -23,13 +24,14 @@
                 }
             },
             "headers": {
-                "Authorization": "join('', ['Bearer ', context.saved.token])"
-            }
+                "Authorization": "join('', ['Bearer ', context.auth.token])"
+            },
+            "blockComment": ""
         },
         {
-            "type": "debug",
-            "open": 0,
-            "showContext": true
+            "type": "mapping",
+            "mapping": "data.merge(@, {\n    venue: venue_name\n})",
+            "blockComment": ""
         },
         {
             "type": "form",
@@ -38,41 +40,18 @@
             "jsonSchema": {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "string",
-                        "title": "ID"
-                    },
-                    "headline_artist_id": {
-                        "type": "string",
-                        "title": "Headline Artist ID"
-                    },
                     "headline_artist_name": {
                         "type": "string",
+                        "readOnly": true,
                         "title": "Headline Artist Name"
                     },
-                    "venue_id": {
+                    "title": {
                         "type": "string",
-                        "title": "Venue ID"
+                        "title": "Event Title"
                     },
-                    "venue_name": {
+                    "venue": {
                         "type": "string",
                         "title": "Venue Name"
-                    },
-                    "venue_city": {
-                        "type": "string",
-                        "title": "Venue City"
-                    },
-                    "venue_country": {
-                        "type": "string",
-                        "title": "Venue Country"
-                    },
-                    "venue_latitude": {
-                        "type": "number",
-                        "title": "Venue Latitude"
-                    },
-                    "venue_longitude": {
-                        "type": "number",
-                        "title": "Venue Longitude"
                     },
                     "description": {
                         "type": "string",
@@ -88,6 +67,16 @@
                         "description": "Format: 14:24:00",
                         "title": "Start Time"
                     },
+                    "end_date": {
+                        "type": "string",
+                        "description": "Format: 2019-10-01",
+                        "title": "End Date"
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "End Time"
+                    },
                     "status": {
                         "type": "string",
                         "title": "Status",
@@ -97,6 +86,21 @@
                             "SCHEDULED",
                             "DELETED"
                         ]
+                    },
+                    "lineup": {
+                        "type": "array",
+                        "title": "Lineup",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
                     },
                     "tickets_manager": {
                         "type": "array",
@@ -126,7 +130,67 @@
                     }
                 }
             },
-            "uiSchema": {}
+            "uiSchema": {
+                "venue": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "adapterName": "bandsintown",
+                        "blocks": [
+                            {
+                                "type": "card",
+                                "blocks": [
+                                    {
+                                        "type": "message",
+                                        "title": "Search and select venue:"
+                                    },
+                                    {
+                                        "type": "gosub",
+                                        "adapterName": "bandsintown",
+                                        "workflowId": "findVenue"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "lineup": {
+                    "items": {
+                        "ui:widget": "blocks",
+                        "blocksConfig": {
+                            "adapterName": "bandsintown",
+                            "blocks": [
+                                {
+                                    "type": "card",
+                                    "blocks": [
+                                        {
+                                            "type": "message",
+                                            "title": "Search and select artist:"
+                                        },
+                                        {
+                                            "type": "gosub",
+                                            "adapterName": "bandsintown",
+                                            "workflowId": "findArtist"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.{ \n    id:id,\n    headline_artist_id:headline_artist_id,\n    headline_artist_name:headline_artist_name,\n    description:description,\n    schedule_date:schedule_date,\n    schedule_time:schedule_time,\n    schedule_timezone:schedule_timezone,\n    start_date:start_date,\n    start_time:start_time,\n    end_date:end_date,\n    end_time:end_time,\n    status:status,\n    type:`UPCOMING`,\n    title:title,\n    use_custom_title:all([title]),\n    rsvp_count:rsvp_count,\n    version:version,\n    venue_id: venue.id || venue_id,\n    venue_name:venue.name || venue_name,\n    venue_city:venue.city || venue_city,\n    venue_region:venue.region || venue_region,\n    venue_country:venue.country || venue_country,\n    venue_latitude:venue.latitude || venue_latitude,\n    venue_longitude:venue.longitude || venue_longitude,\n    venue_postal_code:venue.postal_code || venue_postal_code,\n    streaming_event:streaming_event,\n    streaming_url:streaming_url,\n    lineup:lineup,\n    tickets_manager:tickets_manager\n}",
+            "blockComment": ""
         },
         {
             "type": "switch",
@@ -144,14 +208,14 @@
                         "method": "patch",
                         "endpoint": {
                             "protocol": "https:",
-                            "host": "partnerapi.artists.bandsintown.com",
+                            "host": "kendraio-bit-proxy.vercel.app",
                             "valueGetters": {
                                 "pathname": "join('', ['/artist/', to_string(data.headline_artist_id), '/events/', to_string(data.id)])",
-                                "query": "{ \"x-api-key\": context.saved.key }"
+                                "query": "{ \"x-api-key\": context.auth.key }"
                             }
                         },
                         "headers": {
-                            "Authorization": "join('', ['Bearer ', context.saved.token])"
+                            "Authorization": "join('', ['Bearer ', context.auth.token])"
                         },
                         "onError": {
                             "blocks": [
@@ -172,15 +236,34 @@
                         }
                     }
                 ]
-            }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to start page",
+                    "color": "secondary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "bandsintown",
+                            "workflowId": "start"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
         }
     ],
     "id": "editEvent",
     "workflowId": "editEvent",
     "adapterName": "bandsintown",
-    "created": "2023-04-04T13:56:15.272Z",
+    "created": "2024-04-15T15:00:10.981Z",
     "tags": [],
-    "updated": "2023-04-04T13:56:15.272Z",
-    "modified": "2023-04-04T13:56:15.272Z",
+    "updated": "2024-04-15T15:00:10.981Z",
+    "modified": "2024-04-15T15:00:10.981Z",
     "title": "Edit Event"
 }

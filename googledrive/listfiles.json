@@ -1,0 +1,94 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "context.googleAuth.access_token"
+                },
+                {
+                    "type": "context-save",
+                    "key": "state.token"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/drive/v3/files"
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "files": {
+                        "type": "array",
+                        "title": "Files",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "id": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "files": {
+                    "items": {
+                        "ui:widget": "blocks",
+                        "blocksConfig": {
+                            "adapterName": "googledrive",
+                            "blocks": [
+                                {
+                                    "type": "gosub",
+                                    "adapterName": "googledrive",
+                                    "workflowId": "listcomments"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "listfiles",
+    "workflowId": "listfiles",
+    "adapterName": "googledrive",
+    "created": "2024-05-23T14:17:01.075Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-05-23T14:17:01.075Z",
+    "modified": "2024-05-23T14:17:01.075Z",
+    "title": "List Files"
+}

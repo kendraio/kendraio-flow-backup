@@ -1,0 +1,63 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Test",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "api_key": {
+                        "type": "string",
+                        "title": "API Key"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api-inference.huggingface.co",
+                "pathname": "/models/tiiuae/falcon-7b-instruct",
+                "query": {
+                    "inputs": "User: Hi!\nAssistant:"
+                },
+                "headers": {
+                    "Authorization": "join('', ['Bearer ', data.api_key])"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        }
+    ],
+    "id": "falcon",
+    "workflowId": "falcon",
+    "adapterName": "huggingface",
+    "created": "2023-07-09T14:29:08.415Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2023-07-09T14:29:08.415Z",
+    "modified": "2023-07-09T14:29:08.415Z",
+    "title": "HuggingFace API - Falcon Large Language Model"
+}

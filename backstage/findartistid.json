@@ -1,0 +1,38 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query MyQuery($id: Int!) {\n  backstage_gigs_by_pk(id: $id) {\n    id\n    description\n    start_date\n    start_time\n    status\n    lineup\n    tickets_manager\n    venue_id\n    venue {\n        name\n        city\n        country\n        latitude\n        longitude\n    }\n    headline_artist_id\n    headline_artist {\n        name\n    }\n  }\n}",
+            "variables": {
+                "id": "data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "data.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        }
+    ],
+    "id": "findartistid",
+    "workflowId": "findartistid",
+    "adapterName": "backstage",
+    "created": "2024-05-09T16:35:09.714Z",
+    "tags": [],
+    "updated": "2024-05-09T16:35:09.713Z",
+    "modified": "2024-05-09T16:35:09.713Z",
+    "title": "Kendraio Backstage Find Artist"
+}

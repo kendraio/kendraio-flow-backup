@@ -10,6 +10,11 @@
         },
         {
             "type": "mapping",
+            "mapping": "`{\n  \n    \"confirmed\": {\n      \"value\": 10000000\n    },\n    \"deaths\": {\n      \"value\": 500000\n    },\n    \"recovered\": {\n      \"value\": 5000000\n    }\n  }`",
+            "blockComment": "mock"
+        },
+        {
+            "type": "mapping",
             "mapping": "[{ label: 'Confirmed', value: data.confirmed.value},{ label: 'Deaths', value: data.deaths.value},{ label: 'Recovered', value: data.recovered.value}]"
         },
         {
@@ -18,12 +23,11 @@
         }
     ],
     "id": "coronavirusPie",
-    "adapter": "kendraio",
-    "org": "kendraio",
     "workflowId": "coronavirusPie",
     "adapterName": "kendraio",
-    "created": "2020-04-03T06:16:26.720Z",
-    "updated": "2020-04-03T06:16:26.720Z",
-    "modified": "2020-04-03T06:16:26.720Z",
+    "created": "2023-07-14T17:01:24.102Z",
+    "tags": [],
+    "updated": "2023-07-14T17:01:24.101Z",
+    "modified": "2023-07-14T17:01:24.101Z",
     "title": "Coronavirus (Pie Chart)"
 }

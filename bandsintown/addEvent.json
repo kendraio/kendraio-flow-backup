@@ -9,18 +9,32 @@
         },
         {
             "type": "context-save",
-            "contextKey": "sandboxAuth"
+            "contextKey": "state.sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth",
+            "blockComment": ""
         },
         {
             "type": "form",
-            "contextErrorKey": "formErrors.message",
-            "label": "Add event",
+            "title": "Add Event",
+            "label": "Add Event",
             "jsonSchema": {
                 "type": "object",
                 "properties": {
                     "headline_artist": {
                         "type": "string",
                         "title": "Headline Artist"
+                    },
+                    "title": {
+                        "type": "string",
+                        "title": "Event Title"
+                    },
+                    "venue": {
+                        "type": "string",
+                        "title": "Venue"
                     },
                     "description": {
                         "type": "string",
@@ -36,6 +50,16 @@
                         "description": "Format: 14:24:00",
                         "title": "Start Time"
                     },
+                    "end_date": {
+                        "type": "string",
+                        "description": "Format: 2019-10-01",
+                        "title": "End Date"
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "End Time"
+                    },
                     "status": {
                         "type": "string",
                         "title": "Status",
@@ -45,18 +69,6 @@
                             "SCHEDULED",
                             "DELETED"
                         ]
-                    },
-                    "type": {
-                        "type": "string",
-                        "title": "Type",
-                        "enum": [
-                            "PAST",
-                            "UPCOMING"
-                        ]
-                    },
-                    "venue": {
-                        "type": "string",
-                        "title": "Venue ID"
                     },
                     "lineup": {
                         "type": "array",
@@ -115,12 +127,12 @@
                                 "blocks": [
                                     {
                                         "type": "message",
-                                        "title": "Select artist:"
+                                        "title": "Search and select artist:"
                                     },
                                     {
                                         "type": "gosub",
                                         "adapterName": "bandsintown",
-                                        "workflowId": "selectArtist"
+                                        "workflowId": "findArtist"
                                     }
                                 ]
                             }
@@ -173,75 +185,80 @@
                         }
                     }
                 }
-            }
+            },
+            "blockComment": ""
         },
         {
             "type": "mapping",
-            "mapping": "data.{ type: type, headline_artist_id: headline_artist.id, headline_artist_name: headline_artist.name, description: description,start_date: start_date,start_time: start_time,status: status, tickets_manager: tickets_manager, venue_id: venue.id, venue_name: venue.name, venue_city: venue.city, venue_region: venue.region, venue_country: venue.country,venue_postal_code: venue.postal_code, venue_latitude: venue.latitude, venue_longitude: venue.longitude, lineup: lineup[*].{id: id, name: name }, streaming_event: `false` }",
+            "mapping": "data.{ \n    type: `UPCOMING`,\n    headline_artist_id: headline_artist.id,\n    status: status,\n    venue_name: venue.name,\n    start_date: start_date,    \n    start_time: start_time,\n    description: description,\n    lineup:lineup,\n    tickets_manager:tickets_manager,\n    headline_artist_name: headline_artist.name,\n    venue_id: venue.id,\n    end_date: end_date,    \n    end_time: end_time,\n    title: title,\n    use_custom_title: all([title]),\n    streaming_event: `false`\n}",
             "blockComment": ""
         },
         {
             "type": "debug",
-            "open": 0,
-            "showContext": true
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
         },
         {
-            "type": "switch",
-            "valueGetter": "data.headline_artist_id",
-            "cases": [
-                {
-                    "value": null,
-                    "blocks": []
+            "type": "http",
+            "contextErrorKey": "formErrors.message",
+            "method": "post",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "kendraio-bit-proxy.vercel.app",
+                "valueGetters": {
+                    "pathname": "join('', ['/artist/', to_string(data.headline_artist_id), '/events'])"
                 }
-            ],
-            "default": {
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+            },
+            "onError": {
                 "blocks": [
                     {
-                        "type": "http",
-                        "contextErrorKey": "formErrors.message",
-                        "method": "post",
-                        "endpoint": {
-                            "protocol": "https:",
-                            "host": "kendraio-bit-proxy.vercel.app",
-                            "valueGetters": {
-                                "pathname": "join('', ['/artist/', to_string(data.headline_artist_id), '/events'])"
+                        "type": "mapping",
+                        "mapping": "{ message: data.message, status: data.status, errors: data.error.message[*].{ property: property, constraints: constraints } }"
+                    },
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<ul>{{#each data.errors}}<li>{{property}}<ul>{{#each constraints}}{{this}}{{/each}}</ul></li>{{/each}}</ul>"
                             }
-                        },
-                        "headers": {
-                            "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
-                        },
-                        "onError": {
-                            "blocks": [
-                                {
-                                    "type": "debug"
-                                },
-                                {
-                                    "type": "mapping",
-                                    "mapping": "{ message: data.message, status: data.status, errors: data.error.message[*].{ property: property, constraints: constraints } }"
-                                },
-                                {
-                                    "type": "card",
-                                    "blocks": [
-                                        {
-                                            "type": "template",
-                                            "template": "Error with submission:<ul>{{#each data.errors}}<li>{{property}}<ul>{{#each constraints}}{{this}}{{/each}}</ul></li>{{/each}}</ul>"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                        ]
                     }
                 ]
             },
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to start page",
+                    "color": "secondary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "bandsintown",
+                            "workflowId": "start"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
             "blockComment": ""
         }
     ],
     "id": "addEvent",
     "workflowId": "addEvent",
     "adapterName": "bandsintown",
-    "created": "2023-04-04T13:55:57.814Z",
+    "created": "2024-04-24T16:43:29.652Z",
     "tags": [],
-    "updated": "2023-04-04T13:55:57.814Z",
-    "modified": "2023-04-04T13:55:57.814Z",
+    "updated": "2024-04-24T16:43:29.651Z",
+    "modified": "2024-04-24T16:43:29.651Z",
     "title": "Add Event"
 }

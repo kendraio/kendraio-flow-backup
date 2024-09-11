@@ -1,0 +1,77 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "adapter": {
+                        "type": "string",
+                        "title": "Adapter",
+                        "default": ""
+                    },
+                    "id": {
+                        "type": "string",
+                        "title": "ID",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "title": "Update Event",
+            "label": "Update Event",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "adapter": {
+                        "type": "string",
+                        "title": "ID"
+                    }
+                }
+            },
+            "uiSchema": {
+                "adapter": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "adapterName": "kendraio",
+                        "blocks": [
+                            {
+                                "type": "debug",
+                                "showData": true
+                            },
+                            {
+                                "type": "card",
+                                "blocks": [
+                                    {
+                                        "type": "message",
+                                        "title": "Flow"
+                                    },
+                                    {
+                                        "type": "gosub",
+                                        "adapterName": "googledrive",
+                                        "workflowId": "listfiles"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "dashboard",
+    "workflowId": "dashboard",
+    "adapterName": "kendraio",
+    "created": "2023-12-14T14:36:54.765Z",
+    "tags": [
+        "multi"
+    ],
+    "updated": "2023-12-14T14:36:54.765Z",
+    "modified": "2023-12-14T14:36:54.765Z",
+    "title": "Flow"
+}

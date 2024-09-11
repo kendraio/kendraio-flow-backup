@@ -1,0 +1,84 @@
+{
+    "blocks": [
+        {
+            "type": "init",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.currentVenue",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: state.local.currentVenue || `Default` }",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Venue name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 10,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/venue/search",
+                "host": "kendraio-bit-proxy.vercel.app",
+                "valueGetters": {
+                    "query": "{ name: data.name }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.auth.token])"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select venue",
+            "labelGetter": "join(', ', [name, city, region, country, postal_code])",
+            "valueField": "id",
+            "outputGetter": "@"
+        }
+    ],
+    "id": "findVenue2",
+    "workflowId": "findVenue2",
+    "adapterName": "bandsintown",
+    "created": "2023-10-11T11:28:31.918Z",
+    "tags": [
+        "hidden",
+        "deleted"
+    ],
+    "updated": "2023-10-11T11:28:31.915Z",
+    "modified": "2023-10-11T11:28:31.915Z",
+    "title": "Find Venue"
+}

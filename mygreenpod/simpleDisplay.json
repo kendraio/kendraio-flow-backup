@@ -1,0 +1,73 @@
+{
+    "blocks": [
+        {
+            "type": "init",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.name || 'No content'",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "currentArtist",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: context.currentArtist }",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Simple Display"
+                    }
+                }
+            },
+            "hasSubmit": false,
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist/search",
+                "host": "kendraio-bit-proxy.vercel.app",
+                "valueGetters": {
+                    "query": "{ name: data.name }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "simpleDisplay",
+    "workflowId": "simpleDisplay",
+    "adapterName": "mygreenpod",
+    "created": "2023-09-20T16:41:04.730Z",
+    "tags": [],
+    "updated": "2023-09-20T16:41:04.730Z",
+    "modified": "2023-09-20T16:41:04.730Z",
+    "title": "Simple Display"
+}

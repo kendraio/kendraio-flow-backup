@@ -1,0 +1,150 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "shareUrl": "https://docs.google.com/spreadsheets/d/1aclYhlyZ5TVVfVAGtnwkziu8eGvrWMkKV6uP5UbzbBo/pub?output=csv&gid=140879854",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    iso: @.\"ISO-alpha3 code\"\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.spreadsheetData",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "omit(groupByKeys(data), ['Country', 'ISO-alpha3 code', 'iso'])",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "proposals",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": keys(data)[*].{\n    \"title\": @,\n    \"const\": @\n  }\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "formOptions",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "proposal": {
+                        "title": "Select a proposal",
+                        "$ref": "#/definitions/context/formOptions"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.proposal",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "proposal",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && get(context.proposals, data)",
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "context.proposal",
+            "cases": [],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "batch",
+                        "blocks": [
+                            {
+                                "type": "context",
+                                "contextPath": "country",
+                                "contextBlocks": [
+                                    {
+                                        "type": "context-save",
+                                        "key": "country_data"
+                                    }
+                                ],
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "{country: state.spreadsheetData[0].iso, status: context.country_data}"
+                                    },
+                                    {
+                                        "type": "context-save",
+                                        "key": "country"
+                                    },
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "state.spreadsheetData[1:]"
+                                    },
+                                    {
+                                        "type": "context-save",
+                                        "key": "state.spreadsheetData"
+                                    },
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "context.country"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "context-save",
+                        "key": "labelledCountries"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.labelledCountries",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "map",
+            "height": 500,
+            "zoom": 2,
+            "blockComment": ""
+        }
+    ],
+    "id": "groupbykeysspreadsheet",
+    "workflowId": "groupbykeysspreadsheet",
+    "adapterName": "steppingstones",
+    "created": "2024-08-19T15:18:08.836Z",
+    "tags": [],
+    "updated": "2024-08-19T15:18:08.836Z",
+    "modified": "2024-08-19T15:18:08.836Z",
+    "title": "Stepping Stones Map"
+}

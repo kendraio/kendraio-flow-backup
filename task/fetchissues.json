@@ -1,0 +1,104 @@
+{
+    "blocks": [
+        {
+            "type": "gosub",
+            "adapterName": "task",
+            "workflowId": "fetchgoogledrivecomments",
+            "blockComment": "fetch Google Drive comments"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "task",
+            "workflowId": "fetchgithubissues",
+            "blockComment": "fetch GitHub issues"
+        },
+        {
+            "type": "gosub",
+            "adapterName": "task",
+            "workflowId": "fetchlinearissues",
+            "blockComment": "fetch Linear issues"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[\n    context.linear[0] && context.linear, \n    context.googledrive[0] && context.googledrive,\n    context.github[0] && context.github\n][]",
+            "blockComment": "combine arrays"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    created: formatDate(\n        created, 'yyyy/MM/dd, T'\n    )\n})",
+            "blockComment": "format date"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "created",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "source",
+                    "headerName": "Source"
+                },
+                {
+                    "field": "asset",
+                    "headerName": "Asset"
+                },
+                {
+                    "field": "preview",
+                    "headerName": "Preview"
+                },
+                {
+                    "field": "details",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Details",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "variable-set",
+                                                "name": "issue"
+                                            },
+                                            {
+                                                "type": "launch",
+                                                "adapter": "task",
+                                                "workflowId": "issue"
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ],
+                                "blockComment": ""
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": "display data"
+        }
+    ],
+    "id": "fetchissues",
+    "workflowId": "fetchissues",
+    "adapterName": "task",
+    "created": "2024-08-28T13:24:55.137Z",
+    "tags": [],
+    "updated": "2024-08-28T13:24:55.133Z",
+    "modified": "2024-08-28T13:24:55.133Z",
+    "title": "Kendraio Task Dashboard"
+}

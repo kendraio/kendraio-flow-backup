@@ -1,0 +1,83 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "githubtoken",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    githubtoken: data.githubtoken,\n    owner: `kendraio`,\n    repository: `kendraio-app`\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://api.github.com/graphql",
+            "query": "query MyQuery($owner: String!, $repository: String!) {\n    repository(owner: $owner, name: $repository) {\n      issues(first: 100, states: [OPEN], orderBy:  {field: UPDATED_AT, direction: DESC}) {\n        totalCount\n        nodes {\n          body\n          bodyHTML\n          bodyText\n          number\n          id\n          title\n          url\n          createdAt\n          updatedAt   \n          author {\n            url\n            login\n            avatarUrl\n          }\n          comments(first: 100) {\n            nodes {\n              body\n              author {\n                login\n              }\n              bodyText\n              createdAt\n            }\n          }\n        }\n      }\n    } \n  }",
+            "variables": {
+                "owner": "data.owner",
+                "repository": "data.repository"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, data.githubtoken])"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.repository.issues.nodes[*].merge(@, {\n    source:  `GitHub`,\n    asset:   title,\n    preview: ``,\n    createdAtSort: formatDate(createdAt, 'yyyy/MM/dd, T'),\n    createdAtRead: formatDate(createdAt, 'T, dd/MM/yyyy'),\n    updatedAt: formatDate(updatedAt, 'T, dd/MM/yyyy')\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "GitHub Data not fetched"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "message",
+                        "message": "GitHub Data fetched"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "github",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "`Can you read this?`",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.test",
+            "blockComment": ""
+        }
+    ],
+    "id": "fetchgithubissues",
+    "workflowId": "fetchgithubissues",
+    "adapterName": "task",
+    "created": "2024-09-05T16:56:27.325Z",
+    "tags": [],
+    "updated": "2024-09-05T16:56:27.325Z",
+    "modified": "2024-09-05T16:56:27.325Z",
+    "title": "Kendraio Task Fetch GitHub Issues"
+}

@@ -1,0 +1,39 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Submit",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "lineartoken": {
+                        "type": "string",
+                        "title": "Linear API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {
+                "lineartoken": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "lineartoken",
+            "blockComment": ""
+        }
+    ],
+    "id": "linearconnect",
+    "workflowId": "linearconnect",
+    "adapterName": "task",
+    "created": "2024-09-05T16:47:48.729Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2024-09-05T16:47:48.729Z",
+    "modified": "2024-09-05T16:47:48.729Z",
+    "title": "Kendraio Task Linear List Issues"
+}

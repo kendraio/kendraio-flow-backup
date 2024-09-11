@@ -1,0 +1,149 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Private Token",
+                        "default": ""
+                    },
+                    "accountID": {
+                        "type": "string",
+                        "title": "Account ID",
+                        "default": ""
+                    },
+                    "from": {
+                        "type": "string",
+                        "title": "yyyymmdd",
+                        "default": "20230810"
+                    },
+                    "to": {
+                        "type": "string",
+                        "title": "yyyymmdd",
+                        "default": "20230910"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "init",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"token\": join('', [`\"Bearer\"`, `\" \"`, data.token]),\n    \"accountID\": data.accountID,\n    \"from\": data.from,\n    \"to\": data.to\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "savedData",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.harvestapp.com/api/v2",
+                "pathname": "/reports/time/tasks",
+                "valueGetters": {
+                    "query": "{ from: context.savedData.from, to: context.savedData.to }"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "User-Agent": "'Harvest API Example'",
+                "harvest-account-ID": "data.accountID",
+                "authorization": "data.token"
+            },
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.error.error}} - {{data.error.error_description}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.results",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "API call was successful!"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.results",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "resultsSaved",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ \n    total_timeframe_billable_hours: sum(context.resultsSaved[].to_number(billable_hours) || `[]`),\n    total_timeframe_billable_amount: currency(product(sum(context.resultsSaved[].product(to_number(billable_amount), `100`) || `[]`), `0.01`), 'en-GB', 'GBP')\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<p><b>Tot billable hours:</b> {{data.total_timeframe_billable_hours}}</p><p><b>Tot billable amount:</b> {{data.total_timeframe_billable_amount}}</p>",
+            "blockComment": ""
+        }
+    ],
+    "id": "harvestTimesheet",
+    "workflowId": "harvestTimesheet",
+    "adapterName": "harvest-timesheet",
+    "created": "2023-10-25T12:52:02.722Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-10-25T12:52:02.722Z",
+    "modified": "2023-10-25T12:52:02.722Z",
+    "title": "Harvest timesheet"
+}

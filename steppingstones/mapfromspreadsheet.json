@@ -1,0 +1,238 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "shareUrl": "https://docs.google.com/spreadsheets/d/1aclYhlyZ5TVVfVAGtnwkziu8eGvrWMkKV6uP5UbzbBo/pub?output=csv&gid=140879854",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    country: @.\"Country\",\n    iso: @.\"ISO-alpha3 code\",\n    biological: @.\"Biological and Toxin Weapons Convention\",\n    conference: @.\"Conference on Disarmament\",\n    convention: @.\"Convention on the Physical Protection of Nuclear Material\",\n    comprehensive: @.\"Comprehensive Test Ban Treaty\",\n    fissile: @.\"Fissile Material Cutoff Treaty\",\n    atomic: @.\"International Atomic Energy Agency\",\n    commission: @.\"International Commission on Nuclear Non-proliferation and Disarmament\",\n    partnership: @.\"International Partnership for Nuclear Disarmament Verification\",\n    nuclear: @.\"Nuclear Armed State(s) [NPT and non-NPT]\",\n    north: @.\"North Atlantic Treaty Organization\",\n    non: @.\"Non-Nuclear Weapon State(s)\",\n    npt: @.\"NPT Nuclear Weapon State(s)\",\n    organization: @.\"Organization for Security and Co-operation in Europe\",\n    p5: @.\"P5\",\n    strategic: @.\"Strategic Arms Reduction Treaty\",\n    general: @.\"United Nations General Assembly\",\n    security: @.\"United Nations Security Council\"\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Biological and Toxin Weapons Convention",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?biological!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Conference on Disarmament",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?conference!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Convention on the Physical Protection of Nuclear Material",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?convention!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Comprehensive Test Ban Treaty",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?comprehensive!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Fissile Material Cutoff Treaty",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?fissile!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "International Atomic Energy Agency",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?atomic!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "International Commission on Nuclear Non-proliferation and Disarmament",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?commission!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "International Partnership for Nuclear Disarmament Verification",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?partnership!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Nuclear Armed State(s) [NPT and non-NPT]",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?nuclear!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "North Atlantic Treaty Organization",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?north!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Non-Nuclear Weapon State(s)",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?non!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "NPT Nuclear Weapon State(s)",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?npt!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Organization for Security and Co-operation in Europe",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?organization!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "P5",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?p5!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Strategic Arms Reduction Treaty",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?strategic!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "United Nations General Assembly",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?general!='']"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "United Nations Security Council",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?security!='']"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "map",
+            "height": 500,
+            "zoom": 2,
+            "blockComment": ""
+        }
+    ],
+    "id": "mapfromspreadsheet",
+    "workflowId": "mapfromspreadsheet",
+    "adapterName": "steppingstones",
+    "created": "2024-08-12T16:17:56.678Z",
+    "tags": [],
+    "updated": "2024-08-12T16:17:56.678Z",
+    "modified": "2024-08-12T16:17:56.678Z",
+    "title": "Stepping Stones Map"
+}

@@ -1,0 +1,75 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "casoris.si",
+                "pathname": "/wp-json/wp/v2/posts",
+                "query": {
+                    "per_page": 100
+                }
+            },
+            "useProxy": true,
+            "followPaginationLinksMerged": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                },
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "field": "title.rendered",
+                    "headerName": "Title"
+                },
+                {
+                    "field": "excerpt.rendered",
+                    "headerName": "Rendered"
+                },
+                {
+                    "field": "link",
+                    "headerName": "Link"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "list",
+    "workflowId": "list",
+    "adapterName": "subscribe",
+    "created": "2023-06-08T08:38:27.258Z",
+    "tags": [],
+    "updated": "2023-06-08T08:38:27.258Z",
+    "modified": "2023-06-08T08:38:27.258Z",
+    "title": "Article list"
+}

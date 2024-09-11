@@ -1,0 +1,139 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Key 1",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "authkey": {
+                        "type": "string",
+                        "title": "Key 1",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "hasSubmit": false,
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.dynadot.com",
+                "pathname": "/api3.json",
+                "query": {},
+                "valueGetters": {
+                    "query": "data.{command: 'list_domain', key: join('', [authkey]) }",
+                    "dummy": ""
+                }
+            },
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.ListDomainInfoResponse.MainDomains[*].[`1`, Name, Registration, Expiration]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "dynadot1",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Key 2",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "authkey": {
+                        "type": "string",
+                        "title": "Key 2",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "hasSubmit": false,
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.dynadot.com",
+                "pathname": "/api3.json",
+                "query": {},
+                "valueGetters": {
+                    "query": "data.{command: 'list_domain', key: join('', [authkey]) }",
+                    "dummy": ""
+                }
+            },
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.ListDomainInfoResponse.MainDomains[*].[`2`, Name, Registration, Expiration]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "dynadot2",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.dynadot1[:],context.dynadot2[:]][]",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Key"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Domain"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "3",
+                    "headerName": "Expires"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "doubleDynadot",
+    "workflowId": "doubleDynadot",
+    "adapterName": "domains",
+    "created": "2023-10-11T09:06:40.760Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-10-11T09:06:40.760Z",
+    "modified": "2023-10-11T09:06:40.760Z",
+    "title": "Workflow"
+}

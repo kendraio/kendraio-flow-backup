@@ -92,20 +92,18 @@
         },
         {
             "type": "mapping",
-            "mapping": "data && { parties: data[0][].{ type: `party`, id: uuid(), name: @ }, licenses: data[1][].{ type: `license`, id: uuid(), name: @ }, marketPlatforms: data[2][].{ type: `platform`, id: uuid(), name: @ }, works: data[3][].merge(@, { id: uuid(), type: `work` }) }"
+            "mapping": "data && { \n    parties: data[0][].{ type: `party`, id: uuid(), name: @ }, \n    licenses: data[1][].{ type: `license`, id: uuid(), name: @ }, \n    marketPlatforms: data[2][].{ type: `platform`, id: uuid(), name: @ }, \n    works: data[3][].merge(@, { id: uuid(), type: `work` }) \n}",
+            "blockComment": ""
         },
         {
             "type": "mapping",
-            "mapping": "data && merge(data,{ works: data.works[].merge(@, { assetManager: find($.data.parties, 'name', assetManager).id, owner: owner[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, marketPlatforms: marketPlatforms[].find($.data.marketPlatforms, 'name', @).id, beneficiaries: beneficiaries[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, licenseDetails: find($.data.licenses, 'name', licenseDetails).id }) })"
+            "mapping": "data && merge(data,\n    { works: data.works[].merge(@, { \n        assetManager: find($.data.parties, 'name', assetManager).id, \n        owner: owner[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, \n        marketPlatforms: marketPlatforms[].find($.data.marketPlatforms, 'name', @).{ marketId: id },\n        beneficiaries: beneficiaries[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, \n        licenseDetails: find($.data.licenses, 'name', licenseDetails).id \n    }) \n})",
+            "blockComment": ""
         },
         {
             "type": "mapping",
-            "mapping": "data && data.[parties, licenses, marketPlatforms, works][].merge(@, { uuid: id, schema: type })"
-        },
-        {
-            "type": "debug",
-            "open": 0,
-            "showContext": false
+            "mapping": "data.parties && data.[parties, licenses, marketPlatforms, works][]\n    .merge(@, \n        { \n            uuid: id, \n            schema: type \n        }\n    )",
+            "blockComment": ""
         },
         {
             "type": "actions",
@@ -118,10 +116,6 @@
                             "type": "batch",
                             "blocks": [
                                 {
-                                    "type": "debug",
-                                    "consoleLog": true
-                                },
-                                {
                                     "type": "db",
                                     "skipFirst": false,
                                     "operation": "add",
@@ -133,20 +127,16 @@
                     ],
                     "enabled": true
                 }
-            ]
-        },
-        {
-            "type": "debug",
-            "open": 0,
-            "showContext": false
+            ],
+            "blockComment": ""
         }
     ],
     "id": "import",
     "workflowId": "import",
     "adapterName": "culturebanked",
-    "created": "2022-07-27T15:03:22.230Z",
+    "created": "2024-07-10T11:27:49.738Z",
     "tags": [],
-    "updated": "2022-07-27T15:03:22.230Z",
-    "modified": "2022-07-27T15:03:22.230Z",
+    "updated": "2024-07-10T11:27:49.738Z",
+    "modified": "2024-07-10T11:27:49.738Z",
     "title": "Art (Import)"
 }

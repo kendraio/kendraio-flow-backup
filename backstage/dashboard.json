@@ -1,0 +1,254 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{token: data.token}",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-get",
+            "name": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{token: data.token}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query {\n    backstage_gigs {\n        id\n        description\n        lineup\n        start_date\n        start_time\n        status\n        tickets_manager\n        venue {\n            name\n            city\n            country\n            latitude\n            longitude\n        }\n        headline_artist {\n            name\n        }\n    }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "data.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_gigs[*].merge(@, {\n    start_time: start_time && formatDate(start_time, 'T'),\n    venue: venue.name && venue.city && join(', ', [venue.name, venue.city]) || venue.name || venue.city,\n    country: venue.country,\n    latitude: venue.latitude,\n    longitude: venue.longitude\n})",
+            "blockComment": "\n"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "headline_artist.name",
+                    "headerName": "Headline Act"
+                },
+                {
+                    "field": "venue",
+                    "headerName": "Venue"
+                },
+                {
+                    "field": "country",
+                    "headerName": "Country"
+                },
+                {
+                    "field": "latitude",
+                    "headerName": "Latitude"
+                },
+                {
+                    "field": "longitude",
+                    "headerName": "Longitude"
+                },
+                {
+                    "field": "description",
+                    "headerName": "Description"
+                },
+                {
+                    "field": "start_date",
+                    "headerName": "Date"
+                },
+                {
+                    "field": "start_time",
+                    "headerName": "Time"
+                },
+                {
+                    "field": "lineup",
+                    "headerName": "Lineup",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.lineup"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "graphql",
+                                        "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+                                        "query": "query MyQuery($id: Int!) {backstage_artists_by_pk(id: $id) {name}}",
+                                        "variables": {
+                                            "id": "data"
+                                        },
+                                        "headers": {
+                                            "x-hasura-admin-secret": "context.hasura.token"
+                                        },
+                                        "allowFirst": true,
+                                        "allowEmpty": true
+                                    },
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data.data.backstage_artists_by_pk.name",
+                                        "blockComment": ""
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "{{data}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "tickets_manager",
+                    "headerName": "Tickets Manager"
+                },
+                {
+                    "field": "update",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "{id: data.id, token: context.hasura.token}"
+                            },
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "variable-set",
+                                                "name": "flow_data"
+                                            },
+                                            {
+                                                "type": "launch",
+                                                "adapter": "backstage",
+                                                "workflowId": "updategig"
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ],
+                                "blockComment": ""
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "delete",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "form",
+                                "label": "Delete"
+                            },
+                            {
+                                "type": "graphql",
+                                "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+                                "query": "mutation MyMutation(      $id: Int!    ) {  delete_backstage_gigs_by_pk(id: $id) {    description    headline_artist_id    start_date    start_time    status    venue_id  }}",
+                                "variables": {
+                                    "id": "data.id"
+                                },
+                                "headers": {
+                                    "x-hasura-admin-secret": "context.hasura.token"
+                                },
+                                "allowFirst": true,
+                                "allowEmpty": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add Gig",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "backstage",
+                            "workflowId": "addgig"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Manage Venues",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "backstage",
+                            "workflowId": "managevenues"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Manage Artists",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "backstage",
+                            "workflowId": "manageartists"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "dashboard",
+    "workflowId": "dashboard",
+    "adapterName": "backstage",
+    "created": "2024-07-10T13:56:21.645Z",
+    "tags": [],
+    "updated": "2024-07-10T13:56:21.644Z",
+    "modified": "2024-07-10T13:56:21.644Z",
+    "title": "Kendraio Backstage Dashboard"
+}

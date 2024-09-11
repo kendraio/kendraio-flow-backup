@@ -1,7 +1,13 @@
 {
     "blocks": [
         {
-            "type": "init"
+            "type": "init",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.currentVenue",
+            "blockComment": ""
         },
         {
             "type": "variable-get",
@@ -9,11 +15,13 @@
         },
         {
             "type": "context-save",
-            "contextKey": "sandboxAuth"
+            "contextKey": "sandboxAuth",
+            "blockComment": ""
         },
         {
             "type": "mapping",
-            "mapping": "{ name: '' }"
+            "mapping": "{ name: state.local.currentVenue || `Default` }",
+            "blockComment": ""
         },
         {
             "type": "form",
@@ -30,6 +38,11 @@
             "uiSchema": {}
         },
         {
+            "type": "mapping",
+            "mapping": "{\n    name: data.name, \n    token: context.sandboxAuth.token || state.local.sandboxAuth.token\n}",
+            "blockComment": ""
+        },
+        {
             "type": "http",
             "method": "get",
             "endpoint": {
@@ -41,8 +54,9 @@
                 }
             },
             "headers": {
-                "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
-            }
+                "Authorization": "join('', ['Bearer ', data.token])"
+            },
+            "blockComment": ""
         },
         {
             "type": "reference",
@@ -55,9 +69,9 @@
     "id": "findVenue",
     "workflowId": "findVenue",
     "adapterName": "bandsintown",
-    "created": "2023-04-04T13:56:18.073Z",
+    "created": "2024-04-10T16:48:58.081Z",
     "tags": [],
-    "updated": "2023-04-04T13:56:18.073Z",
-    "modified": "2023-04-04T13:56:18.073Z",
+    "updated": "2024-04-10T16:48:58.081Z",
+    "modified": "2024-04-10T16:48:58.081Z",
     "title": "Find Venue"
 }

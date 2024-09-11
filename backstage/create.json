@@ -1,0 +1,130 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "contextErrorKey": "formErrors.message",
+            "label": "Add event",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    },
+                    "headline_artist_name": {
+                        "type": "string",
+                        "title": "Headline Artist"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "description": "Format: 2019-10-01",
+                        "title": "Start Date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "Start Time"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "enum": [
+                            "PUBLISHED",
+                            "DRAFT",
+                            "SCHEDULED",
+                            "DELETED"
+                        ]
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Type",
+                        "enum": [
+                            "PAST",
+                            "UPCOMING"
+                        ]
+                    },
+                    "venue": {
+                        "type": "string",
+                        "title": "Venue ID"
+                    },
+                    "lineup": {
+                        "type": "array",
+                        "title": "Lineup",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "number"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "bio": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "tickets_manager": {
+                        "type": "array",
+                        "title": "Tickets Manager",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "link": {
+                                    "type": "string",
+                                    "title": "Link"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "title": "Tickets Manager",
+                                    "enum": [
+                                        "TICKETS",
+                                        "TICKETS 2",
+                                        "PRESALE",
+                                        "VIP",
+                                        "FAN CLUB",
+                                        "FREE",
+                                        "SOLD OUT"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "mutation {\n    insert_backstage_gigs(\n        objects: [\n            {\n                headline_artist_name: \"The Invented Band\", \n                headline_artist_id: 42, \n                venue_id: 42, \n                venue_name: \"The Invented Venue\", \n                venue_city: \"The Invented City\", \n                venue_country: \"The Invented Country\", \n                venue_latitude: 42, \n                venue_longitude: 42, \n                description: \"The Invented Description\", \n                start_date: \"2023-06-03\", \n                start_time: \"16:00:00\", \n                status: \"PUBLISHED\", \n                lineup: [\"The Invented Band\", \"Nobody Else\"], \n                tickets_manager: []\n            }\n        ]\n    ) {\n        returning {\n            headline_artist_name\n        }\n    }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "data.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        }
+    ],
+    "id": "create",
+    "workflowId": "create",
+    "adapterName": "backstage",
+    "created": "2024-01-24T14:31:14.848Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-01-24T14:31:14.847Z",
+    "modified": "2024-01-24T14:31:14.847Z",
+    "title": "Kendraio Backstage (create)"
+}

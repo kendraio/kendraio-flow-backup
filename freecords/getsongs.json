@@ -1,0 +1,90 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "token",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "freecords.bubbleapps.io/version-test/api/1.1",
+                "pathname": "/obj/song"
+            },
+            "headers": {
+                "authorization": "join('', ['Bearer ', data.key])"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.response.results[*].merge(@, {\n    created: @.\"Created Date\",\n    modified: @.\"Modified Date\",\n    artwork: @.\"Cover Photo\"\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    created: formatDate(created, 'yyyy/MM/dd, T'),\n    modified: formatDate(modified, 'yyyy/MM/dd, T'),\n    artwork: @.\"Cover Photo\"\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "artwork",
+                    "headerName": "Artwork",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<img width='150' height='150' src='{{data.artwork}}' />"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "Artist",
+                    "headerName": "Artist"
+                },
+                {
+                    "field": "Name",
+                    "headerName": "Title"
+                },
+                {
+                    "field": "created",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "modified",
+                    "headerName": "Modified"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "getsongs",
+    "workflowId": "getsongs",
+    "adapterName": "freecords",
+    "created": "2024-07-26T12:13:39.750Z",
+    "tags": [],
+    "updated": "2024-07-26T12:13:39.750Z",
+    "modified": "2024-07-26T12:13:39.750Z",
+    "title": "Freecords Retrieve Songs"
+}

@@ -1,0 +1,115 @@
+{
+    "blocks": [
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockComment": "Load schemas"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "find(data, `name`, `contributions-db`) || null",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "schema-contributions",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "contributions-db",
+            "blockComment": "Grab items from schema"
+        },
+        {
+            "type": "context-save",
+            "key": "state.contributions",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "find(state.local.contributions, `label`, `contributionsDB`)",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "!data || {\n    \"api_key\": join('', [`\"Token \"`, data.api_key]),\n    \"table_pathname\": join('', [`\"/rows/table/\"`, data.contributors_id_table, `\"/\"`])\n\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "contributions-http-info",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "contributions-http-info",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "pathname": "/rows/table/268132/",
+                "query": {
+                    "user_field_names": "true"
+                },
+                "valueGetters": {
+                    "pathname": "context.contributions-http-info.table_id"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.api_key"
+            },
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.errorMessage}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.results[*]\n",
+            "blockComment": ""
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select contributor",
+            "labelGetter": "Contributor",
+            "valueField": "Contributor",
+            "outputGetter": "@",
+            "blockComment": ""
+        }
+    ],
+    "id": "selectContributos",
+    "workflowId": "selectContributos",
+    "adapterName": "contributions",
+    "created": "2024-06-19T16:06:37.859Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2024-06-19T16:06:37.859Z",
+    "modified": "2024-06-19T16:06:37.859Z",
+    "title": "Select Contributor"
+}

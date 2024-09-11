@@ -1,0 +1,219 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query {\n    backstage_venues {\n        id\n        city\n        country\n        latitude\n        longitude\n        name\n    }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_venues",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "id",
+                    "headerName": "ID"
+                },
+                {
+                    "field": "name",
+                    "headerName": "Venue"
+                },
+                {
+                    "field": "city",
+                    "headerName": "City"
+                },
+                {
+                    "field": "country",
+                    "headerName": "Country"
+                },
+                {
+                    "field": "latitude",
+                    "headerName": "Latitude"
+                },
+                {
+                    "field": "longitude",
+                    "headerName": "Longitude"
+                },
+                {
+                    "field": "update",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "{id: data.id, token: context.hasura.token}"
+                            },
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "variable-set",
+                                                "name": "flow_data"
+                                            },
+                                            {
+                                                "type": "launch",
+                                                "adapter": "backstage",
+                                                "workflowId": "updatevenue"
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ],
+                                "blockComment": ""
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "delete",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "form",
+                                "label": "Delete"
+                            },
+                            {
+                                "type": "graphql",
+                                "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+                                "query": "mutation MyMutation(      $id: Int!    ) {  delete_backstage_venues_by_pk(id: $id) { name city country longitude latitude }}",
+                                "variables": {
+                                    "id": "data.id"
+                                },
+                                "headers": {
+                                    "x-hasura-admin-secret": "context.hasura.token"
+                                },
+                                "allowFirst": true,
+                                "allowEmpty": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "city": {
+                        "type": "string",
+                        "title": "City"
+                    },
+                    "country": {
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "latitude": {
+                        "type": "string",
+                        "title": "Latitude"
+                    },
+                    "longitude": {
+                        "type": "string",
+                        "title": "Longitude"
+                    }
+                }
+            },
+            "label": "Add Venue",
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "mutation MyMutation (\n    $name: String,\n    $city: String,\n    $country: String,\n    $longitude: numeric,\n    $latitude: numeric\n) \n{\n    insert_backstage_venues(\n        objects: [\n            {\n                name: $name,\n                city: $city,\n                country: $country,\n                longitude: $longitude,\n                latitude: $latitude\n            }\n        ]\n    ) {\n        returning {\n            id\n        }\n    }\n}",
+            "variables": {
+                "name": "data.name",
+                "city": "data.city",
+                "country": "data.country",
+                "longitude": "data.longitude",
+                "latitude": "data.latitude"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Dashboard",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "backstage",
+                            "workflowId": "dashboard"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "managevenues",
+    "workflowId": "managevenues",
+    "adapterName": "backstage",
+    "created": "2024-05-17T12:49:54.447Z",
+    "tags": [],
+    "updated": "2024-05-17T12:49:54.447Z",
+    "modified": "2024-05-17T12:49:54.447Z",
+    "title": "Kendraio Backstage Manage Venues"
+}

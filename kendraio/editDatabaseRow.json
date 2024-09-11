@@ -1,0 +1,48 @@
+{
+    "blocks": [
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{   type: `\"object\"`,\n    title: `\"Projects Contributions - Edit Item\"`,\n    \"properties\": {\n            \"Name\": { \"type\": `\"string\"`, \"title\": `Name`, \"default\": context.queryParams.name},\n            \"Notes\": { \"type\": `\"string\"`, \"title\": `Notes`, \"default\": context.queryParams.notes},\n            \"Active\": { \"type\": `\"string\"`, \"title\": `Active`, \"default\": context.queryParams.active},\n            \"Contribution Unit\": { \"type\": `\"string\"`, \"title\": `Contribution Unit`, \"default\": context.queryParams.contribution_unit}\n    }\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "originalRow",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Save Edit",
+            "hasSubmit": true,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "row_fields": {
+                        "$ref": "#/definitions/context/originalRow"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "editDatabaseRow",
+    "workflowId": "editDatabaseRow",
+    "adapterName": "kendraio",
+    "created": "2024-05-16T11:42:56.077Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2024-05-16T11:42:56.076Z",
+    "modified": "2024-05-16T11:42:56.076Z",
+    "title": "Edit Database Row"
+}

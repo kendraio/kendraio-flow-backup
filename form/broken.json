@@ -1,0 +1,90 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "hasSubmit": true,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "input": {
+                        "type": "string",
+                        "title": "Input",
+                        "default": ""
+                    },
+                    "bool": {
+                        "type": "boolean",
+                        "title": "Toggle me",
+                        "default": false
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "test",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "length(data)",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.test",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": true,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "input": {
+                        "type": "string",
+                        "title": "Input",
+                        "default": ""
+                    },
+                    "bool": {
+                        "type": "boolean",
+                        "title": "Toggle me",
+                        "default": false
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "broken",
+    "workflowId": "broken",
+    "adapterName": "form",
+    "created": "2024-02-13T12:36:25.099Z",
+    "tags": [],
+    "updated": "2024-02-13T12:36:25.098Z",
+    "modified": "2024-02-13T12:36:25.098Z",
+    "title": "Broken form state reactivity example"
+}

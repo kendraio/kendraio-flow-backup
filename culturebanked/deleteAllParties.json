@@ -1,0 +1,78 @@
+{
+    "blocks": [
+        {
+            "type": "init",
+            "blockComment": "Start the workflow."
+        },
+        {
+            "type": "message",
+            "title": "Deleting All Parties",
+            "message": "Please wait while all parties are deleted...",
+            "blockComment": "Inform the user about the deletion process."
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "culturebanked",
+            "schema": "party",
+            "blockComment": "Fetch all parties from the database."
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "Debug: Display the list of parties before deletion."
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].uuid",
+            "blockComment": "Extract an array of all party UUIDs."
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "db",
+                    "operation": "delete",
+                    "adapterName": "culturebanked",
+                    "schema": "party",
+                    "uuidGetter": "data",
+                    "skipFirst": false,
+                    "blockComment": "Delete each party using its UUID."
+                }
+            ],
+            "blockComment": "Delete all parties in a batch operation."
+        },
+        {
+            "type": "message",
+            "title": "Deletion Complete",
+            "message": "All parties have been deleted.",
+            "blockComment": "Confirm the completion of the deletion."
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "culturebanked",
+            "schema": "party",
+            "blockComment": "Fetch parties again to verify deletion."
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "Debug: Display the list of parties after deletion (should be empty)."
+        }
+    ],
+    "id": "deleteAllParties",
+    "workflowId": "deleteAllParties",
+    "adapterName": "culturebanked",
+    "created": "2024-05-15T11:26:12.945Z",
+    "tags": [],
+    "updated": "2024-05-15T11:26:12.944Z",
+    "modified": "2024-05-15T11:26:12.944Z",
+    "title": "Delete All Parties"
+}

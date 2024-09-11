@@ -1,0 +1,70 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query MyQuery($id: Int!) {\n  backstage_gigs_by_pk(id: $id) {\n    id\n    description\n    start_date\n    start_time\n    status\n    lineup\n    tickets_manager\n    venue_id\n    venue {\n        name\n        city\n        country\n        latitude\n        longitude\n    }\n    headline_artist_id\n    headline_artist {\n        name\n    }\n  }\n}",
+            "variables": {
+                "id": "`45`"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "data.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_gigs_by_pk.lineup",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "graphql",
+                    "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+                    "query": "query MyQuery($id: Int!) {backstage_artists_by_pk(id: $id) {name}}",
+                    "variables": {
+                        "id": "data"
+                    },
+                    "headers": {
+                        "x-hasura-admin-secret": "context.flow_data.token"
+                    },
+                    "allowFirst": true,
+                    "allowEmpty": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 5,
+            "showData": true,
+            "blockComment": ""
+        }
+    ],
+    "id": "simplebatch",
+    "workflowId": "simplebatch",
+    "adapterName": "sandbox",
+    "created": "2024-08-15T16:30:34.794Z",
+    "tags": [],
+    "updated": "2024-08-15T16:30:34.794Z",
+    "modified": "2024-08-15T16:30:34.794Z",
+    "title": "Flow"
+}

@@ -1,0 +1,158 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "This flow decodes data that has been encoded into the current web link, and saves it to LocalStorage.",
+            "blockComment": "This flow decodes data that has been encoded into the current web link, and saves it to LocalStorage."
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "savedData",
+            "default": null,
+            "blockComment": "Try to load \"savedData\" variable from LocalStorage, defaulting to null if not found"
+        },
+        {
+            "type": "template",
+            "template": "This is existing data that was saved to LocalStorage:",
+            "blockComment": "This is existing data that was saved to LocalStorage"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "existingData",
+            "valueGetter": "data",
+            "blockComment": "Saves existingData to a local variable we can use later"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?publisherName!=null]",
+            "blockComment": "Removing result that don't have publihserName"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Publisher Name",
+                    "field": "publisherName"
+                },
+                {
+                    "headerName": "Publisher Website",
+                    "field": "publisherWebsite"
+                },
+                {
+                    "headerName": "Website Language",
+                    "field": "websiteLanguage"
+                },
+                {
+                    "headerName": "Subscription Model",
+                    "field": "subscriptionModel"
+                },
+                {
+                    "headerName": "Genre",
+                    "field": "genre"
+                },
+                {
+                    "headerName": "Age Group",
+                    "field": "ageGroup"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "split(context.app.location.search, `?`)[1]",
+            "blockComment": "Extracts data from URL, getting data after the question mark"
+        },
+        {
+            "type": "mapping",
+            "mapping": "parseQs(data)",
+            "blockComment": "Decodes the data from URL query string format to properties"
+        },
+        {
+            "type": "parse-data",
+            "blockComment": "Convert URL data to JSON"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.existingData, data][]",
+            "blockComment": "Combine objects"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?publisherName!=null]",
+            "blockComment": "Remove objects without publisherName in it"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?keys(@) != `[]`]",
+            "blockComment": "Remove empty objects"
+        },
+        {
+            "type": "template",
+            "template": "These are new objects from the URL, combined with the existing objects:",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "savedData",
+            "valueGetter": "json(data)",
+            "blockComment": "Saves a JSON version of the current data to a LocalStorage variable called \"savedData\""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Publisher Name",
+                    "field": "publisherName"
+                },
+                {
+                    "headerName": "Publisher Website",
+                    "field": "publisherWebsite"
+                },
+                {
+                    "headerName": "Website Language",
+                    "field": "websiteLanguage"
+                },
+                {
+                    "headerName": "Subscription Model",
+                    "field": "subscriptionModel"
+                },
+                {
+                    "headerName": "Genre",
+                    "field": "genre"
+                },
+                {
+                    "headerName": "Age Group",
+                    "field": "ageGroup"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<a href='https://app.kendra.io/subscribe/encode'>Flow to encode data as links</a><br><a href='https://app.kendra.io/subscribe/list'>Standalone data list flow</a>",
+            "blockComment": ""
+        }
+    ],
+    "id": "createPublisherLink",
+    "workflowId": "createPublisherLink",
+    "adapterName": "subscribe",
+    "created": "2023-10-10T15:32:27.256Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2023-10-10T15:32:27.256Z",
+    "modified": "2023-10-10T15:32:27.256Z",
+    "title": "My Publisher List"
+}

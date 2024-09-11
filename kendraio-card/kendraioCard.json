@@ -1,0 +1,63 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "[\n    {\n        \"title\": `\"iPhone Charger fast charging\"`,\n        \"imageUrl\": `\"https://img.fruugo.com/product/4/36/728056364_max.jpg\"`\n    },\n        {\n        \"title\": `\"Wireless On-Ear Headphones\"`,\n        \"imageUrl\": `\"https://m.media-amazon.com/images/I/61WQ0mBtBYL._AC_SL1500_.jpg\"`\n    },\n        {\n        \"title\": `\"Magnetic Wireless Charger Fast\"`,\n        \"imageUrl\": `\"https://m.media-amazon.com/images/I/51ZTUXXpT1L._AC_SL1500_.jpg\"`\n    },\n        {\n        \"title\": `\"USB C to USB C Charger Cable\"`,\n        \"imageUrl\": `\"https://m.media-amazon.com/images/I/81fPmde23VL._AC_SL1500_.jpg\"`\n    }\n]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "batch",
+            "flex": true,
+            "blocks": [
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "<h1>{{data.title}}</h1>"
+                        },
+                        {
+                            "type": "template",
+                            "template": "<img width='400' src='{{data.imageUrl}}' />"
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Pew",
+                                    "color": "primary",
+                                    "blocks": [
+                                        {
+                                            "type": "dispatch",
+                                            "action": "resetApp"
+                                        }
+                                    ],
+                                    "enabled": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "kendraioCard",
+    "workflowId": "kendraioCard",
+    "adapterName": "kendraio-card",
+    "created": "2023-10-25T12:51:02.532Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-10-25T12:51:02.532Z",
+    "modified": "2023-10-25T12:51:02.532Z",
+    "title": "Kendraio Card"
+}

@@ -1,0 +1,97 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "context.googleAuth.access_token"
+                },
+                {
+                    "type": "context-save",
+                    "key": "state.token"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/drive/v3/files"
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.files",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "message",
+                    "message": "{{data.name}}"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "{id: data.id, token: state.local.token}"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "valueGetters": {
+                            "pathname": "join('', ['/drive/v3/files/', data.id, '/comments'])"
+                        },
+                        "query": {
+                            "fields": "*"
+                        }
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "data.token"
+                        }
+                    }
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data.comments"
+                },
+                {
+                    "type": "template",
+                    "template": "<ul>{{#each data}}<li>{{author.displayName}}: {{content}}</li><br/><ul>{{#each replies}}<li>{{author.displayName}}: {{content}}</li>{{/each}}</ul><br/>{{/each}}</ul>"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "googledrivetemplate",
+    "workflowId": "googledrivetemplate",
+    "adapterName": "task",
+    "created": "2024-06-07T16:28:24.463Z",
+    "tags": [],
+    "updated": "2024-06-07T16:28:24.462Z",
+    "modified": "2024-06-07T16:28:24.462Z",
+    "title": "Kendraio Task Google Drive List Files"
+}

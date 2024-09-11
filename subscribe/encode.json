@@ -1,0 +1,76 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "Edit publisher details below to generate a link with those details encoded in the link. <br> Clicking on the link should populate LocalStorage with the item details. <br> Multiple items can be stored.",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Enter product details",
+            "hasSubmit": false,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "publisherName": {
+                        "type": "string",
+                        "title": "Publisher Name",
+                        "default": "Publisher Name"
+                    },
+                    "publisherWebsite": {
+                        "type": "string",
+                        "title": "Publisher Website",
+                        "default": "Publisher Website"
+                    },
+                    "websiteLanguage": {
+                        "type": "string",
+                        "title": "Website Language",
+                        "default": "Website Language"
+                    },
+                    "subscriptionModel": {
+                        "type": "string",
+                        "title": "Subscription Model",
+                        "enum": [
+                            "Free",
+                            "Pooled"
+                        ]
+                    },
+                    "genre": {
+                        "type": "string",
+                        "title": "Genre",
+                        "default": "Genre"
+                    },
+                    "ageGroup": {
+                        "type": "string",
+                        "title": "Age Group",
+                        "default": "Age Group"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{content:json(data)}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "qs(data)"
+        },
+        {
+            "type": "template",
+            "template": "<a href='https://app.kendra.io/subscribe/decode?{{data}}'>https://app.kendra.io/subscribe/decode?{{data}}</a>",
+            "blockComment": ""
+        }
+    ],
+    "id": "encode",
+    "workflowId": "encode",
+    "adapterName": "subscribe",
+    "created": "2023-10-10T16:38:21.173Z",
+    "tags": [],
+    "updated": "2023-10-10T16:38:21.173Z",
+    "modified": "2023-10-10T16:38:21.173Z",
+    "title": "Create Publisher Link"
+}

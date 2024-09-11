@@ -1,0 +1,148 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "query": {
+                    "user_field_names": "true"
+                },
+                "valueGetters": {
+                    "pathname": "data.contributorsPathname"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.errorMessage}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.results[*].omit(@, ['order'])",
+            "blockComment": "/rows/table/268132/"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "single",
+                "sideBar": true
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "Contributor",
+                    "headerName": "Contributor"
+                },
+                {
+                    "field": "Notes",
+                    "headerName": "Notes"
+                },
+                {
+                    "field": "Active",
+                    "headerName": "Active"
+                },
+                {
+                    "headerName": "Action",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "contributions",
+                                                "workflowId": "contributors-edit-record",
+                                                "context": {
+                                                    "id": "data.id",
+                                                    "contributor": "data.Contributor",
+                                                    "notes": "data.Notes",
+                                                    "active": "data.Active"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<h3>All contributions Flows</h3>",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Go to Contributions",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "contributions",
+                            "workflowId": "contributions"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Go to Projects",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "contributions",
+                            "workflowId": "projects"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "contributors",
+    "workflowId": "contributors",
+    "adapterName": "contributions",
+    "created": "2024-07-16T12:20:56.852Z",
+    "tags": [],
+    "updated": "2024-07-16T12:20:56.852Z",
+    "modified": "2024-07-16T12:20:56.852Z",
+    "title": "Contributors (Contributions)"
+}

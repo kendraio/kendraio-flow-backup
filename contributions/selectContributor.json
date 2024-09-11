@@ -1,0 +1,93 @@
+{
+    "blocks": [
+        {
+            "type": "context-save",
+            "key": "state.local.contributorSelected",
+            "blockComment": "local.contributorSelected"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "query": {
+                    "user_field_names": "true"
+                },
+                "valueGetters": {
+                    "pathname": "data.contributorsPathname"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.errorMessage}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.results[*]\n",
+            "blockComment": "results"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": data[*].{\n    \"title\": Contributor,\n    \"const\": Contributor\n  }\n}",
+            "blockComment": "anyOf"
+        },
+        {
+            "type": "context-save",
+            "key": "contributorsList",
+            "blockComment": "contributorsList"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"contributorSelected\": state.local.contributorSelected\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "contributorSelected": {
+                        "title": "Select a contributor",
+                        "$ref": "#/definitions/context/contributorsList"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "selectContributor",
+    "workflowId": "selectContributor",
+    "adapterName": "contributions",
+    "created": "2024-07-22T08:39:13.490Z",
+    "tags": [],
+    "updated": "2024-07-22T08:39:13.490Z",
+    "modified": "2024-07-22T08:39:13.490Z",
+    "title": "Select Contributor"
+}

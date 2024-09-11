@@ -1,0 +1,63 @@
+{
+    "blocks": [
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ",\n        {\n            \"type\": \"context-save\",\n            \"key\": \"file_data\"\n        },\n        {\n            \"type\": \"mapping\",\n            \"mapping\": \"data.merge(@, {token: state.local.token})\"\n        },\n        {\n            \"type\": \"debug\",\n            \"showContext\": true,\n            \"showState\": true\n        },\n        {\n            \"type\": \"http\",\n            \"method\": \"get\",\n            \"useProxy\": true,\n            \"endpoint\": {\n                \"protocol\": \"https:\",\n                \"host\": \"www.googleapis.com\",\n                \"valueGetters\": {\n                    \"pathname\": \"join('', ['/drive/v3/files/', data.id, '/comments'])\"\n                },\n                \"query\": {\n                    \"fields\": \"*\"\n                }\n            },\n            \"authentication\": {\n                \"type\": \"bearer\",\n                \"valueGetters\": {\n                    \"jwt\": \"data.token\"\n                }\n            }\n        },\n        {\n            \"type\": \"mapping\",\n            \"mapping\": \"data.comments[*].merge(@, {source: `Google Drive`, asset: $.context.file_data.name, preview: content})\"\n        }"
+        },
+        {
+            "type": "context-save",
+            "key": "file_data",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "www.googleapis.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/drive/v3/files/', data.id, '/comments'])"
+                },
+                "query": {
+                    "fields": "*"
+                }
+            },
+            "authentication": {
+                "type": "bearer",
+                "valueGetters": {
+                    "jwt": "data.token"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.file_data",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
+        }
+    ],
+    "id": "formatgoogledrivefiles",
+    "workflowId": "formatgoogledrivefiles",
+    "adapterName": "task",
+    "created": "2024-07-03T13:43:05.242Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-07-03T13:43:05.242Z",
+    "modified": "2024-07-03T13:43:05.242Z",
+    "title": "Format Google Drive Files"
+}

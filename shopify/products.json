@@ -1,0 +1,225 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "password",
+                        "title": "Private Token",
+                        "default": ""
+                    },
+                    "shopName": {
+                        "type": "string",
+                        "title": "Shop Hostname",
+                        "default": "example.myshopify.com"
+                    },
+                    "productsAmount": {
+                        "type": "number",
+                        "title": "Products Amount",
+                        "default": 40
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "init",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "!data || {\n    \"token\": data.token,\n    \"shopName\": data.shopName,\n    \"productsAmount\": data.productsAmount,\n    \"host\": join('', [data.shopName, `/admin/api/2023-10`])\n}\n",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "savedData",
+            "blockComment": "savedData: query data"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/products.json",
+                "valueGetters": {
+                    "host": "context.savedData.host",
+                    "query": "{ limit: context.savedData.productsAmount }"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "X-Shopify-Access-Token": "data.token"
+            },
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.error.error}} - {{data.error.error_description}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": "REST"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.products[?image]",
+            "blockComment": "Only show products with an image"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.products",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": [
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "template",
+                                    "template": "No data to display!"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "template",
+                        "template": "API successful"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.resultsSaved",
+            "blockComment": "resultsSaved: shop items array"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "floatingFilter": true,
+                "pagination": true,
+                "paginationPageSize": 20,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "width": 20,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Vendor",
+                    "field": "vendor",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Created At",
+                    "field": "created_at",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Publish At",
+                    "field": "published_at",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Status",
+                    "field": "status",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "state.local.resultsSaved",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "flex": true,
+            "blocks": [
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "<b class='truncate'>{{data.title}}</b>"
+                        },
+                        {
+                            "type": "template",
+                            "template": "<img width='200' height='300' src='{{data.image.src}}' />"
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Go to product",
+                                    "color": "primary",
+                                    "blocks": [
+                                        {
+                                            "type": "template",
+                                            "template": "<a href='context.savedData.host/products/resultsSaved.title'></>"
+                                        }
+                                    ],
+                                    "enabled": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "blockComment": "Card Gallery"
+        }
+    ],
+    "id": "products",
+    "workflowId": "products",
+    "adapterName": "shopify",
+    "created": "2024-06-18T17:13:26.261Z",
+    "tags": [],
+    "updated": "2024-06-18T17:13:26.261Z",
+    "modified": "2024-06-18T17:13:26.261Z",
+    "title": "Shopify Products"
+}

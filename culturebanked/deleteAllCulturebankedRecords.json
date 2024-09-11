@@ -1,0 +1,238 @@
+{
+    "blocks": [
+        {
+            "type": "init",
+            "blockComment": "Start the workflow."
+        },
+        {
+            "type": "message",
+            "title": "Deleting All Records",
+            "message": "Deleting all records from the Culturebanked database. Please wait...",
+            "blockComment": "Inform the user about the ongoing deletion process."
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "label": "Parties",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "party",
+                            "blockComment": "Fetch all parties."
+                        },
+                        {
+                            "type": "debug",
+                            "open": 0,
+                            "showData": true,
+                            "blockComment": "Debug: View parties before deletion."
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[*].uuid",
+                            "blockComment": "Extract party UUIDs."
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "db",
+                                    "operation": "delete",
+                                    "adapterName": "culturebanked",
+                                    "schema": "party",
+                                    "uuidGetter": "data",
+                                    "skipFirst": false,
+                                    "blockComment": "Delete each party."
+                                }
+                            ],
+                            "blockComment": "Batch delete parties."
+                        },
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "party",
+                            "blockComment": "Fetch parties again to verify."
+                        },
+                        {
+                            "type": "debug",
+                            "open": 0,
+                            "showData": true,
+                            "blockComment": "Debug: View parties after deletion."
+                        }
+                    ]
+                },
+                {
+                    "label": "Licenses",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "license",
+                            "blockComment": "Fetch all licenses."
+                        },
+                        {
+                            "type": "debug",
+                            "open": 0,
+                            "showData": true,
+                            "blockComment": "Debug: View licenses before deletion."
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[*].uuid",
+                            "blockComment": "Extract license UUIDs."
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "db",
+                                    "operation": "delete",
+                                    "adapterName": "culturebanked",
+                                    "schema": "license",
+                                    "uuidGetter": "data",
+                                    "skipFirst": false,
+                                    "blockComment": "Delete each license."
+                                }
+                            ],
+                            "blockComment": "Batch delete licenses."
+                        },
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "license",
+                            "blockComment": "Fetch licenses again to verify."
+                        },
+                        {
+                            "type": "debug",
+                            "open": 0,
+                            "showData": true,
+                            "blockComment": "Debug: View licenses after deletion."
+                        }
+                    ]
+                },
+                {
+                    "label": "Market Platforms",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "platform",
+                            "blockComment": "Fetch all market platforms."
+                        },
+                        {
+                            "type": "debug",
+                            "open": 0,
+                            "showData": true,
+                            "blockComment": "Debug: View platforms before deletion."
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[*].uuid",
+                            "blockComment": "Extract platform UUIDs."
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "db",
+                                    "operation": "delete",
+                                    "adapterName": "culturebanked",
+                                    "schema": "platform",
+                                    "uuidGetter": "data",
+                                    "skipFirst": false,
+                                    "blockComment": "Delete each platform."
+                                }
+                            ],
+                            "blockComment": "Batch delete platforms."
+                        },
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "platform",
+                            "blockComment": "Fetch platforms again to verify."
+                        },
+                        {
+                            "type": "debug",
+                            "open": 0,
+                            "showData": true,
+                            "blockComment": "Debug: View platforms after deletion."
+                        }
+                    ]
+                },
+                {
+                    "label": "Works",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "work",
+                            "blockComment": "Fetch all works."
+                        },
+                        {
+                            "type": "debug",
+                            "open": 0,
+                            "showData": true,
+                            "blockComment": "Debug: View works before deletion."
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[*].uuid",
+                            "blockComment": "Extract work UUIDs."
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "db",
+                                    "operation": "delete",
+                                    "adapterName": "culturebanked",
+                                    "schema": "work",
+                                    "uuidGetter": "data",
+                                    "skipFirst": false,
+                                    "blockComment": "Delete each work."
+                                }
+                            ],
+                            "blockComment": "Batch delete works."
+                        },
+                        {
+                            "type": "db",
+                            "operation": "get",
+                            "adapterName": "culturebanked",
+                            "schema": "work",
+                            "blockComment": "Fetch works again to verify."
+                        },
+                        {
+                            "type": "debug",
+                            "open": 0,
+                            "showData": true,
+                            "blockComment": "Debug: View works after deletion."
+                        }
+                    ]
+                }
+            ],
+            "blockComment": "Execute the deletion process for each schema."
+        },
+        {
+            "type": "message",
+            "title": "Deletion Complete",
+            "message": "All Culturebanked records have been deleted.",
+            "blockComment": "Confirm the successful deletion of all records."
+        }
+    ],
+    "id": "deleteAllCulturebankedRecords",
+    "workflowId": "deleteAllCulturebankedRecords",
+    "adapterName": "culturebanked",
+    "created": "2024-05-15T11:33:13.683Z",
+    "tags": [],
+    "updated": "2024-05-15T11:33:13.683Z",
+    "modified": "2024-05-15T11:33:13.683Z",
+    "title": "Delete All Culturebanked Records"
+}

@@ -1,0 +1,135 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "context.googleAuth.access_token"
+                },
+                {
+                    "type": "context-save",
+                    "key": "state.token"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/drive/v3/files"
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ],
+            "blockComment": "check for Google Auth and fetch list of files"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.files",
+            "blockComment": "prepare array for Batch"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Google Data not fetched"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "message",
+                        "message": "Google Data fetched"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "context",
+                    "contextPath": "file_data",
+                    "contextBlocks": [
+                        {
+                            "type": "context-save",
+                            "key": "file_data"
+                        }
+                    ],
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{id: data.id, token: state.local.token}"
+                        },
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "endpoint": {
+                                "protocol": "https:",
+                                "host": "www.googleapis.com",
+                                "valueGetters": {
+                                    "pathname": "join('', ['/drive/v3/files/', data.id, '/comments'])"
+                                },
+                                "query": {
+                                    "fields": "*"
+                                }
+                            },
+                            "authentication": {
+                                "type": "bearer",
+                                "valueGetters": {
+                                    "jwt": "data.token"
+                                }
+                            }
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.comments[*].merge(@, {source: `Google Drive`, asset: $.context.file_data.name, preview: content, createdAtSort: formatDate(createdTime, 'yyyy/MM/dd, T'), createdAtRead: formatDate(createdTime, 'T, dd/MM/yyyy'), updatedAt: formatDate(modifiedTime, 'yyyy/MM/dd, T')})"
+                        }
+                    ]
+                }
+            ],
+            "blockComment": "fetch comments for each file"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[]",
+            "blockComment": "flatten array of comments arrays"
+        },
+        {
+            "type": "context-save",
+            "key": "googledrive",
+            "blockComment": "save comments array"
+        }
+    ],
+    "id": "fetchgoogledrivecomments",
+    "workflowId": "fetchgoogledrivecomments",
+    "adapterName": "task",
+    "created": "2024-09-03T16:34:49.827Z",
+    "tags": [],
+    "updated": "2024-09-03T16:34:49.826Z",
+    "modified": "2024-09-03T16:34:49.826Z",
+    "title": "Kendraio Task Fetch Google Drive Comments"
+}

@@ -1,0 +1,350 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "shareUrl": "https://docs.google.com/spreadsheets/d/1aclYhlyZ5TVVfVAGtnwkziu8eGvrWMkKV6uP5UbzbBo/pub?output=csv&gid=140879854",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    country: @.\"Country\",\n    iso: @.\"ISO-alpha3 code\",\n    biological: @.\"Biological and Toxin Weapons Convention\",\n    conference: @.\"Conference on Disarmament\",\n    convention: @.\"Convention on the Physical Protection of Nuclear Material\",\n    comprehensive: @.\"Comprehensive Test Ban Treaty\",\n    fissile: @.\"Fissile Material Cutoff Treaty\",\n    atomic: @.\"International Atomic Energy Agency\",\n    commission: @.\"International Commission on Nuclear Non-proliferation and Disarmament\",\n    partnership: @.\"International Partnership for Nuclear Disarmament Verification\",\n    nuclear: @.\"Nuclear Armed State(s) [NPT and non-NPT]\",\n    north: @.\"North Atlantic Treaty Organization\",\n    non: @.\"Non-Nuclear Weapon State(s)\",\n    npt: @.\"NPT Nuclear Weapon State(s)\",\n    organization: @.\"Organization for Security and Co-operation in Europe\",\n    p5: @.\"P5\",\n    strategic: @.\"Strategic Arms Reduction Treaty\",\n    general: @.\"United Nations General Assembly\",\n    security: @.\"United Nations Security Council\"\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "countries",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].omit(@, ['Country', 'ISO-alpha3 code', 'lat', 'long', 'label', 'biological', 'conference', 'convention', 'comprehensive', 'fissile', 'atomic', 'commission', 'partnership', 'nuclear', 'north', 'non', 'npt', 'organization', 'p5', 'strategic', 'general', 'security', 'country', 'iso'])",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": keys(data[0])[*].{\n    \"title\": @,\n    \"const\": @\n  }\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "proposals",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "proposal": {
+                        "title": "Select a proposal",
+                        "$ref": "#/definitions/context/proposals"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.proposal",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "proposal",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.countries[?\"$.data\"!='']",
+            "blockComment": "In progress\n\npick(context.countries[0], [data]) Interpolation is allowed here"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.countries",
+            "blockComment": "Temporary"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "context.proposal",
+            "cases": [
+                {
+                    "value": "Biological and Toxin Weapons Convention",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?biological!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "International Commission on Nuclear Non-proliferation and Disarmament",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?commission!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "Conference on Disarmament",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?conference!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "Convention on the Physical Protection of Nuclear Material",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?convention!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "Comprehensive Test Ban Treaty",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?comprehensive!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "Fissile Material Cutoff Treaty",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?fissile!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "International Atomic Energy Agency",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?atomic!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "International Commission on Nuclear Non-proliferation and Disarmament",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?commission!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "International Partnership for Nuclear Disarmament Verification",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?partnership!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "Nuclear Armed State(s) [NPT and non-NPT]",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?nuclear!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "North Atlantic Treaty Organization",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?north!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "Non-Nuclear Weapon State(s)",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?non!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "NPT Nuclear Weapon State(s)",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?npt!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "Organization for Security and Co-operation in Europe",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?organization!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "P5",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?p5!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "Strategic Arms Reduction Treaty",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?strategic!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "United Nations General Assembly",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?general!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                },
+                {
+                    "value": "United Nations Security Council",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[?security!='']"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "filteredCountries"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": []
+            },
+            "blockComment": "Temporary hardcoding"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.filteredCountries",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "map",
+            "height": 500,
+            "zoom": 2,
+            "blockComment": ""
+        }
+    ],
+    "id": "dropdownfromspreadsheet",
+    "workflowId": "dropdownfromspreadsheet",
+    "adapterName": "steppingstones",
+    "created": "2024-08-13T17:15:29.781Z",
+    "tags": [],
+    "updated": "2024-08-13T17:15:29.781Z",
+    "modified": "2024-08-13T17:15:29.781Z",
+    "title": "Stepping Stones Map"
+}

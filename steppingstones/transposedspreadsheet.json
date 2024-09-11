@@ -1,0 +1,175 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "shareUrl": "https://docs.google.com/spreadsheets/d/1aclYhlyZ5TVVfVAGtnwkziu8eGvrWMkKV6uP5UbzbBo/pub?output=csv&gid=1683336318",
+            "headerRow": 1,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    attribute: @.Country\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "omit(data, ['Country'])"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "proposals",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "omit(data[0], ['attribute'])",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "isos",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "omit(context.proposals[-1], ['attribute'])",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "flags",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "omit(context.proposals[-2], ['attribute'])",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "capitals",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "omit(context.proposals[-3], ['attribute'])",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "longitudes",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "omit(context.proposals[-4], ['attribute'])",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "latitudes",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.proposals[?\n    attribute!='ISO-alpha3 code'&&\n    attribute!='Latitude'&&\n    attribute!='Longitude'&&\n    attribute!='Capital'&&\n    attribute!='Flag'\n]",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": data[*].{\n    \"title\": @.attribute,\n    \"const\": @.attribute\n  }\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "formOptions",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "proposal": {
+                        "title": "Select a proposal",
+                        "$ref": "#/definitions/context/formOptions"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.proposal",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "proposal",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.proposals[?attribute==$.data]",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && keys(omit(compact(data[0]), ['attribute']))",
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "context.proposal",
+            "cases": [],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "batch",
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "{ country: get(context.isos, data), lat: get(context.latitudes, data), long: get(context.longitudes, data) label: get(context.capitals, data), customPin: get(context.flags, data) }"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "context-save",
+                        "key": "filteredCountries"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.filteredCountries",
+            "blockComment": ""
+        },
+        {
+            "type": "map",
+            "height": 500,
+            "zoom": 2,
+            "blockComment": ""
+        }
+    ],
+    "id": "transposedspreadsheet",
+    "workflowId": "transposedspreadsheet",
+    "adapterName": "steppingstones",
+    "created": "2024-08-21T17:07:12.143Z",
+    "tags": [],
+    "updated": "2024-08-21T17:07:12.143Z",
+    "modified": "2024-08-21T17:07:12.143Z",
+    "title": "Stepping Stones Map"
+}

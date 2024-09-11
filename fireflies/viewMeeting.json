@@ -1,0 +1,57 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Browse transcript for meeting ID",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "fireflies_note_id": {
+                        "type": "string",
+                        "title": "Fireflies Note ID",
+                        "default": "3WV340W56IvpyZTJ"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://meeting-bobcat.hasura.app/v1/graphql",
+            "query": "query GetTranscriptsById($fireflies_note_id: String!) {\n  transcripts(where: {fireflies_note_id: {_eq: $fireflies_note_id}}) {\n    fireflies_note_id\n    meeting_duration\n    speaker_list\n    transcript_text\n    id\n  }\n}",
+            "variables": {
+                "fireflies_note_id": "data.fireflies_note_id"
+            },
+            "allowFirst": true,
+            "allowEmpty": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.transcripts[0].transcript_text",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "replaceAll(data, `\\n`, `<br>`)",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "{{{data}}}",
+            "blockComment": ""
+        }
+    ],
+    "id": "viewMeeting",
+    "workflowId": "viewMeeting",
+    "adapterName": "fireflies",
+    "created": "2024-09-10T18:08:23.628Z",
+    "tags": [],
+    "updated": "2024-09-10T18:08:23.628Z",
+    "modified": "2024-09-10T18:08:23.628Z",
+    "title": "Kendraio Fireflies Meeting Browser"
+}

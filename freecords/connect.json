@@ -1,0 +1,57 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "token",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data || `{}`",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Connect",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "title": "key"
+                    }
+                }
+            },
+            "uiSchema": {
+                "key": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "token",
+            "blockComment": ""
+        },
+        {
+            "type": "launch",
+            "adapter": "freecords",
+            "workflowId": "getsongs",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "freecords",
+    "created": "2024-07-26T12:12:38.571Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2024-07-26T12:12:38.571Z",
+    "modified": "2024-07-26T12:12:38.571Z",
+    "title": "Freecords Connect"
+}

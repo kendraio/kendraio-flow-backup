@@ -1,0 +1,150 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "context.googleAuth.access_token"
+                },
+                {
+                    "type": "context-save",
+                    "key": "state.token"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/drive/v3/files"
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.files",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 1,
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "wrapText": true,
+                    "resizable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "message",
+                                "message": "{{data.name}}"
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "{id: data.id, token: state.local.token}"
+                            },
+                            {
+                                "type": "http",
+                                "method": "get",
+                                "useProxy": true,
+                                "endpoint": {
+                                    "protocol": "https:",
+                                    "host": "www.googleapis.com",
+                                    "valueGetters": {
+                                        "pathname": "join('', ['/drive/v3/files/', data.id, '/comments'])"
+                                    },
+                                    "query": {
+                                        "fields": "*"
+                                    }
+                                },
+                                "authentication": {
+                                    "type": "bearer",
+                                    "valueGetters": {
+                                        "jwt": "data.token"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "data.comments"
+                            },
+                            {
+                                "type": "grid",
+                                "gridOptions": {
+                                    "pagination": true,
+                                    "paginationPageSize": 1,
+                                    "defaultColDef": {
+                                        "resizable": true,
+                                        "autoHeight": true,
+                                        "wrapText": true,
+                                        "autoSizeStrategy": {
+                                            "type": "fitCellContents"
+                                        }
+                                    }
+                                },
+                                "passThrough": false,
+                                "firstRowHeaders": false,
+                                "columnDefs": [
+                                    {
+                                        "field": "content",
+                                        "headerName": "Comments"
+                                    },
+                                    {
+                                        "field": "replies",
+                                        "cellRenderer": "workflowRenderer",
+                                        "cellRendererParams": {
+                                            "blocks": [
+                                                {
+                                                    "type": "mapping",
+                                                    "mapping": "data.replies"
+                                                },
+                                                {
+                                                    "type": "template",
+                                                    "template": "<ul>{{#each data}}<li>{{content}}</li>{{/each}}</ul>"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "googledrivegrid",
+    "workflowId": "googledrivegrid",
+    "adapterName": "task",
+    "created": "2024-05-27T14:43:50.471Z",
+    "tags": [],
+    "updated": "2024-05-27T14:43:50.471Z",
+    "modified": "2024-05-27T14:43:50.471Z",
+    "title": "Kendraio Task Google Drive List Files"
+}

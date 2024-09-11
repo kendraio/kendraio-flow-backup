@@ -1,0 +1,63 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "Add the questions you would like your receiver to answer to. <br>While editing the question, a link si created which contain your questions.<br> Clicking on the link should populate LocalStorage with the item details. <br> Multiple items can be stored.<br>",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Send survey",
+            "hasSubmit": false,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "question_one": {
+                        "type": "string",
+                        "title": "Question One"
+                    },
+                    "question_two": {
+                        "type": "string",
+                        "title": "Question Two"
+                    },
+                    "question_three": {
+                        "type": "string",
+                        "title": "Question Three"
+                    },
+                    "question_four": {
+                        "type": "string",
+                        "title": "Question Four"
+                    },
+                    "submit_label": {
+                        "type": "string",
+                        "title": "Submit button label"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{content:json(data)}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "qs(data)"
+        },
+        {
+            "type": "template",
+            "template": "<a href='https://app.kendra.io/form/formDecode?{{data}}'>https://app.kendra.io/form/formDecode?{{data}}</a>",
+            "blockComment": ""
+        }
+    ],
+    "id": "formEncode",
+    "workflowId": "formEncode",
+    "adapterName": "form",
+    "created": "2023-08-10T12:28:00.414Z",
+    "tags": [],
+    "updated": "2023-08-10T12:28:00.414Z",
+    "modified": "2023-08-10T12:28:00.414Z",
+    "title": "Form Encode"
+}

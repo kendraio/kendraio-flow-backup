@@ -112,7 +112,7 @@
                 },
                 {
                     "enabledGetter": "!(state.local.update)",
-                    "label": "Add new entry",
+                    "label": "Save new entry",
                     "color": "primary",
                     "blocks": [
                         {
@@ -291,9 +291,9 @@
     "id": "editItem",
     "workflowId": "editItem",
     "adapterName": "schemas",
-    "created": "2022-09-29T15:01:16.425Z",
+    "created": "2024-06-25T11:47:33.675Z",
     "tags": [],
-    "updated": "2022-09-29T15:01:16.424Z",
-    "modified": "2022-09-29T15:01:16.424Z",
+    "updated": "2024-06-25T11:47:33.675Z",
+    "modified": "2024-06-25T11:47:33.675Z",
     "title": "Edit Item"
 }

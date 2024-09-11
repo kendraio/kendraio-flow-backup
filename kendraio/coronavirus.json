@@ -5,6 +5,11 @@
             "template": "<p>Welcome to the Coronavirus dashboard within Kendraio App, our prototype for experimenting with new ways of accessing, owning and interacting with data. Here's <a href=\"https://medium.com/kendraio/covid-19-kendraio-creates-coronavirus-dashboard-within-kendraio-app-a0185e526b25\" target=\"_blank\"> how and why we did it</a>.</p><p>Do you have a question or feedback? Join our <a href=\"https://slack.kendra.io\" target=\"_blank\">Slack channel</a> or our <a href=\"https://www.facebook.com/groups/kendraio\" target=\"_blank\">Facebook group</a> and start a conversation!</p><p></p>"
         },
         {
+            "type": "template",
+            "template": "Please note that we are using either historical or mocked up data. Obviously the pandemic is over now so current data doesn't show the benefits of this dashboard.",
+            "blockComment": ""
+        },
+        {
             "type": "multi",
             "batches": [
                 {
@@ -67,11 +72,11 @@
     "id": "coronavirus",
     "workflowId": "coronavirus",
     "adapterName": "kendraio",
-    "created": "2021-10-28T16:13:45.366Z",
+    "created": "2023-07-17T09:01:05.170Z",
     "tags": [
         "highlight"
     ],
-    "updated": "2021-10-28T16:13:45.366Z",
-    "modified": "2021-10-28T16:13:45.366Z",
+    "updated": "2023-07-17T09:01:05.169Z",
+    "modified": "2023-07-17T09:01:05.169Z",
     "title": "Coronavirus dashboard"
 }

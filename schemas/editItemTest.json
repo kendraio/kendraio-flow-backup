@@ -1,0 +1,199 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "parseQs('schemaId=6a0a2dc0-de40-447d-aca3-d50144fb1229&id=5f6058aa-a328-46e5-bb08-9b24f7a7bd39')",
+            "blockComment": "data instead of query string"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "savedQuery",
+            "blockComment": "Saves to context.savedQuery"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "schema": "schemas",
+            "uuidGetter": "data.schemaId",
+            "blockComment": "Get schema from DB ( schemaId from mapping)"
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[0]",
+            "blockComment": "Get main data, strips metadata"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "schema",
+            "blockComment": "Saves to context.schema"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "uuidGetter": "context.savedQuery.id",
+            "blockComment": "Get record from DB if exists"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[0]",
+            "blockComment": "Get record data (strip metadata)"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved",
+            "blockComment": "Saves existing record as \"context.saved\""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data || { uuid: context.savedQuery.id }",
+            "blockComment": "If no record exists, makes new empty object with UUID from URL"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.uuid",
+            "valueGetter": "data.uuid",
+            "blockComment": "Saves record UUID to state.local.uuid"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.update",
+            "valueGetter": "length([context.saved][?uuid==$.data.uuid])>`0`",
+            "blockComment": "set update flag"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "Show existing record, or empty new record"
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": false,
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "load-schema",
+                        "adapterName": "schemas",
+                        "schemaGetter": "context.schema && context.schema.name"
+                    }
+                ]
+            },
+            "injectContext": false,
+            "blockComment": "Form populated by load-schema and existing record data if exists"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.record",
+            "valueGetter": "data",
+            "blockComment": "Saves latest record to state.global.record"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "See form record output"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to item list",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "itemsFromSchemaId",
+                            "context": {
+                                "schemaId": "context.savedQuery.schemaId"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "enabledGetter": "!(state.local.update)",
+                    "label": "Add new entry",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "add",
+                            "adapterName": "schemas",
+                            "schemaGetter": "context.schema.name"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Update entry",
+                    "color": "primary",
+                    "enabledGetter": "state.local.update",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "merge(data, { uuid: $.state.local.uuid })"
+                        },
+                        {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "schemas",
+                            "schemaGetter": "context.schema.name"
+                        }
+                    ],
+                    "enabled": false
+                },
+                {
+                    "label": "Delete",
+                    "color": "warn",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "delete",
+                            "adapterName": "schemas",
+                            "uuidGetter": "context.savedQuery.id"
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "itemsFromSchemaId",
+                            "context": {
+                                "schemaId": "context.savedQuery.schemaId"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Action buttons for item (adding/updating/deletion)"
+        }
+    ],
+    "id": "editItemTest",
+    "workflowId": "editItemTest",
+    "adapterName": "schemas",
+    "created": "2023-10-25T13:53:21.532Z",
+    "tags": [
+        "hidden",
+        " review"
+    ],
+    "updated": "2023-10-25T13:53:21.532Z",
+    "modified": "2023-10-25T13:53:21.532Z",
+    "title": "Edit Item Only Test"
+}

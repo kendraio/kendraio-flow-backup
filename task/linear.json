@@ -1,0 +1,74 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "linear",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.linear.app",
+                "pathname": "/graphql"
+            },
+            "headers": {
+                "authorization": "data.key"
+            },
+            "payload": "{ query: '{ issues { nodes { id title description        assignee {          id          name        }        createdAt        archivedAt} } }'}",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.issues.nodes[*].merge(@, { \n    createdAt:  formatDate(createdAt, 'yyyy/MM/dd'),\n    assignee:   assignee.name   \n})",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "title",
+                    "headerName": "Issue"
+                },
+                {
+                    "field": "description",
+                    "headerName": "Description"
+                },
+                {
+                    "field": "assignee",
+                    "headerName": "Assignee"
+                },
+                {
+                    "field": "createdAt",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "archivedAt",
+                    "headerName": "Archived"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "linear",
+    "workflowId": "linear",
+    "adapterName": "task",
+    "created": "2024-07-10T16:25:30.752Z",
+    "tags": [],
+    "updated": "2024-07-10T16:25:30.752Z",
+    "modified": "2024-07-10T16:25:30.752Z",
+    "title": "Kendraio Task Linear List Issues"
+}

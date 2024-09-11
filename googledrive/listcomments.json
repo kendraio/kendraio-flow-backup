@@ -1,0 +1,161 @@
+{
+    "blocks": [
+        {
+            "type": "context-save",
+            "key": "fileData",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: data.name || 'No title' }",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "List comments",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "state.local.token",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "www.googleapis.com",
+                "valueGetters": {
+                    "pathname": "join('', ['/drive/v3/files/', context.fileData.id, '/comments'])"
+                },
+                "query": {
+                    "fields": "*"
+                }
+            },
+            "authentication": {
+                "type": "bearer",
+                "valueGetters": {
+                    "jwt": "data"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.comments[*].merge(@, { \n    createdTime:  formatDate(createdTime, 'yyyy/MM/dd'),\n    modifiedTime:  formatDate(modifiedTime, 'yyyy/MM/dd'),\n    author:   author.displayName   \n})",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "saved",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true,
+                    "wrapText": true,
+                    "autoHeight": true
+                },
+                "autoSizeStrategy": {
+                    "type": "fitCellContents"
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "content",
+                    "headerName": "Comment"
+                },
+                {
+                    "field": "author",
+                    "headerName": "Author"
+                },
+                {
+                    "field": "createdTime",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "modifiedTime",
+                    "headerName": "Modified"
+                },
+                {
+                    "field": "resolved",
+                    "headerName": "Resolved?"
+                },
+                {
+                    "field": "replies",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.replies[*].merge(@, {author: author.displayName, createdTime:  formatDate(createdTime, 'yyyy/MM/dd'), modifiedTime:  formatDate(modifiedTime, 'yyyy/MM/dd')})"
+                            },
+                            {
+                                "type": "grid",
+                                "gridOptions": {
+                                    "pagination": true,
+                                    "paginationPageSize": 20,
+                                    "defaultColDef": {
+                                        "sortable": true,
+                                        "resizable": true,
+                                        "wrapText": true,
+                                        "autoHeight": true
+                                    }
+                                },
+                                "columnDefs": [
+                                    {
+                                        "headerName": "Reply",
+                                        "field": "content"
+                                    },
+                                    {
+                                        "headerName": "Author",
+                                        "field": "author"
+                                    },
+                                    {
+                                        "field": "createdTime",
+                                        "headerName": "Created"
+                                    },
+                                    {
+                                        "field": "modifiedTime",
+                                        "headerName": "Modified"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "listcomments",
+    "workflowId": "listcomments",
+    "adapterName": "googledrive",
+    "created": "2024-05-23T14:18:35.254Z",
+    "tags": [
+        "work in progress",
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-05-23T14:18:35.254Z",
+    "modified": "2024-05-23T14:18:35.254Z",
+    "title": "List Comments"
+}

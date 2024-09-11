@@ -1,0 +1,168 @@
+{
+    "blocks": [
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockComment": "Load schemas"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "find(data, `name`, `employees`) || null",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "schema",
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data",
+            "cases": [
+                {
+                    "value": "undefined",
+                    "blocks": [
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "template",
+                                    "template": "Look like you don't have a Employee schema yet. Please create one in order to use this flow"
+                                },
+                                {
+                                    "type": "actions",
+                                    "buttons": [
+                                        {
+                                            "label": "Create schema",
+                                            "blocks": [
+                                                {
+                                                    "type": "launch",
+                                                    "adapter": "schemas",
+                                                    "workflowId": "list"
+                                                }
+                                            ],
+                                            "enabled": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": []
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "employees",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.employees",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add new employee",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "schemas",
+                            "workflowId": "editItem",
+                            "context": {
+                                "schemaId": "context.schema.uuid",
+                                "id": "uuid()"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "state.local.employees",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Harvest Account ID",
+                    "field": "harvest_account_id",
+                    "cellDataType": "number"
+                },
+                {
+                    "headerName": "Harvest API Key",
+                    "field": "harvest_api_key"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "schemas",
+                                                "workflowId": "editItem",
+                                                "context": {
+                                                    "schemaId": "context.queryParams.schemaId",
+                                                    "id": "context.queryParams.uuid"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "kendraioEmployees",
+    "workflowId": "kendraioEmployees",
+    "adapterName": "kendraio",
+    "created": "2024-01-09T10:28:00.788Z",
+    "tags": [],
+    "updated": "2024-01-09T10:28:00.787Z",
+    "modified": "2024-01-09T10:28:00.787Z",
+    "title": "List of Employees"
+}

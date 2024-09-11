@@ -1,0 +1,99 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Submit",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "linearkey": {
+                        "type": "string",
+                        "title": "Linear API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {
+                "linearkey": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[\n    {\n        source: `Google Drive`,\n        asset:  `A Filename`,\n        preview: `A comment about ...`\n    },\n    {\n        source: `Google Drive`,\n        asset:  `A Filename`,\n        preview: `A second comment about ...`\n    },\n    {\n        source: `Google Drive`,\n        asset:  `Another Filename`,\n        preview: `A comment about ...`\n    },\n    {\n        source: `Linear`,\n        asset:  `An issue`,\n        preview: `Do such and such ...`\n    },\n    {\n        source: `Linear`,\n        asset:  `Another issue`,\n        preview: `Do something else ...`\n    }\n]",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "source",
+                    "headerName": "Source"
+                },
+                {
+                    "field": "asset",
+                    "headerName": "Asset"
+                },
+                {
+                    "field": "preview",
+                    "headerName": "Preview"
+                },
+                {
+                    "field": "edit",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "{id: data.id, token: context.hasura.token}"
+                            },
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "variable-set",
+                                                "name": "flow_data"
+                                            },
+                                            {
+                                                "type": "launch",
+                                                "adapter": "task",
+                                                "workflowId": "editasset"
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ],
+                                "blockComment": ""
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "dashboardmock",
+    "workflowId": "dashboardmock",
+    "adapterName": "task",
+    "created": "2024-06-14T14:22:29.859Z",
+    "tags": [],
+    "updated": "2024-06-14T14:22:29.858Z",
+    "modified": "2024-06-14T14:22:29.858Z",
+    "title": "Kendraio Task Dashboard"
+}

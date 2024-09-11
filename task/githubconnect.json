@@ -1,0 +1,39 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Submit",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "githubtoken": {
+                        "type": "string",
+                        "title": "Personal access token",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {
+                "githubtoken": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "githubtoken",
+            "blockComment": ""
+        }
+    ],
+    "id": "githubconnect",
+    "workflowId": "githubconnect",
+    "adapterName": "task",
+    "created": "2024-09-05T16:59:51.733Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2024-09-05T16:59:51.733Z",
+    "modified": "2024-09-05T16:59:51.733Z",
+    "title": "Kendraio Task GitHub Connect"
+}

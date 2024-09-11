@@ -1,0 +1,97 @@
+{
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "Import",
+            "accept": [
+                "csv",
+                "json",
+                "xml",
+                "txt"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "document",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "document",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "document",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    name: data.name,\n    content: (state.local.term != '' && replaceAll(data.content, state.local.term, toUpper(state.local.term))) || data.content\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "message",
+                    "title": "{{ data.name }}",
+                    "message": "{{ data.content }}"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "term": {
+                        "type": "string",
+                        "title": "Search term",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.term || ''",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.term",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "state.local.term != '' && contains(toLower(context.document.content), toLower(state.local.term)) && 'Search Term Found' || 'Search Term Not Found'",
+            "blockComment": ""
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "message",
+                    "message": "{{ data }}"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "textsearch",
+    "workflowId": "textsearch",
+    "adapterName": "kendraio",
+    "created": "2023-12-21T14:27:34.546Z",
+    "tags": [],
+    "updated": "2023-12-21T14:27:34.546Z",
+    "modified": "2023-12-21T14:27:34.546Z",
+    "title": "Text Search"
+}

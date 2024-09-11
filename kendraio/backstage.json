@@ -1,0 +1,78 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query {\n  backstage_gigs {\n    headline_artist_name\n    venue_name\n    venue_city\n    start_date\n    start_time\n    lineup\n    description\n  }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "data.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_gigs[*].merge(@, {\n    start_time: formatDate(start_time, 'T'),\n    venue: join(', ', [venue_name, venue_city])\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "headline_artist_name",
+                    "headerName": "Headline Act"
+                },
+                {
+                    "field": "venue",
+                    "headerName": "Venue"
+                },
+                {
+                    "field": "start_date",
+                    "headerName": "Date"
+                },
+                {
+                    "field": "start_time",
+                    "headerName": "Time"
+                },
+                {
+                    "field": "lineup",
+                    "headerName": "Lineup"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "backstage",
+    "workflowId": "backstage",
+    "adapterName": "kendraio",
+    "created": "2024-01-12T12:31:22.717Z",
+    "tags": [
+        "hidden",
+        " delete"
+    ],
+    "updated": "2024-01-12T12:31:22.716Z",
+    "modified": "2024-01-12T12:31:22.716Z",
+    "title": "Kendraio Backstage"
+}

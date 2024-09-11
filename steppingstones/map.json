@@ -1,0 +1,112 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "Stepping Stones",
+            "message": "Developing a map to display nuclear disarmament data",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "`\n    {\n        \"uk\": {\n            \"lat\": 51.5074,\n            \"long\": -0.1278,\n            \"label\": \"London, UK\"\n        },\n        \"france\": {\n            \"lat\": 48.8566,\n            \"long\": 2.3522,\n            \"label\": \"Paris, France\"\n        },\n        \"italy\": {\n            \"lat\": 41.9028,\n            \"long\": 12.4964,\n            \"label\": \"Rome, Italy\"\n        },\n        \"japan\": {\n            \"lat\": 35.6895,\n            \"long\": 139.6917,\n            \"label\": \"Tokyo, Japan\"\n        },\n        \"usa\": {\n            \"lat\": 39.91,\n            \"long\": -77.02,\n            \"label\": \"Washington DC, USA\",\n            \"country\": \"USA\"\n        },\n        \"russia\": {\n            \"lat\": 55.45,\n            \"long\": 37.35,\n            \"label\": \"Moscow, Russia\"\n        },\n        \"sweden\": {\n            \"lat\": 59.20,\n            \"long\": 18.03,\n            \"label\": \"Stockholm, Sweden\"\n        },\n        \"germany\": {\n            \"lat\": 52.30,\n            \"long\": 13.25,\n            \"label\": \"Berlin, Germany\"\n        },\n        \"india\": {\n            \"lat\": 28.37,\n            \"long\": 77.13,\n            \"label\": \"New Delhi, India\"\n        },\n        \"pakistan\": {\n            \"lat\": 33.40,\n            \"long\": 73.10,\n            \"label\": \"Islamabad, Pakistan\"\n        },\n        \"china\": {\n            \"lat\": 39.55,\n            \"long\": 116.20,\n            \"label\": \"Beijing, China\"\n        }\n    }\n`",
+            "blockComment": "mock"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Freeze for smaller NAS",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.uk, data.france]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "NSNW",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.sweden, data.germany, data.russia, data.usa, data.india, data.pakistan]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Strategic dialogue declaration",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.china, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Reporting on strategic stability talks",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Renewed US-Russia commitments to arms control",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "New START",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "INF compliance",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "[data.usa, data.russia]"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "map",
+            "height": 500,
+            "zoom": 2,
+            "blockComment": ""
+        }
+    ],
+    "id": "map",
+    "workflowId": "map",
+    "adapterName": "steppingstones",
+    "created": "2024-08-15T12:29:33.425Z",
+    "tags": [],
+    "updated": "2024-08-15T12:29:33.424Z",
+    "modified": "2024-08-15T12:29:33.424Z",
+    "title": "Stepping Stones Nuclear Disarmament Data"
+}

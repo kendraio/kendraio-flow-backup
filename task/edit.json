@@ -1,0 +1,111 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "issue",
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.source",
+            "cases": [
+                {
+                    "value": "Linear",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.merge(@, {assignee: assignee.name})"
+                        },
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "message": "{{data.title}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "{{data.created}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "Assigned to {{data.assignee}}"
+                                },
+                                {
+                                    "type": "template",
+                                    "template": "{{data.description}}"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": "Google Drive",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.merge(@, {assignee: assignee.name})"
+                        },
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "message": "{{data.content}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "{{data.author.displayName}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "from {{data.asset}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "{{data.created}}"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": []
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Dashboard",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "task",
+                            "workflowId": "dashboard"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "edit",
+    "workflowId": "edit",
+    "adapterName": "task",
+    "created": "2024-07-03T13:03:20.244Z",
+    "tags": [
+        "hidden",
+        " delete"
+    ],
+    "updated": "2024-07-03T13:03:20.244Z",
+    "modified": "2024-07-03T13:03:20.244Z",
+    "title": "Edit"
+}

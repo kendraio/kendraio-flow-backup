@@ -1,0 +1,113 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "gsheet",
+            "shareUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vR-aTG_VfJSs7Acp9DLvO2XUpraIvSZnjod-zljfoR2y7hZmF7C8u83_H2YtEnofM1Ro47nYMwQIhdR/pub?output=csv",
+            "headerRow": 1,
+            "blockComment": "Loads the shared spreadsheet"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[1:]",
+            "blockComment": "Filter out the another header row"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[*].merge(@, {\n    Initiative: @.\"Initiative\" || '',\n    Description: @.\"Description\" || '',\n    page_link_2010: @.\"2010 page link\" || '',\n    Type_of_proposal: @.\"Type of proposal\" || '',\n    Priority_for_NTI: @.\"Priority for NTI\" || '',\n    States_supporting_initiative: @.\"States supporting initiative\" || '',\n    action_point: @.\"2010 NPT Review Conference (64-point Action Plan) \" || ''\n})\n",
+            "blockComment": "Have underscores property keys so template blocks work"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 5,
+                "defaultColDef": {
+                    "wrapText": false,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "headerName": "Initiative",
+                    "field": "Initiative",
+                    "wrapText": true
+                },
+                {
+                    "headerName": "Description",
+                    "field": "Description",
+                    "wrapText": true,
+                    "autoHeight": true
+                },
+                {
+                    "headerName": "Type of proposal",
+                    "field": "Type of proposal"
+                },
+                {
+                    "headerName": "Action link",
+                    "field": "2010 page link",
+                    "wrapText": true,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<a href='https://kendraio.github.io/kendraio-gists/pdf_deep_link.htm?site=https://documents.un.org/api/symbol/access?j=N1039021&t=pdf&search={{data.action_point}}%3A' target='_blank'>{{data.action_point}}</a>"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Priority for NTI",
+                    "field": "Priority for NTI"
+                },
+                {
+                    "headerName": "States supporting initiative",
+                    "field": "States supporting initiative",
+                    "wrapText": true
+                },
+                {
+                    "headerName": "2010 page link",
+                    "field": "2010 page link",
+                    "wrapText": true,
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "{{#if data.page_link_2010}}<p><a href=\"{{data.page_link_2010}}\" target=\"_blank\">Page link</a></p>{{/if}}"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": "Show a subset of the columns"
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "template",
+                            "template": "<h3>{{data.Initiative}}</h3>{{#if data.Description}}<p>{{data.Description}}</p>{{/if}}{{#if data.page_link_2010}}<p><a href=\"{{data.page_link_2010}}\" target=\"_blank\">{{data.page_link_2010}}</a></p>{{/if}}{{#if data.Type_of_proposal}}<p><b>Type of proposal:</b> {{data.Type_of_proposal}}</p>{{/if}}{{#if data.Priority_for_NTI}}<p><b>Priority for NTI:</b> {{data.Priority_for_NTI}}</p>{{/if}}{{#if data.States_supporting_initiative}}<p><b>States supporting initiative:</b> {{data.States_supporting_initiative}}</p>{{/if}}"
+                        }
+                    ]
+                }
+            ],
+            "blockComment": "Card UI example"
+        }
+    ],
+    "id": "proposals",
+    "workflowId": "proposals",
+    "adapterName": "steppingstones",
+    "created": "2024-07-16T09:57:17.655Z",
+    "tags": [],
+    "updated": "2024-07-16T09:57:17.654Z",
+    "modified": "2024-07-16T09:57:17.654Z",
+    "title": "Stepping Stones: Proposed ideas for multilateral nuclear disarmament initiatives"
+}
