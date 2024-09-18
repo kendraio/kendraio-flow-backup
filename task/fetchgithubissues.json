@@ -16,7 +16,7 @@
         {
             "type": "graphql",
             "endpoint": "https://api.github.com/graphql",
-            "query": "query MyQuery($owner: String!, $repository: String!) {\n    repository(owner: $owner, name: $repository) {\n      issues(first: 100, states: [OPEN], orderBy:  {field: UPDATED_AT, direction: DESC}) {\n        totalCount\n        nodes {\n          body\n          bodyHTML\n          bodyText\n          number\n          id\n          title\n          url\n          createdAt\n          updatedAt   \n          author {\n            url\n            login\n            avatarUrl\n          }\n          comments(first: 100) {\n            nodes {\n              body\n              author {\n                login\n              }\n              bodyText\n              createdAt\n            }\n          }\n        }\n      }\n    } \n  }",
+            "query": "query MyQuery($owner: String!, $repository: String!) {\n    repository(owner: $owner, name: $repository) {\n      issues(first: 100, states: [OPEN], orderBy:  {field: UPDATED_AT, direction: DESC}) {\n        totalCount\n        nodes {\n          body\n          bodyHTML\n          bodyText\n          editor {\n            url\n            login\n            avatarUrl\n          }\n          number\n          id\n          title\n          url\n          createdAt\n          updatedAt   \n          author {\n            url\n            login\n            avatarUrl\n          }\n          comments(first: 100) {\n            nodes {\n              body\n              author {\n                login\n              }\n              bodyText\n              createdAt\n            }\n          }\n        }\n      }\n    } \n  }",
             "variables": {
                 "owner": "data.owner",
                 "repository": "data.repository"
@@ -60,24 +60,14 @@
             "type": "context-save",
             "key": "github",
             "blockComment": ""
-        },
-        {
-            "type": "mapping",
-            "mapping": "`Can you read this?`",
-            "blockComment": ""
-        },
-        {
-            "type": "context-save",
-            "key": "state.test",
-            "blockComment": ""
         }
     ],
     "id": "fetchgithubissues",
     "workflowId": "fetchgithubissues",
     "adapterName": "task",
-    "created": "2024-09-05T16:56:27.325Z",
+    "created": "2024-09-12T10:54:59.323Z",
     "tags": [],
-    "updated": "2024-09-05T16:56:27.325Z",
-    "modified": "2024-09-05T16:56:27.325Z",
+    "updated": "2024-09-12T10:54:59.323Z",
+    "modified": "2024-09-12T10:54:59.323Z",
     "title": "Kendraio Task Fetch GitHub Issues"
 }

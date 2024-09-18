@@ -39,7 +39,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "mutation MyMutation($input: tracks_insert_input!) {\n  insert_tracks_one(object: $input) {\n    __typename\n  }\n}\n",
             "variables": {
                 "input": "data.input"
@@ -47,7 +47,7 @@
             "headers": {
                 "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
             },
-            "allowFirst": false,
+            "allowFirst": true,
             "allowEmpty": true
         },
         {
@@ -59,9 +59,9 @@
     "id": "addTrack",
     "workflowId": "addTrack",
     "adapterName": "dsp1",
-    "created": "2021-03-01T12:31:07.310Z",
+    "created": "2024-09-17T20:01:18.339Z",
     "tags": [],
-    "updated": "2021-03-01T12:31:07.310Z",
-    "modified": "2021-03-01T12:31:07.310Z",
+    "updated": "2024-09-17T20:01:18.339Z",
+    "modified": "2024-09-17T20:01:18.339Z",
     "title": "Add Track (DSP1)"
 }

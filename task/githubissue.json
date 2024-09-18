@@ -1,0 +1,71 @@
+{
+    "blocks": [
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "message",
+                    "title": "Issue {{data.number}} - {{data.title}}"
+                },
+                {
+                    "type": "message",
+                    "message": "{{data.bodyText}}"
+                },
+                {
+                    "type": "message",
+                    "message": "{{data.url}}"
+                },
+                {
+                    "type": "message",
+                    "message": "Created at {{data.createdAtRead}} by {{author.login}}"
+                },
+                {
+                    "type": "switch",
+                    "valueGetter": "data.createdAtRead",
+                    "cases": [
+                        {
+                            "value": "{{data.updatedAt}}",
+                            "blocks": []
+                        }
+                    ],
+                    "default": [
+                        {
+                            "type": "message",
+                            "message": "Edited at {{updatedAt}} by {{editor.login}}"
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.comments.nodes[*].merge(@, {createdAt: formatDate(createdAt, 'T, dd/MM/yyyy')})",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "title": "{{author.login}} commented at {{createdAt}}:",
+                            "message": "{{bodyText}}"
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "githubissue",
+    "workflowId": "githubissue",
+    "adapterName": "task",
+    "created": "2024-09-17T17:06:18.409Z",
+    "tags": [],
+    "updated": "2024-09-17T17:06:18.409Z",
+    "modified": "2024-09-17T17:06:18.409Z",
+    "title": "Flow"
+}

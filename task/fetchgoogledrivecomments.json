@@ -106,7 +106,7 @@
                         },
                         {
                             "type": "mapping",
-                            "mapping": "data.comments[*].merge(@, {source: `Google Drive`, asset: $.context.file_data.name, preview: content, createdAtSort: formatDate(createdTime, 'yyyy/MM/dd, T'), createdAtRead: formatDate(createdTime, 'T, dd/MM/yyyy'), updatedAt: formatDate(modifiedTime, 'yyyy/MM/dd, T')})"
+                            "mapping": "data.comments[*].merge(@, {source: `Google Drive`, asset: $.context.file_data.name, preview: content, createdAtSort: formatDate(createdTime, 'yyyy/MM/dd, T'), createdAtRead: formatDate(createdTime, 'T, dd/MM/yyyy'), updatedAt: formatDate(modifiedTime, 'T, dd/MM/yyyy')})"
                         }
                     ]
                 }
@@ -127,9 +127,9 @@
     "id": "fetchgoogledrivecomments",
     "workflowId": "fetchgoogledrivecomments",
     "adapterName": "task",
-    "created": "2024-09-03T16:34:49.827Z",
+    "created": "2024-09-12T11:06:36.043Z",
     "tags": [],
-    "updated": "2024-09-03T16:34:49.826Z",
-    "modified": "2024-09-03T16:34:49.826Z",
+    "updated": "2024-09-12T11:06:36.043Z",
+    "modified": "2024-09-12T11:06:36.043Z",
     "title": "Kendraio Task Fetch Google Drive Comments"
 }

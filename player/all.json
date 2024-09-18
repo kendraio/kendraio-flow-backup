@@ -9,7 +9,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "query MyQuery {\n  tracks {\n    display_artist\n    display_title\n    id\n    user_id\n    user {\n        payment_pointer\n    }\n  }\n}\n\n",
             "variables": {},
             "headers": {},
@@ -191,11 +191,11 @@
     "id": "all",
     "workflowId": "all",
     "adapterName": "player",
-    "created": "2021-10-28T16:14:36.756Z",
+    "created": "2024-09-17T19:54:56.327Z",
     "tags": [
         "highlight"
     ],
-    "updated": "2021-10-28T16:14:36.756Z",
-    "modified": "2021-10-28T16:14:36.756Z",
+    "updated": "2024-09-17T19:54:56.327Z",
+    "modified": "2024-09-17T19:54:56.327Z",
     "title": "Kendraio Player"
 }

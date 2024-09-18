@@ -1,6 +1,5 @@
 {
     "id": "mapping2",
-    "modified": "2021-02-12T12:55:04.986Z",
     "blocks": [
         {
             "type": "file-input",
@@ -59,5 +58,6 @@
     "created": "2021-02-05T14:11:49.386Z",
     "tags": [],
     "updated": "2021-02-12T12:55:04.986Z",
+    "modified": "2021-02-12T12:55:04.986Z",
     "title": "Transparence (Mapping PlayRight)"
 }

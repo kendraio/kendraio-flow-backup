@@ -1,0 +1,172 @@
+{
+    "blocks": [
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, {assignee: assignee.name})",
+            "blockComment": ""
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "message",
+                    "title": "{{data.title}}"
+                },
+                {
+                    "type": "message",
+                    "message": "{{data.description}}"
+                },
+                {
+                    "type": "switch",
+                    "valueGetter": "data.assignee",
+                    "cases": [
+                        {
+                            "value": null,
+                            "blocks": []
+                        }
+                    ],
+                    "default": {
+                        "blocks": [
+                            {
+                                "type": "message",
+                                "message": "Assigned to {{data.assignee}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "context.issue"
+                },
+                {
+                    "type": "message",
+                    "message": "Created at {{context.issue.createdAtRead}} by {{context.issue.creator.name}}"
+                },
+                {
+                    "type": "gosub",
+                    "adapterName": "task",
+                    "workflowId": "updatedissue"
+                },
+                {
+                    "type": "switch",
+                    "valueGetter": "data.archivedAt",
+                    "cases": [
+                        {
+                            "value": null,
+                            "blocks": []
+                        }
+                    ],
+                    "default": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.merge(@, {archivedAt: formatDate(archivedAt, 'T, dd/MM/yyyy')})"
+                            },
+                            {
+                                "type": "message",
+                                "message": "Archived at {{data.archivedAt}}"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.issue.children.nodes",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "data.merge(@, { createdAtRead: formatDate(createdAt, 'T, dd/MM/yyyy'), updatedAt: formatDate(updatedAt, 'T, dd/MM/yyyy'), assignee: assignee.name})"
+                                },
+                                {
+                                    "type": "message",
+                                    "title": "{{data.title}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "{{data.description}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "Created at {{data.createdAtRead}} by {{data.creator.name}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "Edited at {{data.updatedAt}}"
+                                },
+                                {
+                                    "type": "switch",
+                                    "valueGetter": "data.assignee",
+                                    "cases": [
+                                        {
+                                            "value": null,
+                                            "blocks": []
+                                        }
+                                    ],
+                                    "default": {
+                                        "blocks": [
+                                            {
+                                                "type": "message",
+                                                "message": "Assigned to {{data.assignee}}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "switch",
+                                    "valueGetter": "data.archivedAt",
+                                    "cases": [
+                                        {
+                                            "value": null,
+                                            "blocks": []
+                                        }
+                                    ],
+                                    "default": {
+                                        "blocks": [
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "data.merge(@, {archivedAt: formatDate(archivedAt, 'T, dd/MM/yyyy')})"
+                                            },
+                                            {
+                                                "type": "message",
+                                                "message": "Archived at {{data.archivedAt}}"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "linearissue",
+    "workflowId": "linearissue",
+    "adapterName": "task",
+    "created": "2024-09-18T13:51:05.994Z",
+    "tags": [],
+    "updated": "2024-09-18T13:51:05.994Z",
+    "modified": "2024-09-18T13:51:05.994Z",
+    "title": "Display Linear Issue"
+}

@@ -13,7 +13,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "mutation MyMutation($trackId: String!) {\n  uploadTrack(trackId: $trackId) {\n    signedRequest\n    url\n  }\n}\n",
             "variables": {
                 "trackId": "context.queryParams.id"
@@ -79,9 +79,9 @@
     "id": "uploadTrack",
     "workflowId": "uploadTrack",
     "adapterName": "dsp1",
-    "created": "2020-11-20T16:01:36.455Z",
+    "created": "2024-09-17T20:06:23.641Z",
     "tags": [],
-    "updated": "2020-11-20T16:01:36.455Z",
-    "modified": "2020-11-20T16:01:36.455Z",
+    "updated": "2024-09-17T20:06:23.641Z",
+    "modified": "2024-09-17T20:06:23.641Z",
     "title": "Upload Track (DSP1)"
 }

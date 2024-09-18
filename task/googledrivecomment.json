@@ -1,0 +1,114 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, {assignee: assignee.name})",
+            "blockComment": ""
+        },
+        {
+            "type": "message",
+            "title": "{{data.asset}}",
+            "blockComment": ""
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "message",
+                    "message": "{{data.content}}"
+                },
+                {
+                    "type": "message",
+                    "message": "Created by {{data.author.displayName}} at {{data.createdAtRead}}"
+                },
+                {
+                    "type": "message",
+                    "message": "Edited at {{data.updatedAt}}"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.replies",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.merge(@, { createdTime: formatDate(createdTime, 'T, dd/MM/yyyy'), modifiedTime: formatDate(modifiedTime, 'T, dd/MM/yyyy')})"
+                        },
+                        {
+                            "type": "switch",
+                            "valueGetter": "data.content",
+                            "cases": [
+                                {
+                                    "value": "",
+                                    "blocks": [
+                                        {
+                                            "type": "switch",
+                                            "valueGetter": "data.action",
+                                            "cases": [
+                                                {
+                                                    "value": "resolve",
+                                                    "blocks": [
+                                                        {
+                                                            "type": "message",
+                                                            "message": "Resolved by {{data.author.displayName}} at {{data.createdTime}}"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "default": {
+                                                "blocks": [
+                                                    {
+                                                        "type": "message",
+                                                        "message": "{{data.action}}"
+                                                    },
+                                                    {
+                                                        "type": "message",
+                                                        "message": "Created by {{data.author.displayName}} at {{data.createdTime}}"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            ],
+                            "default": {
+                                "blocks": [
+                                    {
+                                        "type": "message",
+                                        "message": "{{data.content}}"
+                                    },
+                                    {
+                                        "type": "message",
+                                        "message": "Created by {{data.author.displayName}} at {{data.createdTime}}"
+                                    },
+                                    {
+                                        "type": "message",
+                                        "message": "Edited at {{data.modifiedTime}}"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "googledrivecomment",
+    "workflowId": "googledrivecomment",
+    "adapterName": "task",
+    "created": "2024-09-17T16:11:35.230Z",
+    "tags": [],
+    "updated": "2024-09-17T16:11:35.230Z",
+    "modified": "2024-09-17T16:11:35.230Z",
+    "title": "Flow"
+}

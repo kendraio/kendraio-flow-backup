@@ -9,12 +9,17 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "query {\\n  generic_xrp_rank {\\n      analyticsItemUUID\\n    total_xrp\\n    sessions\\n    total_session_mins\\n  }\\n}",
             "variables": {},
             "headers": {},
             "allowFirst": true,
             "allowEmpty": true
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
         },
         {
             "type": "validator",
@@ -34,13 +39,8 @@
             "template": "Raw stats data:"
         },
         {
-            "type": "debug",
-            "open": 1,
-            "showContext": false
-        },
-        {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "query{ tracks {\\n    display_artist\\n    display_title\\n    id\\n  }\\n}",
             "variables": {},
             "headers": {},
@@ -192,9 +192,9 @@
     "id": "statsComb",
     "workflowId": "statsComb",
     "adapterName": "player",
-    "created": "2021-06-03T12:23:01.919Z",
+    "created": "2024-09-17T20:15:03.842Z",
     "tags": [],
-    "updated": "2021-06-03T12:23:01.919Z",
-    "modified": "2021-06-03T12:23:01.919Z",
+    "updated": "2024-09-17T20:15:03.842Z",
+    "modified": "2024-09-17T20:15:03.842Z",
     "title": "Kendraio Player Statistics"
 }

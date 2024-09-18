@@ -20,12 +20,12 @@
             "headers": {
                 "authorization": "data.lineartoken"
             },
-            "payload": "{ query: '{ issues { nodes { id title description        assignee {          id          name        }        createdAt        archivedAt updatedAt} } }'}",
+            "payload": "{ query: '{issues{nodes{id title description assignee{id name}createdAt updatedAt children{nodes{title description assignee{name}createdAt updatedAt creator{name} archivedAt}}creator{name} archivedAt}}}'}",
             "blockComment": ""
         },
         {
             "type": "mapping",
-            "mapping": "data.data.issues.nodes[*].merge(@, {\n    source:  `Linear`,\n    asset:   title,\n    preview: description,\n    createdAtSort: formatDate(createdAt, 'yyyy/MM/dd, T'),\n    createdAtRead: formatDate(createdAt, 'T, dd/MM/yyyy'),\n    updatedAt: formatDate(updatedAt, 'yyyy/MM/dd, T')\n})",
+            "mapping": "data.data.issues.nodes[*].merge(@, {\n    source:  `Linear`,\n    asset:   title,\n    preview: description,\n    createdAtSort: formatDate(createdAt, 'yyyy/MM/dd, T'),\n    createdAtRead: formatDate(createdAt, 'T, dd/MM/yyyy'),\n    updatedAt: formatDate(updatedAt, 'T, dd/MM/yyyy')\n})",
             "blockComment": ""
         },
         {
@@ -61,9 +61,9 @@
     "id": "fetchlinearissues",
     "workflowId": "fetchlinearissues",
     "adapterName": "task",
-    "created": "2024-09-05T16:52:08.427Z",
+    "created": "2024-09-18T11:15:02.025Z",
     "tags": [],
-    "updated": "2024-09-05T16:52:08.427Z",
-    "modified": "2024-09-05T16:52:08.427Z",
+    "updated": "2024-09-18T11:15:02.025Z",
+    "modified": "2024-09-18T11:15:02.025Z",
     "title": "Kendraio Task Fetch Linear Issues"
 }

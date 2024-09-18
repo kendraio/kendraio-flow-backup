@@ -20,7 +20,7 @@
             "template": "<a href=\"https://accounts.spotify.com/authorize?client_id={{data.client_id}}&state={{data.state}}&response_type=token&redirect_uri={{context.app.location.origin}}/spotify/callback\">Connect</a>"
         }
     ],
-    "id": "authorise",
+    "id": "dUjQlNTcTiId1wMi4rHB",
     "adapter": "spotify",
     "org": "kendraio",
     "workflowId": "dUjQlNTcTiId1wMi4rHB",

@@ -13,7 +13,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "query MyQuery($trackId: uuid!) {\n  tracks_by_pk(id: $trackId) {\n    id\n    url\n    user_id\n    display_artist\n    display_title\n  }\n}",
             "variables": {
                 "trackId": "context.queryParams.id"
@@ -54,9 +54,9 @@
     "id": "streamTrack",
     "workflowId": "streamTrack",
     "adapterName": "dsp1",
-    "created": "2020-11-20T17:08:32.718Z",
+    "created": "2024-09-17T19:55:55.133Z",
     "tags": [],
-    "updated": "2020-11-20T17:08:32.718Z",
-    "modified": "2020-11-20T17:08:32.718Z",
+    "updated": "2024-09-17T19:55:55.133Z",
+    "modified": "2024-09-17T19:55:55.133Z",
     "title": "Stream track"
 }

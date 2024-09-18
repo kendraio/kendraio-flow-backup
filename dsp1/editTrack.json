@@ -13,7 +13,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "query MyQuery($trackId: uuid!) {\n  tracks_by_pk(id: $trackId) {\n    display_artist\n    display_title\n    public\n  }\n}\n",
             "variables": {
                 "trackId": "context.queryParams.id"
@@ -56,7 +56,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "\nmutation MyMutation($trackId: uuid!, $input: tracks_set_input!) {\n  update_tracks_by_pk(pk_columns: {id: $trackId}, _set: $input) {\n    id\n    display_artist\n    display_title\n    public\n  }\n}",
             "variables": {
                 "trackId": "context.queryParams.id",
@@ -85,7 +85,8 @@
                             "adapter": "dsp1",
                             "workflowId": "myTracks"
                         }
-                    ]
+                    ],
+                    "enabled": true
                 }
             ]
         }
@@ -93,9 +94,9 @@
     "id": "editTrack",
     "workflowId": "editTrack",
     "adapterName": "dsp1",
-    "created": "2021-03-01T12:28:46.509Z",
+    "created": "2024-09-17T20:02:47.840Z",
     "tags": [],
-    "updated": "2021-03-01T12:28:46.509Z",
-    "modified": "2021-03-01T12:28:46.509Z",
+    "updated": "2024-09-17T20:02:47.839Z",
+    "modified": "2024-09-17T20:02:47.839Z",
     "title": "Edit Track (DSP1)"
 }

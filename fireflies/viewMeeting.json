@@ -32,26 +32,31 @@
         },
         {
             "type": "mapping",
-            "mapping": "data.data.transcripts[0].transcript_text",
-            "blockComment": ""
+            "mapping": "data.data.transcripts | [0]",
+            "blockComment": "Extract first transcript"
         },
         {
             "type": "mapping",
-            "mapping": "replaceAll(data, `\\n`, `<br>`)",
-            "blockComment": ""
+            "mapping": "data || {transcript_text: null, speaker_list: null, meeting_duration: null}",
+            "blockComment": "Handle null transcript"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{transcript_text: replaceAll(data.transcript_text||``, `\\n`, `<br>`), speaker_list: data.speaker_list, meeting_duration: data.meeting_duration}",
+            "blockComment": "Add new lines with BR tag"
         },
         {
             "type": "template",
-            "template": "{{{data}}}",
+            "template": "<h2>Meeting Transcript</h2>\n{{#if data.transcript_text}}\n  <p><b>Speakers:</b> {{data.speaker_list}}</p>\n  <p><b>Duration:</b> {{data.meeting_duration}} minutes</p>\n  <p><b>Note:</b> Timestamps may not be local time.</p>\n  {{{data.transcript_text}}}\n{{else}}\n  <p>No transcript loaded yet. Enter a Fireflies Note ID and submit the form to view its transcript.</p>\n{{/if}}",
             "blockComment": ""
         }
     ],
     "id": "viewMeeting",
     "workflowId": "viewMeeting",
     "adapterName": "fireflies",
-    "created": "2024-09-10T18:08:23.628Z",
+    "created": "2024-09-11T13:48:44.946Z",
     "tags": [],
-    "updated": "2024-09-10T18:08:23.628Z",
-    "modified": "2024-09-10T18:08:23.628Z",
+    "updated": "2024-09-11T13:48:44.946Z",
+    "modified": "2024-09-11T13:48:44.946Z",
     "title": "Kendraio Fireflies Meeting Browser"
 }

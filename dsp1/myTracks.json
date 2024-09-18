@@ -13,7 +13,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "query MyQuery {\n  my_tracks {\n    created_at\n    display_artist\n    display_title\n    id\n    updated_at\n    url\n    user_id\n    public\n  }\n}\n",
             "variables": {},
             "headers": {
@@ -69,7 +69,8 @@
                                                     "id": "data.id"
                                                 }
                                             }
-                                        ]
+                                        ],
+                                        "enabled": true
                                     },
                                     {
                                         "label": "Upload",
@@ -82,7 +83,8 @@
                                                     "id": "data.id"
                                                 }
                                             }
-                                        ]
+                                        ],
+                                        "enabled": true
                                     },
                                     {
                                         "label": "Stream",
@@ -95,7 +97,8 @@
                                                     "id": "data.id"
                                                 }
                                             }
-                                        ]
+                                        ],
+                                        "enabled": true
                                     }
                                 ]
                             }
@@ -116,7 +119,8 @@
                             "adapter": "dsp1",
                             "workflowId": "addTrack"
                         }
-                    ]
+                    ],
+                    "enabled": true
                 }
             ]
         }
@@ -124,9 +128,9 @@
     "id": "myTracks",
     "workflowId": "myTracks",
     "adapterName": "dsp1",
-    "created": "2021-03-01T12:21:22.616Z",
+    "created": "2024-09-17T20:00:25.765Z",
     "tags": [],
-    "updated": "2021-03-01T12:21:22.616Z",
-    "modified": "2021-03-01T12:21:22.616Z",
+    "updated": "2024-09-17T20:00:25.765Z",
+    "modified": "2024-09-17T20:00:25.765Z",
     "title": "My Tracks (DSP1)"
 }

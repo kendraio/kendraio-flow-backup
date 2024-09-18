@@ -1,0 +1,40 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "[context.issue]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?updatedAt != createdAtRead]",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "message",
+                    "message": "Edited at {{data.updatedAt}}"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "updatedissue",
+    "workflowId": "updatedissue",
+    "adapterName": "task",
+    "created": "2024-09-18T13:53:56.490Z",
+    "tags": [],
+    "updated": "2024-09-18T13:53:56.490Z",
+    "modified": "2024-09-18T13:53:56.490Z",
+    "title": "Flow"
+}

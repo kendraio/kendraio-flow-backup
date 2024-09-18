@@ -18,7 +18,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://distributor.hasura.app/v1/graphql",
             "query": "query MyQuery {\n  tracks {\n    display_artist\n    display_title\n    id\n    user_id\n    user {\n        payment_pointer\n    }\n  }\n}\n\n",
             "variables": {},
             "headers": {
@@ -84,9 +84,9 @@
     "id": "allTracks",
     "workflowId": "allTracks",
     "adapterName": "dsp1",
-    "created": "2021-01-28T15:44:30.871Z",
+    "created": "2024-09-17T20:04:34.429Z",
     "tags": [],
-    "updated": "2021-01-28T15:44:30.871Z",
-    "modified": "2021-01-28T15:44:30.871Z",
+    "updated": "2024-09-17T20:04:34.428Z",
+    "modified": "2024-09-17T20:04:34.428Z",
     "title": "All Tracks (DSP1)"
 }
