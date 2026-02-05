@@ -47,7 +47,7 @@
                 },
                 {
                     "field": "asset",
-                    "headerName": "Asset"
+                    "headerName": "asset"
                 },
                 {
                     "field": "preview",
@@ -91,9 +91,9 @@
     "id": "dashboard",
     "workflowId": "dashboard",
     "adapterName": "task",
-    "created": "2024-10-02T12:23:57.425Z",
+    "created": "2026-01-21T12:52:43.678Z",
     "tags": [],
-    "updated": "2024-10-02T12:23:57.425Z",
-    "modified": "2024-10-02T12:23:57.425Z",
+    "updated": "2026-01-21T12:52:43.678Z",
+    "modified": "2026-01-21T12:52:43.678Z",
     "title": "Kendraio Task Dashboard"
 }

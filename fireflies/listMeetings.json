@@ -16,7 +16,7 @@
         {
             "type": "graphql",
             "endpoint": "https://kendraio-fireflies.hasura.app/v1/graphql",
-            "query": "query getAllMeetings {\n  meetings(limit: 10) {\n    # data: data(path: \"$.data.meetingNote\")\n    title: data(path: \"$.data.meetingNote.title\")\n    id: data(path: \"$.data.meetingNote._id\")\n    date: data(path: \"$.data.meetingNote.date\")\n  }\n}\n",
+            "query": "query getAllMeetings {\n  meetings(limit: 1000) {\n    # data: data(path: \"$.data.meetingNote\")\n    title: data(path: \"$.data.meetingNote.title\")\n    id: data(path: \"$.data.meetingNote._id\")\n    date: data(path: \"$.data.meetingNote.date\")\n  }\n}\n",
             "variables": {},
             "allowFirst": true,
             "allowEmpty": true,
@@ -83,9 +83,9 @@
     "id": "listMeetings",
     "workflowId": "listMeetings",
     "adapterName": "fireflies",
-    "created": "2024-12-12T11:35:22.496Z",
+    "created": "2026-02-02T20:58:39.198Z",
     "tags": [],
-    "updated": "2024-12-12T11:35:22.414Z",
-    "modified": "2024-12-12T11:35:22.414Z",
+    "updated": "2026-02-02T20:58:39.198Z",
+    "modified": "2026-02-02T20:58:39.198Z",
     "title": "List Kendraio Fireflies Meetings"
 }

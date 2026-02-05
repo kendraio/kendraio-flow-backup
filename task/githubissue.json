@@ -9,34 +9,56 @@
             "blockComment": ""
         },
         {
+            "type": "context-save",
+            "key": "issue",
+            "blockComment": ""
+        },
+        {
             "type": "card",
             "blocks": [
                 {
                     "type": "message",
-                    "title": "Issue {{data.number}} - {{data.title}}"
+                    "title": "Issue {{context.issue.number}} - {{context.issue.title}}"
                 },
                 {
                     "type": "message",
-                    "message": "{{data.bodyText}}"
-                },
-                {
-                    "type": "message",
-                    "message": "{{data.url}}"
-                },
-                {
-                    "type": "message",
-                    "message": "Created at {{data.createdAtRead}} by {{author.login}}"
+                    "message": "{{context.issue.bodyText}}"
                 },
                 {
                     "type": "mapping",
-                    "mapping": "[data][?updatedAt != createdAtRead]"
+                    "mapping": "[context.issue][?assignees.nodes[0] != null]"
+                },
+                {
+                    "type": "batch",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.assignees.nodes[0].login"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Assigned to {{data}}"
+                        }
+                    ]
+                },
+                {
+                    "type": "template",
+                    "template": "<a href=\"{{context.issue.url}}\">View on GitHub</a>"
+                },
+                {
+                    "type": "message",
+                    "message": "Created at {{context.issue.createdAtRead}} by {{context.issue.author.login}}"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "[context.issue][?editor.login != null]"
                 },
                 {
                     "type": "batch",
                     "blocks": [
                         {
                             "type": "message",
-                            "message": "Edited at {{data.updatedAt}}"
+                            "message": "Edited at {{context.issue.updatedAt}} by {{context.issue.editor.login}}"
                         }
                     ]
                 }
@@ -65,18 +87,22 @@
                         },
                         {
                             "type": "message",
-                            "message": "Created by {{author.login}} at {{createdAt}}"
+                            "message": "{{}}"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Created  at {{createdAt}} by {{author.login}}"
                         },
                         {
                             "type": "mapping",
-                            "mapping": "[data][?updatedAt != createdAt]"
+                            "mapping": "[data][?editor.login != null]"
                         },
                         {
                             "type": "batch",
                             "blocks": [
                                 {
                                     "type": "message",
-                                    "message": "Edited at {{data.updatedAt}}"
+                                    "message": "Edited at {{data.updatedAt}} by {{data.editor.login}}"
                                 }
                             ]
                         }
@@ -89,9 +115,9 @@
     "id": "githubissue",
     "workflowId": "githubissue",
     "adapterName": "task",
-    "created": "2025-02-05T15:41:11.498Z",
+    "created": "2026-01-27T17:33:56.722Z",
     "tags": [],
-    "updated": "2025-02-05T15:41:11.498Z",
-    "modified": "2025-02-05T15:41:11.498Z",
+    "updated": "2026-01-27T17:33:56.722Z",
+    "modified": "2026-01-27T17:33:56.722Z",
     "title": "Display GitHub Issue"
 }

@@ -9,53 +9,97 @@
             "blockComment": ""
         },
         {
-            "type": "graphql",
-            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
-            "query": "query {\n  generic_xrp_rank {\n      analyticsItemUUID\n    total_xrp\n    sessions\n    total_session_mins\n  }\n}",
-            "variables": {},
-            "headers": {},
-            "allowFirst": true,
-            "allowEmpty": true
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Load Distributor stats",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "graphql",
+                            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
+                            "query": "query {\n  generic_xrp_rank {\n    analyticsItemUUID\n    total_xrp\n    sessions\n    total_session_mins\n  }\n}",
+                            "variables": {},
+                            "headers": {},
+                            "allowFirst": true,
+                            "allowEmpty": true
+                        },
+                        {
+                            "type": "validator",
+                            "test": "not_null(data)",
+                            "message": "Loading"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.data.generic_xrp_rank[].{ id:analyticsItemUUID, xrp:total_xrp, sessions:sessions, total_session_mins:total_session_mins}"
+                        },
+                        {
+                            "type": "variable-set",
+                            "name": "graphqlGenericXrp"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Fetch generic_xrp_rank, map and save in context on button trigger"
         },
         {
-            "type": "validator",
-            "test": "not_null(data)",
-            "message": "Loading"
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Load Distributor track metadata",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "graphql",
+                            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
+                            "query": "query { tracks { display_artist display_title id } }",
+                            "variables": {},
+                            "headers": {},
+                            "allowFirst": true,
+                            "allowEmpty": true
+                        },
+                        {
+                            "type": "validator",
+                            "test": "not_null(data)",
+                            "message": "Loading"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.data.tracks[].{ id:id, title:display_title, artist:display_artist }"
+                        },
+                        {
+                            "type": "variable-set",
+                            "name": "graphqlTracks"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Fetch tracks, map and save in context on button trigger"
         },
         {
-            "type": "mapping",
-            "mapping": "data.data.generic_xrp_rank[].{ id:analyticsItemUUID, xrp:total_xrp, sessions:sessions, total_session_mins:total_session_mins}"
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "graphqlGenericXrp",
+            "blockComment": "graphqlGenericXrp"
         },
         {
             "type": "context-save",
-            "contextKey": "stats"
+            "key": "stats",
+            "blockComment": "stats"
         },
         {
-            "type": "graphql",
-            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
-            "query": "query{ tracks {\n    display_artist\n    display_title\n    id\n  }\n}",
-            "variables": {},
-            "headers": {},
-            "allowFirst": true,
-            "allowEmpty": true
-        },
-        {
-            "type": "validator",
-            "test": "not_null(data)",
-            "message": "Loading"
-        },
-        {
-            "type": "mapping",
-            "mapping": "data.data.tracks"
-        },
-        {
-            "type": "mapping",
-            "mapping": "data[].{\n    id:id,\n    title:display_title,\n    artist:display_artist\n} "
+            "type": "variable-get",
+            "name": "graphqlTracks",
+            "blockComment": "graphqlTracks"
         },
         {
             "type": "context-save",
-            "contextKey": "distributor",
-            "blockComment": ""
+            "key": "tracks",
+            "blockComment": "tracks"
         },
         {
             "type": "http",
@@ -64,7 +108,8 @@
                 "protocol": "https://",
                 "host": "www.audiotarky.com",
                 "pathname": "/api/tracks/index.json"
-            }
+            },
+            "blockComment": ""
         },
         {
             "type": "validator",
@@ -73,20 +118,23 @@
         },
         {
             "type": "mapping",
-            "mapping": "data.tracks[].{\n    id: uuid(url),\n    title:name,\n    artist:artist\n} "
-        },
-        {
-            "type": "context-save",
-            "contextKey": "at_id"
-        },
-        {
-            "type": "mapping",
-            "mapping": "[context.at_id,context.distributor][].[\n\t\t\tid, \n\t\t\t{\n                title:title, \n                artist:artist, \n                id:id\n            }\n\t\t].fromPairs(@)",
+            "mapping": "context.tracks[].{\n    id: uuid(url),\n    title:name,\n    artist:artist\n} ",
             "blockComment": ""
         },
         {
             "type": "context-save",
-            "contextKey": "comb"
+            "contextKey": "at_id",
+            "blockComment": "at_id"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.at_id,context.tracks][].[\n\t\t\tid, \n\t\t\t{\n                title:title, \n                artist:artist, \n                id:id\n            }\n\t\t].fromPairs(@)",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "comb",
+            "blockComment": "comb"
         },
         {
             "type": "mapping",
@@ -94,7 +142,8 @@
         },
         {
             "type": "context-save",
-            "contextKey": "stats_index"
+            "contextKey": "stats_index",
+            "blockComment": "stats_index"
         },
         {
             "type": "mapping",
@@ -102,7 +151,8 @@
         },
         {
             "type": "context-save",
-            "contextKey": "all_comb"
+            "contextKey": "all_comb",
+            "blockComment": "all_comb"
         },
         {
             "type": "validator",
@@ -160,9 +210,9 @@
     "id": "stats",
     "workflowId": "stats",
     "adapterName": "player",
-    "created": "2024-12-17T20:21:07.301Z",
+    "created": "2026-01-28T18:47:10.114Z",
     "tags": [],
-    "updated": "2024-12-17T20:21:07.301Z",
-    "modified": "2024-12-17T20:21:07.301Z",
+    "updated": "2026-01-28T18:47:10.114Z",
+    "modified": "2026-01-28T18:47:10.114Z",
     "title": "Kendraio Player Statistics"
 }

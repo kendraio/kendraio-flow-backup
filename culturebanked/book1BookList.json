@@ -167,11 +167,8 @@
         },
         {
             "type": "mapping",
-            "mapping": "{items: data}",
+            "mapping": "{ items: data }",
             "blockComment": "items: data"
-        },
-        {
-            "type": "init"
         },
         {
             "type": "form",
@@ -259,7 +256,7 @@
         {
             "type": "mapping",
             "mapping": "{ items: data.items, total: currency(product(sum(data.items[].product(product(to_number(price), `100`), order_quantity) || `[]`), `0.01`), 'en-GB', 'GBP') }",
-            "blockComment": ""
+            "blockComment": "tot order calculation"
         },
         {
             "type": "card",
@@ -340,31 +337,14 @@
                 }
             ],
             "blockComment": ""
-        },
-        {
-            "type": "http",
-            "method": "post",
-            "notify": false,
-            "endpoint": {
-                "protocol": "https:",
-                "host": "9597d8-c1.myshopify.com",
-                "pathname": "/admin/api/2025-07/graphql.json"
-            },
-            "headers": {
-                "Content-Type": "'application/json'",
-                "X-Shopify-Access-Token": "context.boonbooksToken.token"
-            },
-            "payload": "{ query: 'query { products(first: 250) { edges { node { title handle vendor featuredMedia { preview { image { url altText } } } variants(first: 1) { edges { node { price inventoryQuantity } } } metafield(namespace: \"isbn_db_connector\", key: \"authors\") { value } } } } }' }",
-            "useProxy": true,
-            "blockComment": "old request"
         }
     ],
     "id": "book1BookList",
     "workflowId": "book1BookList",
     "adapterName": "culturebanked",
-    "created": "2025-11-10T11:14:42.071Z",
+    "created": "2026-02-04T15:49:07.260Z",
     "tags": [],
-    "updated": "2025-11-10T11:14:42.070Z",
-    "modified": "2025-11-10T11:14:42.070Z",
+    "updated": "2026-02-04T15:49:07.260Z",
+    "modified": "2026-02-04T15:49:07.260Z",
     "title": "Book List"
 }

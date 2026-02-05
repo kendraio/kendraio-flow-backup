@@ -14,8 +14,13 @@
             "blockComment": ""
         },
         {
+            "type": "context-save",
+            "key": "comment",
+            "blockComment": ""
+        },
+        {
             "type": "message",
-            "title": "{{data.asset}}",
+            "title": "{{context.comment.asset}}",
             "blockComment": ""
         },
         {
@@ -23,22 +28,35 @@
             "blocks": [
                 {
                     "type": "message",
-                    "message": "{{data.content}}"
+                    "message": "{{context.comment.content}}"
                 },
                 {
                     "type": "message",
-                    "message": "Created by {{data.author.displayName}} at {{data.createdAtRead}}"
+                    "message": "Created by {{context.comment.author.displayName}} at {{context.comment.createdAtRead}}"
                 },
                 {
                     "type": "mapping",
-                    "mapping": "[data][?updatedAt != createdAtRead]"
+                    "mapping": "[context.comment][?updatedAt != createdAtRead]"
                 },
                 {
                     "type": "batch",
                     "blocks": [
                         {
                             "type": "message",
-                            "message": "Edited at {{data.updatedAt}}"
+                            "message": "Edited at {{context.comment.updatedAt}}"
+                        }
+                    ]
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "[context.comment][?assigneeEmailAddress != null]"
+                },
+                {
+                    "type": "batch",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Assigned to {{context.comment.assigneeEmailAddress}}"
                         }
                     ]
                 }
@@ -132,9 +150,9 @@
     "id": "googledrivecomment",
     "workflowId": "googledrivecomment",
     "adapterName": "task",
-    "created": "2025-02-05T15:40:40.111Z",
+    "created": "2026-01-27T17:58:45.116Z",
     "tags": [],
-    "updated": "2025-02-05T15:40:40.111Z",
-    "modified": "2025-02-05T15:40:40.111Z",
+    "updated": "2026-01-27T17:58:45.116Z",
+    "modified": "2026-01-27T17:58:45.116Z",
     "title": "Display Google Drive Comment"
 }

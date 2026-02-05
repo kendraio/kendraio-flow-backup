@@ -29,21 +29,27 @@
                             "mapping": "data.data.tracks"
                         },
                         {
-                            "type": "context-save",
-                            "contextKey": "graphql"
+                            "type": "variable-set",
+                            "name": "graphqlTracks"
                         }
                     ],
                     "enabled": true
                 }
             ],
+            "blockComment": "Fetch tracks and save as local var on button trigger"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "graphqlTracks",
             "blockComment": ""
         },
         {
-            "type": "debug",
-            "open": 1,
-            "showData": true,
-            "showContext": false,
-            "showState": false
+            "type": "context-save",
+            "contextKey": "graphql",
+            "blockComment": "graphql tracks"
         },
         {
             "type": "http",
@@ -205,11 +211,11 @@
     "id": "all",
     "workflowId": "all",
     "adapterName": "player",
-    "created": "2026-01-09T16:43:25.162Z",
+    "created": "2026-01-26T21:43:23.171Z",
     "tags": [
         "highlight"
     ],
-    "updated": "2026-01-09T16:43:25.161Z",
-    "modified": "2026-01-09T16:43:25.161Z",
+    "updated": "2026-01-26T21:43:23.170Z",
+    "modified": "2026-01-26T21:43:23.170Z",
     "title": "Kendraio Player"
 }

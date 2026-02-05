@@ -1,9 +1,21 @@
 {
     "blocks": [
         {
+            "type": "template",
+            "template": "<img height='50' width='50' src='{{state.local.issue.creator.avatarUrl}}' />",
+            "blockComment": ""
+        },
+        {
             "type": "mapping",
             "mapping": "state.local.issue.merge(@, {\n    createdAtRead: formatDate(createdAt, `T, dd/MM/yyyy`),\n    assignee: assignee.name\n})",
             "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
         },
         {
             "type": "message",
@@ -73,9 +85,9 @@
     "id": "populatelinearcard",
     "workflowId": "populatelinearcard",
     "adapterName": "task",
-    "created": "2024-10-02T12:32:37.321Z",
+    "created": "2026-01-30T18:07:10.802Z",
     "tags": [],
-    "updated": "2024-10-02T12:32:37.321Z",
-    "modified": "2024-10-02T12:32:37.321Z",
+    "updated": "2026-01-30T18:07:10.802Z",
+    "modified": "2026-01-30T18:07:10.802Z",
     "title": "Kendraio Task Populate Linear Card"
 }

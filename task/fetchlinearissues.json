@@ -9,11 +9,6 @@
             "blockComment": ""
         },
         {
-            "type": "context-save",
-            "key": "lineartoken",
-            "blockComment": ""
-        },
-        {
             "type": "http",
             "method": "post",
             "useProxy": true,
@@ -25,16 +20,14 @@
             "headers": {
                 "authorization": "data.lineartoken"
             },
-            "payload": "{ query: '{issues{nodes{id title description createdAt updatedAt archivedAt creator {name}assignee {name} parent {id} children {nodes {id title}} comments { nodes {createdAt updatedAt archivedAt body editedAt user{name}}}}}}'}",
+            "payload": "{ query: '{issues{nodes{id title description createdAt updatedAt archivedAt creator {name avatarUrl} assignee {name} parent {id} children {nodes {id title}} comments { nodes {createdAt updatedAt archivedAt body editedAt user{name}}}}}}'}",
             "useOldBucketDataFormat": true,
             "blockComment": ""
         },
         {
-            "type": "debug",
-            "open": 1,
-            "showData": true,
-            "showContext": false,
-            "showState": false
+            "type": "context-save",
+            "key": "lineartoken",
+            "blockComment": ""
         },
         {
             "type": "mapping",
@@ -50,7 +43,7 @@
                     "blocks": [
                         {
                             "type": "message",
-                            "message": "Linear Data not fetched"
+                            "message": "Linear data not fetched"
                         }
                     ]
                 }
@@ -59,7 +52,7 @@
                 "blocks": [
                     {
                         "type": "message",
-                        "message": "Linear Data fetched"
+                        "message": "Linear data fetched"
                     }
                 ]
             },
@@ -74,9 +67,9 @@
     "id": "fetchlinearissues",
     "workflowId": "fetchlinearissues",
     "adapterName": "task",
-    "created": "2025-07-24T15:05:51.066Z",
+    "created": "2026-01-29T17:02:17.211Z",
     "tags": [],
-    "updated": "2025-07-24T15:05:50.978Z",
-    "modified": "2025-07-24T15:05:50.978Z",
+    "updated": "2026-01-29T17:02:17.211Z",
+    "modified": "2026-01-29T17:02:17.211Z",
     "title": "Kendraio Task Fetch Linear Issues"
 }
