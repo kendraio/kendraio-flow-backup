@@ -1,0 +1,121 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "{   type: `\"object\"`,\n    title: `\"Contributors Contributions - Edit Item\"`,\n    \"properties\": {\n            \"id\": { \"type\": `\"string\"`, \"title\": `id`, \"default\": context.queryParams.id, \"readOnly\": `true`},\n            \"Contributor\": { \"type\": `\"string\"`, \"title\": `Name`, \"default\": context.queryParams.contributor},\n            \"Notes\": { \"type\": `\"string\"`, \"title\": `Notes`, \"default\": context.queryParams.notes},\n            \"Active\": { \"type\": `\"string\"`, \"title\": `Active`, \"default\": context.queryParams.active}\n    }\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context",
+            "contextPath": "originalRow",
+            "contextBlocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "data",
+                    "blockComment": ""
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "form",
+                    "label": "Save",
+                    "hasSubmit": true,
+                    "emitOnInit": false,
+                    "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                            "formFields": {
+                                "$ref": "#/definitions/context/originalRow"
+                            }
+                        }
+                    },
+                    "uiSchema": {}
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.formFields",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "formFields",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data.merge(@, { \n    \"pathnameWithId\": join('', [@.contributorsPathname, $.context.formFields.id, '/'])\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "PATCH",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "valueGetters": {
+                    "pathname": "data.pathnameWithId"
+                },
+                "query": {
+                    "user_field_names": true
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "payload": "context.formFields.omit(@, ['id'])",
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.errorMessage}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to Database Table",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "contributions",
+                            "workflowId": "contributors"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "contributorsEditRecord",
+    "workflowId": "contributorsEditRecord",
+    "adapterName": "contributions",
+    "created": "2024-07-16T12:21:57.443Z",
+    "tags": [],
+    "updated": "2024-07-16T12:21:57.443Z",
+    "modified": "2024-07-16T12:21:57.443Z",
+    "title": "Edit Record Contributors"
+}

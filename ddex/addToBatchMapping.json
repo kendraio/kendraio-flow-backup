@@ -1,0 +1,111 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "ddex",
+            "schema": "batches"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?data.NewReleaseMessage]\n.[uuid, data.NewReleaseMessage.ResourceList.SoundRecording[]]\n.map(\n    &zip(split(pad('', product(length([1]), sum([length([0]), `1`])), join('', [[0], ','])), ',')[?@], [1]), \n    @)\n.map(\n    &map(&{ id: join(':', [to_string([0]), to_string([1].ResourceReference)]), \n            title: [1].ReferenceTitle.TitleText,\n            batch: to_string([0]),\n            ResourceReference: to_string([1].ResourceReference)\n    } @)\n    @\n)[]",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "multiple",
+                "rowMultiSelectWithClick": true
+            },
+            "columnDefs": [
+                {
+                    "checkboxSelection": true,
+                    "width": 70,
+                    "suppressSizeToFit": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title"
+                },
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                }
+            ]
+        },
+        {
+            "type": "context-save",
+            "key": "additions",
+            "blockComment": ""
+        },
+        {
+            "type": "message",
+            "message": "{{ data.length }} items selected"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add to batch",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "operation": "fetch",
+                            "adapterName": "ddex",
+                            "schema": "batches",
+                            "uuidGetter": "context.queryParams.uuid"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0]"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.merge(@, {data: data.merge(@, {NewReleaseMessage: NewReleaseMessage.merge(@, {ResourceList: ResourceList.merge(@, {SoundRecording: [SoundRecording, $.context.additions][]})})})})"
+                        },
+                        {
+                            "type": "debug",
+                            "showContext": true
+                        },
+                        {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "ddex",
+                            "schema": "batches"
+                        },
+                        {
+                            "type": "actions",
+                            "buttons": [
+                                {
+                                    "label": "Done",
+                                    "blocks": [
+                                        {
+                                            "type": "launch",
+                                            "adapter": "ddex",
+                                            "workflowId": "batches"
+                                        }
+                                    ],
+                                    "enabled": true
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "addToBatchMapping",
+    "workflowId": "addToBatchMapping",
+    "adapterName": "ddex",
+    "created": "2024-11-26T17:02:52.936Z",
+    "tags": [],
+    "updated": "2024-11-26T17:02:52.935Z",
+    "modified": "2024-11-26T17:02:52.935Z",
+    "title": "Add to Batch"
+}

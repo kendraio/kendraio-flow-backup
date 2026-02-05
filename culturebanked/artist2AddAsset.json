@@ -1,0 +1,206 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": "Hasura Key"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "asset_title": {
+                        "title": "Asset",
+                        "type": "string"
+                    },
+                    "width": {
+                        "title": "Width (mm)",
+                        "type": "string"
+                    },
+                    "height": {
+                        "title": "Height (mm)",
+                        "type": "string"
+                    },
+                    "medium": {
+                        "title": "Medium",
+                        "type": "string"
+                    },
+                    "asset_after": {
+                        "title": "After",
+                        "type": "string"
+                    },
+                    "location": {
+                        "title": "Location",
+                        "type": "string"
+                    },
+                    "physicalLocation": {
+                        "title": "Physical Location",
+                        "type": "string"
+                    },
+                    "asset_id_owner": {
+                        "title": "Owners",
+                        "type": "string",
+                        "default": "0"
+                    },
+                    "asset_id_beneficiary": {
+                        "title": "Beneficiaries",
+                        "type": "string",
+                        "default": "0"
+                    },
+                    "asset_id_vendor": {
+                        "title": "Vendors",
+                        "type": "string"
+                    },
+                    "license_detail_id": {
+                        "title": "License details",
+                        "type": "string"
+                    },
+                    "asset_manager_id": {
+                        "title": "Asset Manager",
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {
+                "location": {
+                    "ui:widget": "remote-image"
+                },
+                "asset_id_owner": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "culturebanked",
+                                "workflowId": "artist2EditOwnerSplit"
+                            }
+                        ]
+                    }
+                },
+                "asset_id_beneficiary": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "culturebanked",
+                                "workflowId": "artist2EditBeneficiarySplit"
+                            }
+                        ]
+                    }
+                },
+                "asset_id_vendor": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "culturebanked",
+                                "workflowId": "artist2EditAssetVendor"
+                            }
+                        ]
+                    }
+                },
+                "license_detail_id": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "culturebanked",
+                                "workflowId": "artist2SelectLicense"
+                            }
+                        ]
+                    }
+                },
+                "asset_manager_id": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "culturebanked",
+                                "workflowId": "artist2-select-asset-manager"
+                            }
+                        ]
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, {\n    \"new_license_id\": license_detail_id.licenseSelected || license_detail_id.license_detail_id,\n    \"new_asset_manager_id\": asset_manager_id.managerSelected || asset_manager_id.asset_manager_id\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "mutation InsertAssetById(\n  $asset_title: String,\n  $width: Int!,\n  $height: Int!,\n  $medium: String,\n  $asset_after: String,\n  $location: String,\n  $license_id: Int,\n  $asset_manager_id: Int\n) {\n  insert_assets(\n    objects: {\n      asset_title: $asset_title,\n      width: $width,\n      height: $height,\n      medium: $medium,\n      asset_after: $asset_after,\n      location: $location,\n      license_id: $license_id,\n      asset_manager_id: $asset_manager_id\n    }\n  ) {\n    returning {\n      asset_id\n      asset_title\n      license_id\n      asset_manager_id\n    }\n  }\n}",
+            "variables": {
+                "asset_title": "data.asset_title",
+                "width": "data.width",
+                "height": "data.height",
+                "medium": "data.medium",
+                "asset_after": "data.asset_after",
+                "location": "data.location",
+                "license_id": "data.new_license_id",
+                "asset_manager_id": "data.new_asset_manager_id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to assets list",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "culturebanked",
+                            "workflowId": "artist2Assets"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2AddAsset",
+    "workflowId": "artist2AddAsset",
+    "adapterName": "culturebanked",
+    "created": "2025-04-16T15:09:58.589Z",
+    "tags": [],
+    "updated": "2025-04-16T15:09:58.589Z",
+    "modified": "2025-04-16T15:09:58.589Z",
+    "title": "Add Asset"
+}

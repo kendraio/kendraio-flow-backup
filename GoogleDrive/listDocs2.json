@@ -1,0 +1,60 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Submit",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Google Drive Token",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "www.googleapis.com",
+                "pathname": "/drive/v3/files"
+            },
+            "headers": {
+                "authorization": "join('', ['Bearer ', data.token])"
+            },
+            "q": "\u2019trashed%3Dfalse\u2019",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.files",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false
+        }
+    ],
+    "id": "listDocs2",
+    "workflowId": "listDocs2",
+    "adapterName": "GoogleDrive",
+    "created": "2023-11-18T12:21:10.954Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-11-18T12:21:10.954Z",
+    "modified": "2023-11-18T12:21:10.954Z",
+    "title": "List Documents"
+}

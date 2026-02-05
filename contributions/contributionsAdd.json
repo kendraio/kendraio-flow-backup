@@ -1,0 +1,147 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "contextErrorKey": "formErrors.message",
+            "label": "Save",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "Contribution Detail": {
+                        "type": "string",
+                        "title": "Contribution Detail"
+                    },
+                    "Notes": {
+                        "type": "string",
+                        "title": "Notes"
+                    },
+                    "Validated": {
+                        "type": "boolean",
+                        "title": "Validated"
+                    },
+                    "Period end": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "Period end"
+                    },
+                    "Validation timestamp": {
+                        "type": "string",
+                        "title": "Validation timestamp"
+                    },
+                    "project_contributed": {
+                        "type": "string",
+                        "title": "Project contributed to"
+                    },
+                    "Claimed": {
+                        "type": "boolean",
+                        "title": "Claimed"
+                    },
+                    "Claim timestamp": {
+                        "type": "string",
+                        "title": "Claim timestamp"
+                    },
+                    "Claim amount": {
+                        "type": "string",
+                        "title": "Claim amount"
+                    },
+                    "contributor_flow": {
+                        "type": "string",
+                        "title": "Pick a Contributor"
+                    }
+                }
+            },
+            "uiSchema": {
+                "project_contributed": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "contributions",
+                                "workflowId": "selectProject"
+                            }
+                        ]
+                    }
+                },
+                "contributor_flow": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "contributions",
+                                "workflowId": "selectContributor"
+                            }
+                        ]
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, {\n    \"Project Contributed to\": [@.project_contributed.projectSelected],\n    \"Contributor\": @.contributor_flow.contributorSelected\n}).omit(@, ['project_contributed', 'contributor_flow'])",
+            "blockComment": "adjust data for post request"
+        },
+        {
+            "type": "context-save",
+            "key": "formFields",
+            "blockComment": "Edited Form Fields"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "valueGetters": {
+                    "pathname": "data.contributionsPathname"
+                },
+                "query": {
+                    "user_field_names": true
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "payload": "context.formFields",
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to Contributions Table",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "contributions",
+                            "workflowId": "contributions"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "contributionsAdd",
+    "workflowId": "contributionsAdd",
+    "adapterName": "contributions",
+    "created": "2025-04-16T13:19:51.301Z",
+    "tags": [],
+    "updated": "2025-04-16T13:19:51.301Z",
+    "modified": "2025-04-16T13:19:51.301Z",
+    "title": "Add Contributions"
+}

@@ -1,0 +1,180 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "row-data",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "orginalFormData",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, {\n    \"contributor_flow\": Contributor[0].value,\n    \"project_contributed\": \"Project Contributed to\"[0].value\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "contextErrorKey": "formErrors.message",
+            "label": "Save",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id",
+                        "readOnly": "true"
+                    },
+                    "Contribution Detail": {
+                        "type": "string",
+                        "title": "Contribution Detail"
+                    },
+                    "Notes": {
+                        "type": "string",
+                        "title": "Notes"
+                    },
+                    "Validated": {
+                        "type": "string",
+                        "title": "Validated"
+                    },
+                    "Period end": {
+                        "type": "string",
+                        "description": "Format: 14:24:00",
+                        "title": "Period end"
+                    },
+                    "Validation timestamp": {
+                        "type": "string",
+                        "title": "Validation timestamp"
+                    },
+                    "project_contributed": {
+                        "type": "string",
+                        "title": "Project contributed to"
+                    },
+                    "Claimed": {
+                        "type": "string",
+                        "title": "Claimed"
+                    },
+                    "Claim timestamp": {
+                        "type": "string",
+                        "title": "Claim timestamp"
+                    },
+                    "Claim amount": {
+                        "type": "string",
+                        "title": "Claim amount"
+                    },
+                    "contributor_flow": {
+                        "type": "string",
+                        "title": "Pick a Contributor"
+                    }
+                }
+            },
+            "uiSchema": {
+                "project_contributed": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "contributions",
+                                "workflowId": "selectProject"
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "data.projectSelected || data"
+                            }
+                        ]
+                    }
+                },
+                "contributor_flow": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "contributions",
+                                "workflowId": "selectContributor"
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "data.contributorSelected"
+                            }
+                        ]
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, {\n    \"Project Contributed to\": [@.project_contributed],\n    \"Contributor\": [@.contributor_flow]\n}).omit(@, ['project_contributed', 'contributor_flow'])",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "formFields",
+            "blockComment": "Edited Form Fields"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, { \n    \"pathnameWithId\": join('', [@.contributionsPathname, to_string($.context.orginalFormData.id), '/'])\n})",
+            "blockComment": "/rows/table/268134/{id}"
+        },
+        {
+            "type": "http",
+            "method": "PATCH",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "valueGetters": {
+                    "pathname": "data.pathnameWithId"
+                },
+                "query": {
+                    "user_field_names": true
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "payload": "context.formFields.omit(@, ['id'])",
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to Database Table",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "contributions",
+                            "workflowId": "contributions"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "contributionsEditRecord",
+    "workflowId": "contributionsEditRecord",
+    "adapterName": "contributions",
+    "created": "2025-04-16T13:13:17.888Z",
+    "tags": [],
+    "updated": "2025-04-16T13:13:17.888Z",
+    "modified": "2025-04-16T13:13:17.888Z",
+    "title": "Edit Record Contributions"
+}

@@ -1,0 +1,65 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "message": "This Flow should be run on https://kendraio-app-git-http-block-aws-signed-authenti-989852-kendraio.vercel.app",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Action",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "init"
+                        },
+                        {
+                            "type": "variable-get",
+                            "name": "backblaze"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "credentials.aws",
+                            "valueGetter": "data"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "`Hello world`"
+                        },
+                        {
+                            "type": "debug",
+                            "open": 1,
+                            "showData": true,
+                            "showContext": true,
+                            "showState": false
+                        },
+                        {
+                            "type": "http",
+                            "method": "put",
+                            "useProxy": true,
+                            "responseType": "text",
+                            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/special_file.txt",
+                            "authentication": {
+                                "type": "aws-sigv4",
+                                "secretKeyGetter": "context.credentials.aws.secretKey",
+                                "accessKeyIdGetter": "context.credentials.aws.accessKeyId"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "s3QueryGetVariable",
+    "workflowId": "s3QueryGetVariable",
+    "adapterName": "example",
+    "created": "2025-03-06T15:31:37.101Z",
+    "tags": [],
+    "updated": "2025-03-06T15:31:37.101Z",
+    "modified": "2025-03-06T15:31:37.101Z",
+    "title": "Example S3 Query"
+}

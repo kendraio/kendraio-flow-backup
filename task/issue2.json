@@ -1,0 +1,83 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "issue",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.issue",
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.source",
+            "cases": [
+                {
+                    "value": "Linear",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "task",
+                            "workflowId": "linearissue"
+                        }
+                    ]
+                },
+                {
+                    "value": "Google Drive",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "task",
+                            "workflowId": "googledrivecomment"
+                        }
+                    ]
+                },
+                {
+                    "value": "GitHub",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "task",
+                            "workflowId": "githubissue"
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": []
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Dashboard",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "task",
+                            "workflowId": "dashboard2"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "issue2",
+    "workflowId": "issue2",
+    "adapterName": "task",
+    "created": "2025-02-28T12:07:59.615Z",
+    "tags": [],
+    "updated": "2025-02-28T12:07:59.615Z",
+    "modified": "2025-02-28T12:07:59.615Z",
+    "title": "Kendraio Task Issue Details"
+}

@@ -1,0 +1,26 @@
+{
+    "blocks": [
+        {
+            "type": "graphql",
+            "endpoint": "https://api.github.com/graphql",
+            "query": "query MyQuery {\\r\\n    viewer { \\r\\n        login \\r\\n        }\\r\\n}",
+            "variables": {
+                "token": "data"
+            },
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true
+        }
+    ],
+    "id": "github",
+    "workflowId": "github",
+    "adapterName": "task",
+    "created": "2025-02-05T17:30:12.900Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-02-05T17:30:12.900Z",
+    "modified": "2025-02-05T17:30:12.900Z",
+    "title": "Kendraio Task Fetch GitHub Issues"
+}

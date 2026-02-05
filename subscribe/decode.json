@@ -1,0 +1,275 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "subscribe",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "This flow decodes data that has been encoded into the current web link, and saves it to LocalStorage.",
+            "blockComment": "This flow decodes data that has been encoded into the current web link, and saves it to LocalStorage."
+        },
+        {
+            "type": "variable-get",
+            "name": "savedData",
+            "default": null,
+            "blockComment": "Try to load \"savedData\" variable from LocalStorage, defaulting to null if not found"
+        },
+        {
+            "type": "template",
+            "template": "This is existing data that was saved to LocalStorage:",
+            "blockComment": "This is existing data that was saved to LocalStorage"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "existingData",
+            "valueGetter": "data",
+            "blockComment": "Saves existingData to a local variable we can use later"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?publisherName!=null]",
+            "blockComment": "Removing result that don't have publihserName"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Publisher Name",
+                    "field": "publisherName"
+                },
+                {
+                    "headerName": "Publisher Website",
+                    "field": "publisherWebsite"
+                },
+                {
+                    "headerName": "Website Language",
+                    "field": "websiteLanguage"
+                },
+                {
+                    "headerName": "Subscription Model",
+                    "field": "subscriptionModel"
+                },
+                {
+                    "headerName": "Genre",
+                    "field": "genre"
+                },
+                {
+                    "headerName": "Age Group",
+                    "field": "ageGroup"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "split(context.app.location.search, `?`)[1]",
+            "blockComment": "Extracts data from URL, getting data after the question mark"
+        },
+        {
+            "type": "mapping",
+            "mapping": "parseQs(data)",
+            "blockComment": "Decodes the data from URL query string format to properties"
+        },
+        {
+            "type": "parse-data",
+            "blockComment": "Convert URL data to JSON"
+        },
+        {
+            "type": "context-save",
+            "key": "newPublisher",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.existingData, data][]",
+            "blockComment": "Combine objects"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?publisherName!=null]",
+            "blockComment": "Remove objects without publisherName in it"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?keys(@) != `[]`]",
+            "blockComment": "Remove empty objects"
+        },
+        {
+            "type": "template",
+            "template": "These are new objects from the URL, combined with the existing objects:",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "savedData",
+            "valueGetter": "json(data)",
+            "blockComment": "Saves a JSON version of the current data to a LocalStorage variable called \"savedData\""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Publisher Name",
+                    "field": "publisherName"
+                },
+                {
+                    "headerName": "Publisher Website",
+                    "field": "publisherWebsite"
+                },
+                {
+                    "headerName": "Website Language",
+                    "field": "websiteLanguage"
+                },
+                {
+                    "headerName": "Subscription Model",
+                    "field": "subscriptionModel"
+                },
+                {
+                    "headerName": "Genre",
+                    "field": "genre"
+                },
+                {
+                    "headerName": "Age Group",
+                    "field": "ageGroup"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<a href='https://app.kendra.io/subscribe/encode'>Flow to encode data as links</a><br><a href='https://app.kendra.io/subscribe/list'>Standalone data list flow</a>",
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "subscribe",
+            "workflowId": "subscribernameform",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Upload",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "variable-get",
+                            "name": "savedData"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[*].merge(@, {subscriber: $.context.subscriber.name})"
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "init"
+                                },
+                                {
+                                    "type": "graphql",
+                                    "endpoint": "https://kendraio-subscribe.hasura.app/v1/graphql",
+                                    "query": "mutation MyMutation($name: String, $websiteUrl: String, $websiteLanguage: String, $subscriptionModel: String, $genre: String, $ageGroup: String, $subscriber: String){insert_publishers(objects: [{name: $name, websiteUrl: $websiteUrl, websiteLanguage: $websiteLanguage, subscriptionModel: $subscriptionModel, genre: $genre, ageGroup: $ageGroup, subscriber: $subscriber}]) {returning {id name websiteUrl websiteLanguage subscriptionModel genre ageGroup subscriber}}}",
+                                    "variables": {
+                                        "name": "data.publisherName",
+                                        "websiteUrl": "data.publisherWebsite",
+                                        "websiteLanguage": "data.websiteLanguage",
+                                        "subscriptionModel": "data.subscriptionModel",
+                                        "genre": "data.genre",
+                                        "ageGroup": "data.ageGroup",
+                                        "subscriber": "data.subscriber"
+                                    },
+                                    "headers": {
+                                        "x-hasura-admin-secret": "context.hasura.token"
+                                    },
+                                    "allowFirst": false,
+                                    "allowEmpty": false
+                                }
+                            ]
+                        },
+                        {
+                            "type": "graphql",
+                            "endpoint": "https://kendraio-subscribe.hasura.app/v1/graphql",
+                            "query": "query MyQuery { publishers { ageGroup genre id name subscriptionModel websiteLanguage websiteUrl subscriber}}",
+                            "variables": {},
+                            "headers": {
+                                "x-hasura-admin-secret": "context.hasura.token"
+                            },
+                            "allowFirst": false,
+                            "allowEmpty": false
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.publishers",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Subscriber",
+                    "field": "subscriber"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Website",
+                    "field": "websiteUrl"
+                },
+                {
+                    "headerName": "Website Language",
+                    "field": "websiteLanguage"
+                },
+                {
+                    "headerName": "Subscription Model",
+                    "field": "subscriptionModel"
+                },
+                {
+                    "headerName": "Genre",
+                    "field": "genre"
+                },
+                {
+                    "headerName": "Age Group",
+                    "field": "ageGroup"
+                }
+            ],
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "decode",
+    "workflowId": "decode",
+    "adapterName": "subscribe",
+    "created": "2024-10-18T14:56:41.213Z",
+    "tags": [],
+    "updated": "2024-10-18T14:56:41.213Z",
+    "modified": "2024-10-18T14:56:41.213Z",
+    "title": "My Publisher List"
+}

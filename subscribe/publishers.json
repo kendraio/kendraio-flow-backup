@@ -1,0 +1,87 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "subscribe",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "message",
+            "message": "Publisher View",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-subscribe.hasura.app/v1/graphql",
+            "query": "query MyQuery { publishers { ageGroup genre id name subscriptionModel websiteLanguage websiteUrl subscriber}}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.publishers",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Subscriber",
+                    "field": "subscriber"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Website",
+                    "field": "websiteUrl"
+                },
+                {
+                    "headerName": "Website Language",
+                    "field": "websiteLanguage"
+                },
+                {
+                    "headerName": "Subscription Model",
+                    "field": "subscriptionModel"
+                },
+                {
+                    "headerName": "Genre",
+                    "field": "genre"
+                },
+                {
+                    "headerName": "Age Group",
+                    "field": "ageGroup"
+                }
+            ],
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "publishers",
+    "workflowId": "publishers",
+    "adapterName": "subscribe",
+    "created": "2024-10-23T16:56:45.113Z",
+    "tags": [],
+    "updated": "2024-10-23T16:56:45.113Z",
+    "modified": "2024-10-23T16:56:45.113Z",
+    "title": "Subscribe Publisher"
+}

@@ -1,0 +1,124 @@
+{
+    "blocks": [
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                },
+                "rowSelection": "multiple",
+                "rowMultiSelectWithClick": true
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "artwork",
+                    "headerName": "Artwork",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<img width='150' height='150' src='{{data.artwork}}' />"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "Artist",
+                    "headerName": "Artist"
+                },
+                {
+                    "field": "Name",
+                    "headerName": "Title"
+                },
+                {
+                    "field": "created",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "modified",
+                    "headerName": "Modified"
+                },
+                {
+                    "field": "ISRC",
+                    "headerName": "ISRC",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "message",
+                                "message": "{{data.ISRC}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "Details",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.ISRC"
+                            },
+                            {
+                                "type": "switch",
+                                "valueGetter": "data",
+                                "cases": [
+                                    {
+                                        "value": null,
+                                        "blocks": []
+                                    }
+                                ],
+                                "default": {
+                                    "blocks": [
+                                        {
+                                            "type": "actions",
+                                            "buttons": [
+                                                {
+                                                    "label": "Details",
+                                                    "color": "primary",
+                                                    "blocks": [
+                                                        {
+                                                            "type": "variable-set",
+                                                            "name": "isrc"
+                                                        },
+                                                        {
+                                                            "type": "launch",
+                                                            "adapter": "freecords",
+                                                            "workflowId": "getsong"
+                                                        }
+                                                    ],
+                                                    "enabled": true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "songsgrid",
+    "workflowId": "songsgrid",
+    "adapterName": "freecords",
+    "created": "2025-01-31T19:04:25.204Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-01-31T19:04:25.204Z",
+    "modified": "2025-01-31T19:04:25.204Z",
+    "title": "Freecords Data Grid"
+}

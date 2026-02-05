@@ -1,0 +1,99 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "<h3>Sample Flow to demostrate how to use Load Schema Block to fetch schema and how to display it in a Form.</h3><p>There are three examples here: one using Subroutine Load Schemas, saving the schema to a context and then display it in a form, one just fetching a schema with load-schema block, and one using load-schema inside a form</p>",
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "schemas",
+            "workflowId": "schemas",
+            "blockComment": "Load schemas"
+        },
+        {
+            "type": "mapping",
+            "mapping": "find(data, `name`, `linked_schemas`) || null",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "loadSchemaContext",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "test_property": {
+                        "$ref": "#/definitions/context/loadSchemaContext"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<p>Seems that is trying to get the Form to display but get an error when encounter the Array type.</p>",
+            "blockComment": ""
+        },
+        {
+            "type": "load-schema",
+            "adapterName": "schemas",
+            "schema": "store",
+            "blockComment": "This is not actually fetching the schemas"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<p>Schema is properly loaded</p>",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": true,
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "load-schema",
+                        "adapterName": "schemas",
+                        "schemaGetter": "context.schema && context.schema.store"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "template",
+            "template": "<p>Schema is not loaded in the form</p>",
+            "blockComment": ""
+        }
+    ],
+    "id": "loadSchemaForm",
+    "workflowId": "loadSchemaForm",
+    "adapterName": "kendraio",
+    "created": "2025-02-17T13:14:37.799Z",
+    "tags": [
+        "sample"
+    ],
+    "updated": "2025-02-17T13:14:37.798Z",
+    "modified": "2025-02-17T13:14:37.798Z",
+    "title": "Load Schema Form Flow Sample"
+}

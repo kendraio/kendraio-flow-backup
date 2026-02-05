@@ -1,0 +1,37 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "context.wavFetchEndpoint"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "put",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "context.wavBackblazeEndpoint"
+            },
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "getandputwavik8Xvz1Tr",
+    "workflowId": "getandputwavik8Xvz1Tr",
+    "adapterName": "freecords",
+    "created": "2025-04-21T14:45:24.852Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-04-21T14:45:24.852Z",
+    "modified": "2025-04-21T14:45:24.852Z",
+    "title": "Get and Put Wav"
+}

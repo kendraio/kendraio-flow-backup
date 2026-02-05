@@ -1,0 +1,93 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"id\":  to_number(context.queryParams.id)\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "query GetBeneficiaryById ($beneficiary_id: Int!) {\n  beneficiaries (limit: 1, where: { beneficiary_id: { _eq: $beneficiary_id } }) {\n    beneficiary_id\n    name\n  }\n}",
+            "variables": {
+                "beneficiary_id": "data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.beneficiaries[0]",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "mutation UpdateBeneficiaryById($beneficiary_id: Int!, $new_name: String!) {\n  update_beneficiaries(\n    where: { beneficiary_id: { _eq: $beneficiary_id } },\n    _set: { name: $new_name }\n  ) {\n    returning {\n      beneficiary_id\n      name\n    }\n  }\n}",
+            "variables": {
+                "beneficiary_id": "data.beneficiary_id",
+                "new_name": "data.name"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to Database",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "culturebanked",
+                            "workflowId": "artist2Database"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2EditBeneficiaries",
+    "workflowId": "artist2EditBeneficiaries",
+    "adapterName": "culturebanked",
+    "created": "2025-01-30T15:06:43.100Z",
+    "tags": [],
+    "updated": "2025-01-30T15:06:43.100Z",
+    "modified": "2025-01-30T15:06:43.100Z",
+    "title": "Edit Beneficiaries Details"
+}

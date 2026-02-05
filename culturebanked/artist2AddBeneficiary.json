@@ -1,0 +1,83 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<br><h3>Add New Beneficiary</h3>",
+            "blockComment": "Add New Beneficiary"
+        },
+        {
+            "type": "form",
+            "hasSubmit": "true",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Full name"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "mutation InsertBeneficiary($name: String!) {\n  insert_beneficiaries(objects: { name: $name }) {\n    returning {\n      name\n      beneficiary_id\n    }\n  }\n}",
+            "variables": {
+                "name": "data.name"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to beneficiaries list",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "culturebanked",
+                            "workflowId": "artist2Beneficiaries"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2AddBeneficiary",
+    "workflowId": "artist2AddBeneficiary",
+    "adapterName": "culturebanked",
+    "created": "2025-03-17T11:47:35.468Z",
+    "tags": [],
+    "updated": "2025-03-17T11:47:35.468Z",
+    "modified": "2025-03-17T11:47:35.468Z",
+    "title": "Add New Beneficiary"
+}

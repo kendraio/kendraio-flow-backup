@@ -1,0 +1,60 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "schemas",
+            "skipFirst": "true",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "decodeOne",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": true,
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "load-schema",
+                        "adapterName": "schemas",
+                        "schemaGetter": "context.decodeOne"
+                    }
+                ]
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "testFormSchema",
+    "workflowId": "testFormSchema",
+    "adapterName": "test-form-schema",
+    "created": "2023-10-25T12:36:16.137Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-10-25T12:36:16.137Z",
+    "modified": "2023-10-25T12:36:16.137Z",
+    "title": "Testing Form populated from schema"
+}

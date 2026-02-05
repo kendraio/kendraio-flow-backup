@@ -1,0 +1,78 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "Testing form with context reference",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "`{   \n    \"first_name\": \"Jane\",\n    \"last_name\": \"Doe\"\n}`",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "saved"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Send",
+            "hasSubmit": true,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "lala": {
+                        "$ref": "#/definitions/context/saved"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "Testing simple form",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "`{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\"\n}`",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "first_name": {
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "testFromContext",
+    "workflowId": "testFromContext",
+    "adapterName": "test-form",
+    "created": "2023-09-21T10:52:53.920Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2023-09-21T10:52:53.920Z",
+    "modified": "2023-09-21T10:52:53.920Z",
+    "title": "test form with context"
+}

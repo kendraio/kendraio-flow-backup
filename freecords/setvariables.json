@@ -1,0 +1,43 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "context-save",
+            "key": "song",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.song.ISRC",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "isrc",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.song.artwork",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "artwork",
+            "blockComment": ""
+        }
+    ],
+    "id": "setvariables",
+    "workflowId": "setvariables",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:53:24.330Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:53:24.330Z",
+    "modified": "2025-10-10T15:53:24.330Z",
+    "title": "Set Freecords Variables"
+}

@@ -1,0 +1,45 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "context.song.artwork"
+            },
+            "responseType": "arraybuffer",
+            "headers": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data.data }",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "bput",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "context.imageBackblazeEndpoint"
+            },
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "getandputimagea8A3Cb",
+    "workflowId": "getandputimagea8A3Cb",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:52:55.132Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:52:55.132Z",
+    "modified": "2025-10-10T15:52:55.132Z",
+    "title": "Get and Put Image"
+}

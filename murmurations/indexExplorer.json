@@ -1,0 +1,211 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://test-library.murmurations.network/v2/schemas",
+            "useProxy": true,
+            "blockComment": "Getting Murmurations Schemas"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data[?url!=''].merge(@, {\n    \"fullUrl\": join('', ['https://test-library.murmurations.network/v2/schemas/', @.name])\n    \n})",
+            "blockComment": "adding url to fetch schema"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[? !starts_with(name, 'test_schema')]",
+            "blockComment": "Filter out all test schema"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": data[*].{\n    \"title\": name,\n    \"const\": name\n  }\n}",
+            "blockComment": "anyOf"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\"anyOf\": [[{\"title\": `all`, \"const\": \"none\"}], data.anyOf][]}",
+            "blockComment": "Adding \"all\" option"
+        },
+        {
+            "type": "context-save",
+            "key": "schemas",
+            "blockComment": "schemas"
+        },
+        {
+            "type": "form",
+            "hasSubmit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "selectedUrl": {
+                        "title": "Select a schema",
+                        "$ref": "#/definitions/context/schemas"
+                    },
+                    "name": {
+                        "title": "name search",
+                        "type": "string"
+                    },
+                    "tags": {
+                        "title": "tags search: write comma separated words",
+                        "type": "string"
+                    },
+                    "primary_url": {
+                        "title": "primary_url search",
+                        "type": "string"
+                    },
+                    "lat": {
+                        "title": "lat search",
+                        "type": "number"
+                    },
+                    "lon": {
+                        "title": "long search",
+                        "type": "number"
+                    },
+                    "range": {
+                        "title": "range search",
+                        "type": "string"
+                    },
+                    "locality": {
+                        "title": "locality search",
+                        "type": "string"
+                    },
+                    "region": {
+                        "title": "region search",
+                        "type": "string"
+                    },
+                    "country_select": {
+                        "title": "select country",
+                        "type": "string"
+                    },
+                    "page_size": {
+                        "title": "Select the page size (default: 30)",
+                        "type": "select",
+                        "enumNames": [
+                            "Select the page size (default: 30)",
+                            "100",
+                            "500"
+                        ],
+                        "enum": [
+                            "",
+                            "100",
+                            "500"
+                        ]
+                    },
+                    "tags_filter": {
+                        "title": "All Tags",
+                        "type": "select",
+                        "enumNames": [
+                            "or",
+                            "and"
+                        ],
+                        "enum": [
+                            "or",
+                            "and"
+                        ]
+                    },
+                    "tags_exact": {
+                        "title": "exact match only",
+                        "type": "boolean"
+                    }
+                }
+            },
+            "uiSchema": {
+                "country_select": {
+                    "ui:widget": "blocks",
+                    "blocksConfig": {
+                        "blocks": [
+                            {
+                                "type": "gosub",
+                                "adapterName": "murmurations",
+                                "workflowId": "countrySelector"
+                            }
+                        ]
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "formData",
+            "blockComment": "form data"
+        },
+        {
+            "type": "mapping",
+            "mapping": "compact(\n    {\n        schema: context.formData.selectedUrl, \n        name: context.formData.name,\n        tags: context.formData.tags,\n        primary_url: context.formData.primary_url, \n        lat: context.formData.lat, \n        lon: context.formData.lng, \n        range: context.formData.range, \n        locality: context.formData.locality, \n        region: context.formData.region,\n        country: context.formData.country_select.country,\n        status: context.formData.status,\n        page_size: context.formData.page_size,\n        tags_filters: context.formData.tags_filters,\n        tags_exact: context.formData.tags_exact\n    }\n)\n",
+            "blockComment": "Compact - remove null params"
+        },
+        {
+            "type": "context-save",
+            "key": "params",
+            "blockComment": "Non Null Params"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "test-index.murmurations.network",
+                "pathname": "/v2/nodes",
+                "valueGetters": {
+                    "query": "context.params"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'"
+            },
+            "useProxy": "true",
+            "blockComment": "Getting Indexes with params"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data[*].omit(@, ['geolocation'])",
+            "blockComment": "Omit some data"
+        },
+        {
+            "type": "grid",
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 30,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "indexExplorer",
+    "workflowId": "indexExplorer",
+    "adapterName": "murmurations",
+    "created": "2025-05-06T09:51:51.041Z",
+    "tags": [],
+    "updated": "2025-05-06T09:51:51.041Z",
+    "modified": "2025-05-06T09:51:51.041Z",
+    "title": "Index Explorer"
+}

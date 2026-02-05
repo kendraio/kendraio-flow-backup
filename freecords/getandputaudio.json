@@ -1,0 +1,58 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "context.audioEndpoints.get"
+            },
+            "responseType": "arraybuffer",
+            "headers": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "consoleLog": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "audio",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: context.audio }",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "bput",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "context.audioEndpoints.put"
+            },
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "getandputaudio",
+    "workflowId": "getandputaudio",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:43:31.443Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:43:31.443Z",
+    "modified": "2025-10-08T16:43:31.443Z",
+    "title": "Get and Put Audio"
+}

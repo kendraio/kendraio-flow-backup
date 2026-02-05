@@ -1,0 +1,97 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "issue",
+            "blockComment": ""
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "message",
+                    "title": "Issue {{data.number}} - {{data.title}}"
+                },
+                {
+                    "type": "message",
+                    "message": "{{data.bodyText}}"
+                },
+                {
+                    "type": "message",
+                    "message": "{{data.url}}"
+                },
+                {
+                    "type": "message",
+                    "message": "Created at {{data.createdAtRead}} by {{author.login}}"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "[data][?updatedAt != createdAtRead]"
+                },
+                {
+                    "type": "batch",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Edited at {{data.updatedAt}}"
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[0]",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.comments.nodes[*].merge(@, {createdAt: formatDate(createdAt, 'T, dd/MM/yyyy'), updatedAt: formatDate(updatedAt, 'T, dd/MM/yyyy')})",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "{{body}}"
+                        },
+                        {
+                            "type": "message",
+                            "message": "Created by {{author.login}} at {{createdAt}}"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "[data][?updatedAt != createdAt]"
+                        },
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "message": "Edited at {{data.updatedAt}}"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "githubissue",
+    "workflowId": "githubissue",
+    "adapterName": "task",
+    "created": "2025-02-05T15:41:11.498Z",
+    "tags": [],
+    "updated": "2025-02-05T15:41:11.498Z",
+    "modified": "2025-02-05T15:41:11.498Z",
+    "title": "Display GitHub Issue"
+}

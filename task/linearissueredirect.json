@@ -1,0 +1,21 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "launch",
+            "adapter": "task",
+            "workflowId": "issue",
+            "blockComment": ""
+        }
+    ],
+    "id": "linearissueredirect",
+    "workflowId": "linearissueredirect",
+    "adapterName": "task",
+    "created": "2024-09-25T17:05:59.221Z",
+    "tags": [],
+    "updated": "2024-09-25T17:05:59.221Z",
+    "modified": "2024-09-25T17:05:59.221Z",
+    "title": ""
+}

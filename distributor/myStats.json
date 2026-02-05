@@ -1,0 +1,57 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
+            "query": "query {\n  track_xrp_rank {\n    display_artist\n    display_title\n    total_xrp\n    sessions\n    total_session_mins\n  }\n}",
+            "variables": {},
+            "headers": {},
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.track_xrp_rank"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "multi",
+            "batches": [
+                {
+                    "blocks": [
+                        {
+                            "type": "grid",
+                            "gridOptions": {}
+                        }
+                    ]
+                },
+                {
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data[].{ label: display_title, value: total_xrp }"
+                        },
+                        {
+                            "type": "chart"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "id": "myStats",
+    "workflowId": "myStats",
+    "adapterName": "distributor",
+    "created": "2024-12-17T20:27:58.815Z",
+    "tags": [],
+    "updated": "2024-12-17T20:27:58.815Z",
+    "modified": "2024-12-17T20:27:58.815Z",
+    "title": "Stats  test (distributor) "
+}

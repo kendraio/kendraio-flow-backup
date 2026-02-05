@@ -1,0 +1,76 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<br><h3>Add New License</h3>",
+            "blockComment": "Add New License"
+        },
+        {
+            "type": "form",
+            "hasSubmit": "true",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "License name"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "mutation InsertLicense($name: String!) {\n  insert_license_details(objects: { name: $name }) {\n    returning {\n      name\n      license_id\n    }\n  }\n}",
+            "variables": {
+                "name": "data.name"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to licenses list",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "culturebanked",
+                            "workflowId": "artist2Licenses"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2AddLicense",
+    "workflowId": "artist2AddLicense",
+    "adapterName": "culturebanked",
+    "created": "2025-04-03T09:09:18.676Z",
+    "tags": [],
+    "updated": "2025-04-03T09:09:18.676Z",
+    "modified": "2025-04-03T09:09:18.676Z",
+    "title": "Add New License"
+}

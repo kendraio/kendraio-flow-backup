@@ -1,0 +1,83 @@
+{
+    "blocks": [
+        {
+            "type": "init",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.name || 'Add artist name'",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "currentArtist",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: context.currentArtist }",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Search",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Artist name"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist/search",
+                "host": "kendraio-bit-proxy.vercel.app",
+                "valueGetters": {
+                    "query": "{ name: data.name }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', context.sandboxAuth.token])"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select artist",
+            "labelGetter": "name",
+            "valueField": "id",
+            "outputGetter": "@",
+            "blockComment": ""
+        }
+    ],
+    "id": "findArtist2",
+    "workflowId": "findArtist2",
+    "adapterName": "bandsintown",
+    "created": "2023-10-11T08:59:06.661Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2023-10-11T08:59:06.661Z",
+    "modified": "2023-10-11T08:59:06.661Z",
+    "title": "Find Artist"
+}

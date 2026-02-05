@@ -1,0 +1,85 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "contextErrorKey": "formErrors.message",
+            "label": "Add",
+            "jsonSchema": {
+                "type": "object",
+                "title": "Add a new project",
+                "properties": {
+                    "Name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "Notes": {
+                        "type": "string",
+                        "title": "Notes"
+                    },
+                    "Active": {
+                        "type": "boolean",
+                        "title": "Active",
+                        "default": "false"
+                    },
+                    "Contribution Unit": {
+                        "type": "string",
+                        "title": "Contribution Unit"
+                    }
+                },
+                "required": [
+                    "Contributor"
+                ]
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "formFields",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "http",
+            "method": "POST",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "valueGetters": {
+                    "pathname": "data.projectsPathname"
+                },
+                "query": {
+                    "user_field_names": true
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "payload": "context.formFields",
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "launch",
+            "adapter": "contributions",
+            "workflowId": "projects",
+            "blockComment": "Go back to projects table"
+        }
+    ],
+    "id": "projectsAdd",
+    "workflowId": "projectsAdd",
+    "adapterName": "contributions",
+    "created": "2025-04-16T13:22:55.005Z",
+    "tags": [],
+    "updated": "2025-04-16T13:22:55.005Z",
+    "modified": "2025-04-16T13:22:55.005Z",
+    "title": "Add Project"
+}

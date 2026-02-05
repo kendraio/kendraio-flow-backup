@@ -1,0 +1,91 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "fireflies-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-fireflies.hasura.app/v1/graphql",
+            "query": "query getAllMeetings {\n  meetings(limit: 10) {\n    # data: data(path: \"$.data.meetingNote\")\n    title: data(path: \"$.data.meetingNote.title\")\n    id: data(path: \"$.data.meetingNote._id\")\n    date: data(path: \"$.data.meetingNote.date\")\n  }\n}\n",
+            "variables": {},
+            "allowFirst": true,
+            "allowEmpty": true,
+            "blockComment": "",
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            }
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.meetings[*]",
+            "blockComment": "Results"
+        },
+        {
+            "type": "mapping",
+            "mapping": "reverse(sort_by(data, &date))[*]",
+            "blockComment": "Reverse & sort by date"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "title",
+                    "headerName": "Title"
+                },
+                {
+                    "field": "date",
+                    "headerName": "Meeting was recorded on:"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "View meeting",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "fireflies",
+                                                "workflowId": "viewMeeting",
+                                                "context": {
+                                                    "id": "data.id"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "listMeetings",
+    "workflowId": "listMeetings",
+    "adapterName": "fireflies",
+    "created": "2024-12-12T11:35:22.496Z",
+    "tags": [],
+    "updated": "2024-12-12T11:35:22.414Z",
+    "modified": "2024-12-12T11:35:22.414Z",
+    "title": "List Kendraio Fireflies Meetings"
+}

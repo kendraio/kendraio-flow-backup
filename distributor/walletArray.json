@@ -1,0 +1,26 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "wallet",
+            "service": "uphold",
+            "list_all_balances": true,
+            "make_card_button": true
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showContext": false
+        }
+    ],
+    "id": "walletArray",
+    "workflowId": "walletArray",
+    "adapterName": "distributor",
+    "created": "2024-09-26T11:01:37.916Z",
+    "tags": [],
+    "updated": "2024-09-26T11:01:37.916Z",
+    "modified": "2024-09-26T11:01:37.916Z",
+    "title": "Multiple balance prototype (distributor)"
+}

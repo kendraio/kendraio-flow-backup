@@ -1,0 +1,122 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ \n    name: data.name || 'File',\n    id: data.id\n}\n",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "fileData",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ name: context.fileData.name }",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "List comments",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "www.googleapis.com",
+                "pathname": "/drive/v3/files/",
+                "query": {
+                    "fields": "*"
+                }
+            },
+            "authentication": {
+                "type": "bearer",
+                "valueGetters": {
+                    "jwt": "``"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.comments",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "content",
+                    "headerName": "Comment"
+                },
+                {
+                    "field": "author.displayName",
+                    "headerName": "Author"
+                },
+                {
+                    "field": "createdTime",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "modifiedTime",
+                    "headerName": "Modified"
+                },
+                {
+                    "field": "resolved",
+                    "headerName": "Resolved?"
+                },
+                {
+                    "field": "replies",
+                    "headerName": "Replies"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "listComments",
+    "workflowId": "listComments",
+    "adapterName": "GoogleDrive",
+    "created": "2024-07-15T16:34:33.654Z",
+    "tags": [
+        "work in progress",
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-07-15T16:34:33.654Z",
+    "modified": "2024-07-15T16:34:33.654Z",
+    "title": "List Comments"
+}

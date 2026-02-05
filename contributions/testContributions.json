@@ -1,0 +1,92 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "api_key": {
+                        "type": "string",
+                        "title": "Baserow API",
+                        "default": ""
+                    },
+                    "table_id": {
+                        "type": "string",
+                        "title": "Table ID",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "!data || {\n    \"api_key\": join('', [`\"Token \"`, data.api_key]),\n    \"table_id\": join('', [`\"/rows/table/\"`, data.table_id, `\"/\"`])\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "saved"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "valueGetters": {
+                    "pathname": "context.saved.table_id"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.api_key"
+            },
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.errorMessage}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.results",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false
+        }
+    ],
+    "id": "testContributions",
+    "workflowId": "testContributions",
+    "adapterName": "contributions",
+    "created": "2024-04-10T11:32:46.977Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2024-04-10T11:32:46.977Z",
+    "modified": "2024-04-10T11:32:46.977Z",
+    "title": "Test Contributions"
+}

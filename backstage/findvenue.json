@@ -1,0 +1,76 @@
+{
+    "blocks": [
+        {
+            "type": "context-save",
+            "key": "venue_name",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{name: context.venue_name}",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Venue"
+                    }
+                }
+            },
+            "label": "Find Venue",
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query MyQuery($name: String) {\n  backstage_venues(where: {name: {_iregex: $name}}) {\n    id\n    city\n    country\n    latitude\n    longitude\n    name\n  }\n}",
+            "variables": {
+                "name": "data.name"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_venues",
+            "blockComment": ""
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select venue",
+            "labelGetter": "join(', ', [name])",
+            "valueField": "id",
+            "outputGetter": "@",
+            "blockComment": ""
+        }
+    ],
+    "id": "findvenue",
+    "workflowId": "findvenue",
+    "adapterName": "backstage",
+    "created": "2024-04-26T14:41:16.165Z",
+    "tags": [],
+    "updated": "2024-04-26T14:41:16.165Z",
+    "modified": "2024-04-26T14:41:16.165Z",
+    "title": "Kendraio Backstage Find Venue"
+}

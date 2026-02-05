@@ -1,0 +1,207 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Submit",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "linearkey": {
+                        "type": "string",
+                        "title": "Linear API Key",
+                        "default": ""
+                    }
+                }
+            },
+            "uiSchema": {
+                "linearkey": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.linear.app",
+                "pathname": "/graphql"
+            },
+            "headers": {
+                "authorization": "data.linearkey"
+            },
+            "payload": "{ query: '{ issues { nodes { id title description        assignee {          id          name        }        createdAt        archivedAt} } }'}",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.issues.nodes[*].merge(@, {\n    source: `Linear`,\n    asset: title,\n    preview: description\n})",
+            "blockComment": "formats data for grid"
+        },
+        {
+            "type": "context-save",
+            "key": "linear",
+            "blockComment": ""
+        },
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "context.googleAuth.access_token"
+                },
+                {
+                    "type": "context-save",
+                    "key": "state.token"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/drive/v3/files"
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.files",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "data.merge(@, {token: $.state.local.token})"
+                },
+                {
+                    "type": "gosub",
+                    "adapterName": "task",
+                    "workflowId": "formatgoogledrivefiles"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "googledrive",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.linear, context.googledrive][]",
+            "blockComment": "combines sources"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "source",
+                    "headerName": "Source"
+                },
+                {
+                    "field": "asset",
+                    "headerName": "Asset"
+                },
+                {
+                    "field": "preview",
+                    "headerName": "Preview"
+                },
+                {
+                    "field": "edit",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "{id: data.id, token: context.hasura.token}"
+                            },
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "variable-set",
+                                                "name": "flow_data"
+                                            },
+                                            {
+                                                "type": "launch",
+                                                "adapter": "task",
+                                                "workflowId": "editasset"
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ],
+                                "blockComment": ""
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "dashboardgosub",
+    "workflowId": "dashboardgosub",
+    "adapterName": "task",
+    "created": "2024-07-03T13:13:34.148Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-07-03T13:13:34.148Z",
+    "modified": "2024-07-03T13:13:34.148Z",
+    "title": "Kendraio Task Dashboard"
+}

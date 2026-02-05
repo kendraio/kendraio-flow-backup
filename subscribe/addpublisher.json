@@ -1,0 +1,148 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "subscribe",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Publisher Name",
+                        "default": "Publisher Name"
+                    },
+                    "websiteUrl": {
+                        "type": "string",
+                        "title": "Publisher Website",
+                        "default": "Publisher Website"
+                    },
+                    "websiteLanguage": {
+                        "type": "string",
+                        "title": "Website Language",
+                        "default": "Website Language"
+                    },
+                    "subscriptionModel": {
+                        "type": "string",
+                        "title": "Subscription Model",
+                        "enum": [
+                            "Free",
+                            "Pooled"
+                        ]
+                    },
+                    "genre": {
+                        "type": "string",
+                        "title": "Genre",
+                        "default": "Genre"
+                    },
+                    "ageGroup": {
+                        "type": "string",
+                        "title": "Age Group",
+                        "default": "Age Group"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-subscribe.hasura.app/v1/graphql",
+            "query": "mutation MyMutation(\n    $name: String,\n    $websiteUrl: String,\n    $websiteLanguage: String,\n    $subscriptionModel: String,\n    $genre: String,\n    $ageGroup: String\n) \n{\n    insert_publishers(\n        objects: [\n            {\n                name: $name,\n                websiteUrl: $websiteUrl,\n                websiteLanguage: $websiteLanguage,\n                subscriptionModel: $subscriptionModel,\n                genre: $genre,\n                ageGroup: $ageGroup\n            }\n        ]\n    ) {\n        returning {\n            id\n            name\n            websiteUrl\n            websiteLanguage\n            subscriptionModel\n            genre\n            ageGroup\n        }\n    }\n}\n",
+            "variables": {
+                "name": "data.name",
+                "websiteUrl": "data.websiteUrl",
+                "websiteLanguage": "data.websiteLanguage",
+                "subscriptionModel": "data.subscriptionModel",
+                "genre": "data.genre",
+                "ageGroup": "data.ageGroup"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-subscribe.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  publishers {\n    ageGroup\n    genre\n    id\n    name\n    subscriptionModel\n    websiteLanguage\n    websiteUrl\n  }\n}\n",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.publishers",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "ID",
+                    "field": "id"
+                },
+                {
+                    "headerName": "Name",
+                    "field": "name"
+                },
+                {
+                    "headerName": "Website",
+                    "field": "websiteUrl"
+                },
+                {
+                    "headerName": "Website Language",
+                    "field": "websiteLanguage"
+                },
+                {
+                    "headerName": "Subscription Model",
+                    "field": "subscriptionModel"
+                },
+                {
+                    "headerName": "Genre",
+                    "field": "genre"
+                },
+                {
+                    "headerName": "Age Group",
+                    "field": "ageGroup"
+                }
+            ],
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "addpublisher",
+    "workflowId": "addpublisher",
+    "adapterName": "subscribe",
+    "created": "2024-10-09T12:51:23.014Z",
+    "tags": [],
+    "updated": "2024-10-09T12:51:23.014Z",
+    "modified": "2024-10-09T12:51:23.014Z",
+    "title": "Add Publisher"
+}

@@ -1,0 +1,120 @@
+{
+    "blocks": [
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "context",
+                    "contextPath": "isrc",
+                    "contextBlocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.ISRC"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "isrc"
+                        }
+                    ],
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ key: context.api.key, ISRC: data.ISRC }"
+                        },
+                        {
+                            "type": "http",
+                            "method": "post",
+                            "useProxy": false,
+                            "endpoint": {
+                                "protocol": "https:",
+                                "host": "app.freecords.com/api/1.1/wf",
+                                "pathname": "/get_song",
+                                "valueGetters": {
+                                    "query": "{ api_token: data.key }"
+                                }
+                            }
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "{     data: {        NewReleaseMessage: {            PartyList: {                Party: [                    {                        PartyReference: PartyReference,                        PartyName: [                            {                                FullName: FullName,                                FullNameIndexed: FullNameIndexed,                                _LanguageAndScriptCode: _LanguageAndScriptCode                            }                        ]                    }                            ]            },            ResourceList: {                SoundRecording: [data.response.merge(@, {                    ResourceReference: `A1`,                    Contributor: {                        ContributorPartyReference:  Contributor.PartyReference,                        Role: Contributor.Role,                        _SequenceNumber: Contributor._SequenceNumber                    },                    CreationDate: {                        __text: CreationDate.__text,                                                        _IsApproximate: CreationDate._IsApproximate                    },                    ResourceId: {                        ISRC: $.context.isrc                    },                    DisplayTitleText: \"song-name\",                    DisplayTitle: [                        {                            TitleText: DisplayTitle.TitleText,                            _ApplicableTerritoryCode: DisplayTitle._ApplicableTerritoryCode,                            _IsDefault: DisplayTitle._IsDefault                        }                    ],                    LanguageOfPerformance: LanguageOfPerformance,                    Duration:  duration,                    IsInstrumental: IsInstrumental,                    PLine: {                        PLineText: PLine.Text                    }                })]            },            \"_xmlns:avs\":               `http://ddex.net/xml/avs/avs`,            \"_xmlns:ern\":               `http://ddex.net/xml/ern/42`,            \"_xmlns:xsi\":               `http://www.w3.org/2001/XMLSchema-instance`,            \"_xsi:schemaLocation\":      `http://ddex.net/xml/ern/42 http://ddex.net/xml/ern/42/release-notification.xsd`,            _ReleaseProfileVersionId: `Audio`,            LanguageAndScriptCode:    `en`,            __prefix:                 `ern`        }    },    created: now(),    batchName: state.local.batchName || `Freecords`}"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "ddex"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "join('', [`https://freecords.s3.eu-central-003.backblazeb2.com/`, context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '/', context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '.xml'])"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "endpoint"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "context.ddex"
+                        },
+                        {
+                            "type": "db",
+                            "adapterName": "ddex",
+                            "schema": "batches",
+                            "operation": "add",
+                            "blockComment": ""
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "context.ddex"
+                        },
+                        {
+                            "type": "debug",
+                            "open": 1,
+                            "showData": true,
+                            "consoleLog": true,
+                            "showContext": false
+                        },
+                        {
+                            "type": "http",
+                            "method": "put",
+                            "useProxy": true,
+                            "responseType": "text",
+                            "endpoint": {
+                                "valueGetter": "context.endpoint"
+                            },
+                            "authentication": {
+                                "type": "aws-sigv4",
+                                "secretKeyGetter": "context.api.secretKey",
+                                "accessKeyIdGetter": "context.api.accessKeyId"
+                            }
+                        },
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "responseType": "text",
+                            "endpoint": {
+                                "valueGetter": "context.endpoint"
+                            },
+                            "authentication": {
+                                "type": "aws-sigv4",
+                                "secretKeyGetter": "context.api.secretKey",
+                                "accessKeyIdGetter": "context.api.accessKeyId"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "getdetailsbackblaze",
+    "workflowId": "getdetailsbackblaze",
+    "adapterName": "freecords",
+    "created": "2025-04-21T14:44:15.946Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-04-21T14:44:15.946Z",
+    "modified": "2025-04-21T14:44:15.946Z",
+    "title": "Get Details and Add to Backblaze"
+}

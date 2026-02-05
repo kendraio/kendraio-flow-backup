@@ -1,0 +1,330 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "message": "Flow should be used on kendraio-ik8xvz1tr-kendraio.vercel.app",
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "freecords",
+            "workflowId": "batchnameform",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ hideBlanks: true }",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "hideBlanks": {
+                        "type": "boolean",
+                        "title": "Hide blank ISRCs",
+                        "default": true
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.hideBlanks",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hideBlanks",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "api",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "freecords.bubbleapps.io/version-test/api/1.1",
+                "pathname": "/obj/song"
+            },
+            "headers": {
+                "authorization": "join('', ['Bearer ', data.key])"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.response.results[*].merge(@, {\n    created: @.\"Created Date\",\n    modified: @.\"Modified Date\",\n    artwork: @.\"Cover Photo\"\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    created: formatDate(created, 'yyyy/MM/dd, T'),\n    modified: formatDate(modified, 'yyyy/MM/dd, T')\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.hideBlanks && data[?ISRC != null] || data",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "multiple",
+                "rowMultiSelectWithClick": true,
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "headerCheckboxSelection": true,
+                    "checkboxSelection": true,
+                    "width": 70,
+                    "suppressSizeToFit": true
+                },
+                {
+                    "field": "artwork",
+                    "headerName": "Artwork",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<img width='150' height='150' src='{{data.artwork}}' />"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "Artist",
+                    "headerName": "Artist"
+                },
+                {
+                    "field": "Name",
+                    "headerName": "Title"
+                },
+                {
+                    "field": "created",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "modified",
+                    "headerName": "Modified"
+                },
+                {
+                    "field": "ISRC",
+                    "headerName": "ISRC",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "message",
+                                "message": "{{data.ISRC}}"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "Details",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.ISRC"
+                            },
+                            {
+                                "type": "switch",
+                                "valueGetter": "data",
+                                "cases": [
+                                    {
+                                        "value": null,
+                                        "blocks": []
+                                    }
+                                ],
+                                "default": {
+                                    "blocks": [
+                                        {
+                                            "type": "actions",
+                                            "buttons": [
+                                                {
+                                                    "label": "Details",
+                                                    "color": "primary",
+                                                    "blocks": [
+                                                        {
+                                                            "type": "variable-set",
+                                                            "name": "isrc"
+                                                        },
+                                                        {
+                                                            "type": "launch",
+                                                            "adapter": "freecords",
+                                                            "workflowId": "getsongdetails"
+                                                        }
+                                                    ],
+                                                    "enabled": true
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add to Backblaze",
+                    "color": "primary",
+                    "enabledGetter": "data[0]",
+                    "blocks": [
+                        {
+                            "type": "batch",
+                            "blocks": [
+                                {
+                                    "type": "context",
+                                    "contextPath": "isrc",
+                                    "contextBlocks": [
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "data.ISRC"
+                                        },
+                                        {
+                                            "type": "context-save",
+                                            "key": "isrc"
+                                        }
+                                    ],
+                                    "blocks": [
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "{ key: context.api.key, ISRC: data.ISRC }"
+                                        },
+                                        {
+                                            "type": "http",
+                                            "method": "post",
+                                            "useProxy": false,
+                                            "endpoint": {
+                                                "protocol": "https:",
+                                                "host": "app.freecords.com/api/1.1/wf",
+                                                "pathname": "/get_song",
+                                                "valueGetters": {
+                                                    "query": "{ api_token: data.key }"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "data.data.response.merge(@, { artistName: \"artist-name\" })"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "{ data: { NewReleaseMessage: { PartyList: { Party: [{ PartyReference: PartyReference, PartyName: [{ FullName: FullName, FullNameIndexed: FullNameIndexed, _LanguageAndScriptCode: _LanguageAndScriptCode }]}]}, ResourceList: { SoundRecording: [data.merge(@, { ResourceReference: `A1`, Contributor: { ContributorPartyReference: Contributor.PartyReference, Role: Contributor.Role, _SequenceNumber: Contributor._SequenceNumber }, CreationDate: { __text: CreationDate.__text, _IsApproximate: CreationDate._IsApproximate }, ResourceId: { ISRC: $.context.isrc }, DisplayTitleText: \"song-name\", DisplayTitle: [{ TitleText: DisplayTitle.TitleText, _ApplicableTerritoryCode: DisplayTitle._ApplicableTerritoryCode, _IsDefault: DisplayTitle._IsDefault }], LanguageOfPerformance: LanguageOfPerformance, Duration: duration, IsInstrumental: IsInstrumental, PLine: { PLineText: PLine.Text }})]}, \"_xmlns:avs\": `http://ddex.net/xml/avs/avs`, \"_xmlns:ern\": `http://ddex.net/xml/ern/42`, \"_xmlns:xsi\": `http://www.w3.org/2001/XMLSchema-instance`, \"_xsi:schemaLocation\": `http://ddex.net/xml/ern/42 http://ddex.net/xml/ern/42/release-notification.xsd`, _ReleaseProfileVersionId: `Audio`, LanguageAndScriptCode: `en`, __prefix: `ern` }}, created: now(), batchName: state.local.batchName || `Freecords`}"
+                                        },
+                                        {
+                                            "type": "context-save",
+                                            "key": "ddex"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "join('', [`https://freecords.s3.eu-central-003.backblazeb2.com/`, context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '/', context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '.xml'])"
+                                        },
+                                        {
+                                            "type": "context-save",
+                                            "key": "ddexEndpoint"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "context.ddex"
+                                        },
+                                        {
+                                            "type": "http",
+                                            "method": "put",
+                                            "useProxy": true,
+                                            "responseType": "text",
+                                            "endpoint": {
+                                                "valueGetter": "context.ddexEndpoint"
+                                            },
+                                            "authentication": {
+                                                "type": "aws-sigv4",
+                                                "secretKeyGetter": "context.api.secretKey",
+                                                "accessKeyIdGetter": "context.api.accessKeyId"
+                                            }
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "join('', [`https://freecords.s3.eu-central-003.backblazeb2.com/`, context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '/', context.isrc, '.wav'])"
+                                        },
+                                        {
+                                            "type": "context-save",
+                                            "key": "wavBackblazeEndpoint"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "join('', [`https://streaming-production-spaces.ams3.cdn.digitaloceanspaces.com/`, context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].artistName, '/', context.isrc, '.wav'])"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "join('', [`https://streaming-production-spaces.ams3.cdn.digitaloceanspaces.com/`, `evearawav`, '/', `AEA2M2465862`, '.wav'])"
+                                        },
+                                        {
+                                            "type": "context-save",
+                                            "key": "wavFetchEndpoint"
+                                        },
+                                        {
+                                            "type": "gosub",
+                                            "adapterName": "freecords",
+                                            "workflowId": "getandputwav"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "enabled": null
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "getsongsik8Xvz1Tr",
+    "workflowId": "getsongsik8Xvz1Tr",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:55:55.337Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:55:55.336Z",
+    "modified": "2025-10-10T15:55:55.336Z",
+    "title": "Freecords Retrieve Songs"
+}

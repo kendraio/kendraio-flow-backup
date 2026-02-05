@@ -1,0 +1,183 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "flow_data",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query {\n    backstage_artists {\n        id\n        name\n    }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_artists",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "id",
+                    "headerName": "ID"
+                },
+                {
+                    "field": "name",
+                    "headerName": "Artist"
+                },
+                {
+                    "field": "update",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "{id: data.id, token: context.hasura.token}"
+                            },
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "variable-set",
+                                                "name": "flow_data"
+                                            },
+                                            {
+                                                "type": "launch",
+                                                "adapter": "backstage",
+                                                "workflowId": "updateartist"
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ],
+                                "blockComment": ""
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "delete",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "form",
+                                "label": "Delete"
+                            },
+                            {
+                                "type": "graphql",
+                                "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+                                "query": "mutation MyMutation(      $id: Int!    ) {  delete_backstage_artists_by_pk(id: $id) { name }}",
+                                "variables": {
+                                    "id": "data.id"
+                                },
+                                "headers": {
+                                    "x-hasura-admin-secret": "context.hasura.token"
+                                },
+                                "allowFirst": true,
+                                "allowEmpty": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Artist Name"
+                    }
+                }
+            },
+            "label": "Add Artist",
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "mutation MyMutation(\n    $name: String\n) \n{\n    insert_backstage_artists(\n        objects: [\n            {\n                name: $name\n            }\n        ]\n    ) {\n        returning {\n            id\n        }\n    }\n}",
+            "variables": {
+                "name": "data.name"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Dashboard",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "backstage",
+                            "workflowId": "dashboard"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "manageartists",
+    "workflowId": "manageartists",
+    "adapterName": "backstage",
+    "created": "2024-05-17T12:48:31.140Z",
+    "tags": [],
+    "updated": "2024-05-17T12:48:31.138Z",
+    "modified": "2024-05-17T12:48:31.138Z",
+    "title": "Kendraio Backstage Manage Artists"
+}

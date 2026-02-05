@@ -1,0 +1,252 @@
+{
+    "blocks": [
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add a new contributor",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "contributions",
+                            "workflowId": "contributors-add"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "context-save",
+            "key": "contributionsAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "query": {
+                    "user_field_names": "true"
+                },
+                "valueGetters": {
+                    "pathname": "data.contributorsPathname"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "useProxy": true,
+            "debug": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.errorMessage}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.results[*].omit(@, ['order']).merge(@, {\"idString\": to_string(id)} )",
+            "blockComment": "omit order + idString"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, \n    {\n        \"apikey\": $.context.contributionsAuth.apikey,\n        \"contributorsPathnameId\": join('', [$.context.contributionsAuth.contributorsPathname, @.idString, '/'])\n    }\n)",
+            "blockComment": "add path for http request"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "rowSelection": "single",
+                "sideBar": true
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "Contributor",
+                    "headerName": "Contributor"
+                },
+                {
+                    "field": "Notes",
+                    "headerName": "Notes"
+                },
+                {
+                    "field": "Notes2",
+                    "headerName": "Notes more"
+                },
+                {
+                    "field": "Active",
+                    "headerName": "Active"
+                },
+                {
+                    "headerName": "Edit",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "contributions",
+                                                "workflowId": "contributors-edit-record",
+                                                "context": {
+                                                    "id": "data.id",
+                                                    "contributor": "data.Contributor",
+                                                    "notes": "data.Notes",
+                                                    "notes2": "data.Notes2",
+                                                    "active": "data.Active"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Delete",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Delete",
+                                        "color": "warn",
+                                        "blocks": [
+                                            {
+                                                "type": "dialog",
+                                                "blocks": [
+                                                    {
+                                                        "type": "message",
+                                                        "title": "Are you sure you want to delete this contributor?",
+                                                        "message": "This action will permanently delete this contributor form the common database."
+                                                    },
+                                                    {
+                                                        "type": "actions",
+                                                        "buttons": [
+                                                            {
+                                                                "label": "Delete",
+                                                                "color": "warn",
+                                                                "blocks": [
+                                                                    {
+                                                                        "type": "http",
+                                                                        "method": "DELETE",
+                                                                        "endpoint": {
+                                                                            "protocol": "https:",
+                                                                            "host": "api.baserow.io/api/database",
+                                                                            "query": {
+                                                                                "user_field_names": "true"
+                                                                            },
+                                                                            "valueGetters": {
+                                                                                "pathname": "data.contributorsPathnameId"
+                                                                            }
+                                                                        },
+                                                                        "headers": {
+                                                                            "Content-Type": "'application/json'",
+                                                                            "Authorization": "data.apikey"
+                                                                        },
+                                                                        "useProxy": true
+                                                                    }
+                                                                ],
+                                                                "enabled": true
+                                                            },
+                                                            {
+                                                                "label": "Cancel Action",
+                                                                "blocks": [
+                                                                    {
+                                                                        "type": "init"
+                                                                    }
+                                                                ],
+                                                                "enabled": true
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<h3>All contributions Flows</h3>",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Go to Contributions",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "contributions",
+                            "workflowId": "contributions"
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Go to Projects",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "contributions",
+                            "workflowId": "projects"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "contributors",
+    "workflowId": "contributors",
+    "adapterName": "contributions",
+    "created": "2025-08-08T10:54:10.497Z",
+    "tags": [],
+    "updated": "2025-08-08T10:54:10.496Z",
+    "modified": "2025-08-08T10:54:10.496Z",
+    "title": "Contributors (Contributions)"
+}

@@ -1,0 +1,98 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "contextErrorKey": "formErrors.message",
+            "label": "Add",
+            "jsonSchema": {
+                "type": "object",
+                "title": "Add a contributor",
+                "properties": {
+                    "Contributor": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "Notes": {
+                        "type": "string",
+                        "title": "Notes"
+                    },
+                    "Notes2": {
+                        "type": "string",
+                        "title": "Notes 2"
+                    },
+                    "Active": {
+                        "type": "boolean",
+                        "title": "Active",
+                        "default": false
+                    }
+                },
+                "required": [
+                    "Contributor"
+                ]
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "formFields",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "contributionsAuth",
+            "blockComment": "contributionsAuth"
+        },
+        {
+            "type": "http",
+            "method": "POST",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.baserow.io/api/database",
+                "valueGetters": {
+                    "pathname": "data.contributorsPathname"
+                },
+                "query": {
+                    "user_field_names": true
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "Authorization": "data.apikey"
+            },
+            "payload": "context.formFields",
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.errorMessage}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "launch",
+            "adapter": "contributions",
+            "workflowId": "contributors",
+            "blockComment": "Go back to contributors table"
+        }
+    ],
+    "id": "contributorsAdd",
+    "workflowId": "contributorsAdd",
+    "adapterName": "contributions",
+    "created": "2025-01-20T15:49:41.411Z",
+    "tags": [],
+    "updated": "2025-01-20T15:49:41.411Z",
+    "modified": "2025-01-20T15:49:41.411Z",
+    "title": "Add Record Contributors"
+}

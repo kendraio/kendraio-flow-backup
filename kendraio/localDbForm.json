@@ -1,0 +1,50 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "db",
+            "operation": "get",
+            "adapterName": "schemas",
+            "schema": "store",
+            "skipFirst": true,
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<p>Display a Form from a Schema loaded with Load Schemas, doesn't seems to work</p>",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {},
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        }
+    ],
+    "id": "localDbForm",
+    "workflowId": "localDbForm",
+    "adapterName": "kendraio",
+    "created": "2025-02-17T11:53:32.798Z",
+    "tags": [
+        "sample"
+    ],
+    "updated": "2025-02-17T11:53:32.798Z",
+    "modified": "2025-02-17T11:53:32.798Z",
+    "title": "Local DB Schema-Form Flow Sample"
+}

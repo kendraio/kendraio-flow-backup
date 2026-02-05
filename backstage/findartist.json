@@ -1,0 +1,113 @@
+{
+    "blocks": [
+        {
+            "type": "context-save",
+            "key": "artist_id",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "switch",
+            "valueGetter": "context.artist_id",
+            "cases": [
+                {
+                    "value": "null",
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "graphql",
+                        "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+                        "query": "query MyQuery($id: Int!) {\n    backstage_artists_by_pk(id: $id) {\n        name\n        id\n    }\n}",
+                        "variables": {
+                            "id": "context.artist_id"
+                        },
+                        "headers": {
+                            "x-hasura-admin-secret": "data.token"
+                        },
+                        "allowFirst": false,
+                        "allowEmpty": false
+                    },
+                    {
+                        "type": "mapping",
+                        "mapping": "data.data.backstage_artists_by_pk",
+                        "blockComment": ""
+                    },
+                    {
+                        "type": "context-save",
+                        "key": "artist"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.artist",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Artist"
+                    }
+                }
+            },
+            "label": "Find Artist",
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query MyQuery($name: String) {\n  backstage_artists(where: {name: {_iregex: $name}}) {\n    id\n    name\n  }\n}",
+            "variables": {
+                "name": "data.name"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_artists",
+            "blockComment": ""
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select artist",
+            "labelGetter": "join(', ', [name])",
+            "valueField": "id",
+            "outputGetter": "@",
+            "blockComment": ""
+        }
+    ],
+    "id": "findartist",
+    "workflowId": "findartist",
+    "adapterName": "backstage",
+    "created": "2024-05-16T15:27:08.156Z",
+    "tags": [],
+    "updated": "2024-05-16T15:27:08.156Z",
+    "modified": "2024-05-16T15:27:08.156Z",
+    "title": "Kendraio Backstage Find Artist"
+}

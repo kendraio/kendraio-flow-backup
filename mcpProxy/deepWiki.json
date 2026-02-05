@@ -1,0 +1,61 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "repoName": {
+                        "type": "string",
+                        "title": "GitHub repo (owner/name)",
+                        "default": "kendraio/kendraio-app"
+                    }
+                },
+                "required": [
+                    "repoName"
+                ]
+            },
+            "uiSchema": {},
+            "emitOnInit": false,
+            "hasSubmit": true,
+            "blockComment": "Input the GitHub repository that DeepWiki should request"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "useProxy": false,
+            "endpoint": "http://127.0.0.1:8044/read_wiki_contents",
+            "headers": {
+                "Content-Type": "'application/json'"
+            },
+            "payload": "{ repoName: data.repoName }",
+            "skipInit": true,
+            "blockComment": "Call MCPO \u2192 DeepWiki tool"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "markdown((data && data[0])|| 'No text content returned from DeepWiki.')",
+            "blockComment": "Turn tool result into Markdown"
+        },
+        {
+            "type": "template",
+            "template": "{{{data}}}",
+            "blockComment": "Render Markdown nicely"
+        }
+    ],
+    "id": "deepWiki",
+    "workflowId": "deepWiki",
+    "adapterName": "mcpProxy",
+    "created": "2025-09-20T17:20:36.123Z",
+    "tags": [],
+    "updated": "2025-09-20T17:20:36.122Z",
+    "modified": "2025-09-20T17:20:36.122Z",
+    "title": "DeepWiki MCP Markdown article browser via Local MCPO Proxy"
+}

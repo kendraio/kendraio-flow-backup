@@ -1,0 +1,61 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "message": "This Flow should be run on https://kendraio-app-git-http-block-aws-signed-authenti-989852-kendraio.vercel.app",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ secretKey: ``, accessKeyId: `` }",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "credentials.aws",
+            "valueGetter": "data",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "`Hello world`",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Action",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "put",
+                            "useProxy": true,
+                            "responseType": "text",
+                            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/special_file.txt",
+                            "authentication": {
+                                "type": "aws-sigv4",
+                                "secretKeyGetter": "context.credentials.aws.secretKey",
+                                "accessKeyIdGetter": "context.credentials.aws.accessKeyId"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "s3Query",
+    "workflowId": "s3Query",
+    "adapterName": "example",
+    "created": "2025-03-06T14:59:24.114Z",
+    "tags": [],
+    "updated": "2025-03-06T14:59:24.114Z",
+    "modified": "2025-03-06T14:59:24.114Z",
+    "title": "Example S3 Query"
+}

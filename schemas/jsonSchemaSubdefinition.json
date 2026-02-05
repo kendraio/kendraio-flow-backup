@@ -1,0 +1,76 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "`{ \"type\": \"object\", \"title\":\"team\", \"properties\": { \"founders\": {\"type\": \"array\", \"items\": {\"type\": \"object\", \"properties\": {\"name\": {\"type\": \"string\", \"title\": \"name\"},\"title\": {\"type\": \"string\", \"title\": \"title\"}}}}}}`",
+            "blockComment": "JSON Object fragment with nested properties to include"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "team",
+            "blockComment": "Save to include"
+        },
+        {
+            "type": "mapping",
+            "mapping": "`{\"team\":{\"founders\":[{\"name\":\"bob\",\"title\":\"Most bob\"}]}}`",
+            "blockComment": "Default values to pre-populate form with"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "team": {
+                        "$ref": "#/definitions/context/team"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Form with definition included from context"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "json(data)",
+            "blockComment": "Convert data to JSON string to show in template for easy copy/pasting"
+        },
+        {
+            "type": "template",
+            "template": "{{{data}}}",
+            "blockComment": "Show JSON string in form for easy copying and pasting"
+        }
+    ],
+    "id": "jsonSchemaSubdefinition",
+    "workflowId": "jsonSchemaSubdefinition",
+    "adapterName": "schemas",
+    "created": "2023-09-07T14:56:30.964Z",
+    "tags": [],
+    "updated": "2023-09-07T14:56:30.964Z",
+    "modified": "2023-09-07T14:56:30.964Z",
+    "title": "Injected JSON Schema sub-definition"
+}

@@ -1,0 +1,58 @@
+{
+    "blocks": [
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Action",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "context",
+                            "contextBlocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "{file_name: `isrc`, track_url: `https://my.freecords.com/uploads/audio/fa2b32a4-33d8-4d0b-a1d1-1e1d3ee0315d/22de94ec-5645-4157-ab6a-57700f5b7244.mp3`}"
+                                },
+                                {
+                                    "type": "http",
+                                    "method": "post",
+                                    "useProxy": true,
+                                    "endpoint": {
+                                        "protocol": "https:",
+                                        "host": "convert-to-wav-392698016617.us-central1.run.app"
+                                    },
+                                    "skipInit": true
+                                }
+                            ],
+                            "blocks": [
+                                {
+                                    "type": "context-save",
+                                    "key": "state.convertedAudio"
+                                },
+                                {
+                                    "type": "debug",
+                                    "consoleLog": true
+                                }
+                            ],
+                            "contextPath": "convertedAudio"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "convertaudio",
+    "workflowId": "convertaudio",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:25:02.741Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:25:02.741Z",
+    "modified": "2025-10-08T16:25:02.741Z",
+    "title": "Flow"
+}

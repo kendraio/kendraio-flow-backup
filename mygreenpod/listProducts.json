@@ -1,0 +1,164 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "www.mygreenpod.com",
+                "pathname": "/wp-json/wc/v3/products",
+                "query": {
+                    "per_page": 100,
+                    "status": "publish"
+                },
+                "valueGetters": {
+                    "query": ""
+                }
+            },
+            "useProxy": true,
+            "followPaginationLinksMerged": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?total_sales>`5`]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                },
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "field": "id",
+                    "headerName": "ID"
+                },
+                {
+                    "field": "name",
+                    "headerName": "Name"
+                },
+                {
+                    "field": "total_sales",
+                    "headerName": "Total sales",
+                    "sort": "desc"
+                },
+                {
+                    "field": "price",
+                    "headerName": "Price"
+                },
+                {
+                    "field": "stock_quantity",
+                    "headerName": "Stock Quantity"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ items: data }",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Recalculate",
+            "hasSubmit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "price": {
+                                    "type": "string"
+                                },
+                                "Quantity": {
+                                    "type": "number",
+                                    "title": "Quantity",
+                                    "default": 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "items": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Name",
+                        "Price",
+                        "Quantity"
+                    ],
+                    "allowAdd": false,
+                    "allowRemove": false,
+                    "items": {
+                        "name": {
+                            "ui:widget": "readonly"
+                        },
+                        "status": {
+                            "ui:widget": "readonly"
+                        },
+                        "price": {
+                            "ui:widget": "readonly"
+                        }
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ items: data.items, total: currency(product(sum(data.items[].product(product(to_number(price), `100`), Quantity) || `[]`), `0.01`), 'en-GB', 'GBP') }",
+            "blockComment": ""
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "<p>Hello,</p><p>Here is my order:</p><ul>{{#each data.items}}<li><b>{{Quantity}} x</b> {{name}} ({{status}}) - &pound;{{price}}</li>{{/each}}</ul><p>I make that a total of {{data.total}}</p><p>Thanks!</p>"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "listProducts",
+    "workflowId": "listProducts",
+    "adapterName": "mygreenpod",
+    "created": "2023-05-23T16:51:13.564Z",
+    "tags": [
+        "hidden",
+        " delete"
+    ],
+    "updated": "2023-05-23T16:51:13.563Z",
+    "modified": "2023-05-23T16:51:13.563Z",
+    "title": "Listing product data from mygreenpod.com"
+}

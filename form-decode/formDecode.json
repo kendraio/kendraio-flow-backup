@@ -1,0 +1,48 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "`{\n    \"question_one\": \"what is your name???\",\n    \"question_two\": \"What is your surname?\",\n     \"question_three\": \"What is your age?\"\n}`",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "form",
+            "label": "Send survey",
+            "hasSubmit": false,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "question_one": {
+                        "type": "string"
+                    },
+                    "question_two": {
+                        "type": "string"
+                    },
+                    "question_three": {
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "formDecode",
+    "workflowId": "formDecode",
+    "adapterName": "form-decode",
+    "created": "2023-09-28T13:17:49.752Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2023-09-28T13:17:49.752Z",
+    "modified": "2023-09-28T13:17:49.752Z",
+    "title": "Form Decode Mock Example"
+}

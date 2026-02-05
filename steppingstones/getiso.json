@@ -1,0 +1,55 @@
+{
+    "blocks": [
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ \n    country: context.spreadsheetData[0].iso, \n    status: data \n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "country",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.spreadsheetData[1:]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "spreadsheetData",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.country",
+            "blockComment": ""
+        }
+    ],
+    "id": "getiso",
+    "workflowId": "getiso",
+    "adapterName": "steppingstones",
+    "created": "2025-03-27T14:22:03.356Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2025-03-27T14:22:03.356Z",
+    "modified": "2025-03-27T14:22:03.356Z",
+    "title": "Flow"
+}

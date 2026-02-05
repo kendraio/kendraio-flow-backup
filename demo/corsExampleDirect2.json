@@ -1,0 +1,70 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "reqres.in",
+                "pathname": "/api/users/1"
+            },
+            "headers": {
+                "x-api-key": "`reqres-free-v1`"
+            },
+            "skipInit": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "reqres.in",
+                "pathname": "/api/users/2"
+            },
+            "headers": {
+                "x-api-key": "`reqres-free-v1`"
+            },
+            "skipInit": false,
+            "blockComment": "test 2"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "corsExampleDirect2",
+    "workflowId": "corsExampleDirect2",
+    "adapterName": "demo",
+    "created": "2025-08-14T17:56:45.805Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2025-08-14T17:56:45.805Z",
+    "modified": "2025-08-14T17:56:45.805Z",
+    "title": "CORS Example"
+}

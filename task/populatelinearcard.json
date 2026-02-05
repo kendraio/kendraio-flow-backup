@@ -1,0 +1,81 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "state.local.issue.merge(@, {\n    createdAtRead: formatDate(createdAt, `T, dd/MM/yyyy`),\n    assignee: assignee.name\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "message",
+            "title": "{{data.title}}",
+            "blockComment": ""
+        },
+        {
+            "type": "message",
+            "message": "{{data.description}}",
+            "blockComment": ""
+        },
+        {
+            "type": "message",
+            "message": "Created at {{createdAtRead}} by {{data.creator.name}}",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[data][?updatedAt != createdAtRead]",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "message",
+                    "message": "Edited at {{data.updatedAt}}"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[state.local.issue][?assignee != null]",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "message",
+                    "message": "Assigned to {{data.assignee.name}}"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[state.local.issue][?archivedAt != null]",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "data.merge(@, {archivedAt: formatDate(archivedAt, 'T, dd/MM/yyyy')})"
+                },
+                {
+                    "type": "message",
+                    "message": "Archived at {{data.archivedAt}}"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "populatelinearcard",
+    "workflowId": "populatelinearcard",
+    "adapterName": "task",
+    "created": "2024-10-02T12:32:37.321Z",
+    "tags": [],
+    "updated": "2024-10-02T12:32:37.321Z",
+    "modified": "2024-10-02T12:32:37.321Z",
+    "title": "Kendraio Task Populate Linear Card"
+}

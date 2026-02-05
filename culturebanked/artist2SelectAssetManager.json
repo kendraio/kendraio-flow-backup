@@ -1,0 +1,79 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.managerSelected",
+            "blockComment": "local.managerSelected"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": "Hasura Key"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "query GetAllManagers {\n    asset_manager {\n        asset_manager_id\n        name\n    }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.asset_manager",
+            "blockComment": "license_details"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": data[*].{\n    \"title\": name,\n    \"const\": asset_manager_id\n  }\n}",
+            "blockComment": "anyOf"
+        },
+        {
+            "type": "context-save",
+            "key": "managers",
+            "blockComment": "managers"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"managerSelected\": to_number(state.local.managerSelected)\n}",
+            "blockComment": "licenseSelected"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "managerSelected": {
+                        "title": "Select an asset manager",
+                        "$ref": "#/definitions/context/managers"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2SelectAssetManager",
+    "workflowId": "artist2SelectAssetManager",
+    "adapterName": "culturebanked",
+    "created": "2025-03-25T17:51:15.246Z",
+    "tags": [],
+    "updated": "2025-03-25T17:51:15.246Z",
+    "modified": "2025-03-25T17:51:15.246Z",
+    "title": "Select Asset Manager"
+}

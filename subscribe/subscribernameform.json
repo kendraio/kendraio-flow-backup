@@ -1,0 +1,54 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "null",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-get",
+            "name": "subscriber",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "subscriber",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Subscriber"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "subscriber",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "subscriber",
+            "blockComment": ""
+        }
+    ],
+    "id": "subscribernameform",
+    "workflowId": "subscribernameform",
+    "adapterName": "subscribe",
+    "created": "2024-10-18T14:43:12.823Z",
+    "tags": [],
+    "updated": "2024-10-18T14:43:12.823Z",
+    "modified": "2024-10-18T14:43:12.823Z",
+    "title": "Subscriber Name Form"
+}

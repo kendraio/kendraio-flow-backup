@@ -1,0 +1,85 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "reqres.in",
+                "pathname": "/api/users",
+                "query": "{ page: 1, per_page: 1 }"
+            },
+            "headers": {
+                "x-api-key": "`reqres-free-v1`"
+            },
+            "skipInit": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {}
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "type": "number",
+                        "title": "Page",
+                        "default": 1
+                    }
+                }
+            },
+            "uiSchema": {},
+            "emitOnInit": true,
+            "hasSubmit": false,
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "reqres.in",
+                "pathname": "/api/user",
+                "valueGetters": {
+                    "query": "{ id: data.page}"
+                }
+            },
+            "headers": {
+                "x-api-key": "`reqres-free-v1`"
+            },
+            "skipInit": true,
+            "blockComment": "test 2"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "corsExampleDirect",
+    "workflowId": "corsExampleDirect",
+    "adapterName": "demo",
+    "created": "2025-08-19T09:23:09.731Z",
+    "tags": [],
+    "updated": "2025-08-19T09:23:09.731Z",
+    "modified": "2025-08-19T09:23:09.731Z",
+    "title": "Direct CORS Example"
+}

@@ -1,0 +1,102 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "message": "To use this Flow, please first log in at https://kendraio-ik8xvz1tr-kendraio.vercel.app/connect",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "api",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "GET",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://streaming-production-spaces.ams3.cdn.digitaloceanspaces.com/evearawav/AEA2M2465862.wav"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "file-input",
+            "label": "Import",
+            "accept": [
+                "csv",
+                "json",
+                "xml",
+                "mp3"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "BPUT",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "bput",
+                            "useProxy": true,
+                            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/5063011806561/GX3HH2257675.wav",
+                            "authentication": {
+                                "type": "aws-sigv4",
+                                "secretKeyGetter": "context.api.secretKey",
+                                "accessKeyIdGetter": "context.api.accessKeyId"
+                            },
+                            "enabled": true
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        }
+    ],
+    "id": "getimportbput",
+    "workflowId": "getimportbput",
+    "adapterName": "freecords",
+    "created": "2025-04-16T16:09:33.893Z",
+    "tags": [
+        "delete",
+        "hidden"
+    ],
+    "updated": "2025-04-16T16:09:33.893Z",
+    "modified": "2025-04-16T16:09:33.893Z",
+    "title": "Get Import BPUT"
+}

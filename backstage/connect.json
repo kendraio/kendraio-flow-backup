@@ -1,0 +1,38 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "label": "Authenticate",
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "hasura",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "backstage",
+    "created": "2024-07-09T16:38:21.038Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2024-07-09T16:38:21.038Z",
+    "modified": "2024-07-09T16:38:21.038Z",
+    "title": "Kendraio Backstage Dashboard"
+}

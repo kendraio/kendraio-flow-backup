@@ -1,0 +1,83 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "Don't forget to login and run this Flow  https://kendraio-app-git-http-block-aws-signed-authenti-a8a3cb-kendraio.vercel.app/freecords/image",
+            "blockComment": "Prompt user to authenticate"
+        },
+        {
+            "type": "init",
+            "blockComment": "Start the flow"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": "Grab your B2 creds from Variables"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "Inspect BPUT response"
+        },
+        {
+            "type": "context-save",
+            "key": "api",
+            "blockComment": "Save creds into context.api"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://streaming-production-spaces.ams3.cdn.digitaloceanspaces.com/evearawav/AEA2M2465862.wav",
+            "responseType": "arraybuffer",
+            "headers": {},
+            "blockComment": "Fetch the PNG as binary"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "Inspect GET result (data, status, size, hash)"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data.data }",
+            "blockComment": "Move the raw bytes into model.content for BPUT"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": "Verify mapping result"
+        },
+        {
+            "type": "http",
+            "method": "bput",
+            "useProxy": true,
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/image-test.png",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "blockComment": "Upload those bytes to B2 via SigV4 (using context.api)"
+        }
+    ],
+    "id": "audiotest",
+    "workflowId": "audiotest",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:54:07.535Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:54:07.535Z",
+    "modified": "2025-10-10T15:54:07.535Z",
+    "title": "Freecords Audio Test"
+}

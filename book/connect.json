@@ -1,0 +1,39 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "label": "Authenticate",
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "fireflies-hasura",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "book",
+    "created": "2025-09-10T15:04:07.366Z",
+    "tags": [
+        "remove",
+        "hidden"
+    ],
+    "updated": "2025-09-10T15:04:07.366Z",
+    "modified": "2025-09-10T15:04:07.366Z",
+    "title": "CultureBanked Book 1"
+}

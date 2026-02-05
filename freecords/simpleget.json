@@ -1,0 +1,45 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "This Flow should be run on https://kendraio-ik8xvz1tr-kendraio.vercel.app",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "GET",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://streaming-production-spaces.ams3.cdn.digitaloceanspaces.com/evearawav/AEA2M2465862.wav"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        }
+    ],
+    "id": "simpleget",
+    "workflowId": "simpleget",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:56:29.636Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:56:29.636Z",
+    "modified": "2025-10-10T15:56:29.636Z",
+    "title": "Simple Get"
+}

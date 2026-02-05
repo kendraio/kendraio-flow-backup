@@ -1,0 +1,116 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "This flow decodes data that has been encoded into the current web link, and saves it to LocalStorage.",
+            "blockComment": "This flow decodes data that has been encoded into the current web link, and saves it to LocalStorage."
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "savedData",
+            "default": null,
+            "blockComment": "Try to load \"savedData\" variable from LocalStorage, defaulting to null if not found"
+        },
+        {
+            "type": "template",
+            "template": "This is existing data that was saved to LocalStorage:",
+            "blockComment": "This is existing data that was saved to LocalStorage"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{   type: `\"object\"`,\n    title: `\"Survey\"`,\n    \"properties\": {\n            \"question_one\": { \"type\": `\"string\"`, \"title\": data.question_one, \"default\": \"\"},\n            \"question_two\": { \"type\": `\"string\"`, \"title\": data.question_two, \"default\": \"\"},\n            \"question_three\": { \"type\": `\"string\"`, \"title\": data.question_three, \"default\": \"\"},\n            \"question_four\": { \"type\": `\"string\"`, \"title\": data.question_four, \"default\": \"\"}\n    }\n}",
+            "blockComment": "Transform data for form"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Send",
+            "hasSubmit": true,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "questions": {
+                        "$ref": "#/definitions/context/decodedObj"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "split(context.app.location.search, `?`)[1]",
+            "blockComment": "Extracts data from URL, getting data after the question mark"
+        },
+        {
+            "type": "mapping",
+            "mapping": "parseQs(data)",
+            "blockComment": "Decodes the data from URL query string format to properties"
+        },
+        {
+            "type": "parse-data",
+            "blockComment": "Convert URL data to JSON"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{   type: `\"object\"`,\n    title: `\"Survey\"`,\n    \"properties\": {\n            \"question_one\": { \"type\": `\"string\"`, \"title\": data.question_one, \"default\": \"\"},\n            \"question_two\": { \"type\": `\"string\"`, \"title\": data.question_two, \"default\": \"\"},\n            \"question_three\": { \"type\": `\"string\"`, \"title\": data.question_three, \"default\": \"\"},\n            \"question_four\": { \"type\": `\"string\"`, \"title\": data.question_four, \"default\": \"\"}\n    }\n}\n",
+            "blockComment": "Transform data for form"
+        },
+        {
+            "type": "context-save",
+            "key": "decodedObj",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Send",
+            "hasSubmit": true,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "questions": {
+                        "$ref": "#/definitions/context/decodedObj"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "These are new objects from the URL, combined with the existing objects:",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "savedData",
+            "valueGetter": "json(data)",
+            "blockComment": "Saves a JSON version of the current data to a LocalStorage variable called \"savedData\""
+        },
+        {
+            "type": "template",
+            "template": "<a href='https://app.kendra.io/form/formEncode'>Flow to encode data as links</a><br>",
+            "blockComment": ""
+        }
+    ],
+    "id": "formDecode",
+    "workflowId": "formDecode",
+    "adapterName": "form",
+    "created": "2023-09-07T14:55:41.568Z",
+    "tags": [],
+    "updated": "2023-09-07T14:55:41.568Z",
+    "modified": "2023-09-07T14:55:41.568Z",
+    "title": "Form Decode"
+}

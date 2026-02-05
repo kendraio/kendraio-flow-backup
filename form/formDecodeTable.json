@@ -1,0 +1,131 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "savedData",
+            "default": null,
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "localStorageData",
+            "valueGetter": "data",
+            "blockComment": "Save localStorage savedData to context"
+        },
+        {
+            "type": "mapping",
+            "mapping": "split(context.app.location.search, `?`)[1]",
+            "blockComment": "Extracts data from URL, getting data after the question mark"
+        },
+        {
+            "type": "mapping",
+            "mapping": "parseQs(data)",
+            "blockComment": "Decodes the data from URL query string format to properties"
+        },
+        {
+            "type": "parse-data",
+            "blockComment": "Convert URL data to JSON"
+        },
+        {
+            "type": "context-save",
+            "key": "urlData",
+            "valueGetter": "data",
+            "blockComment": "Save url data to context"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[context.localStorageData, data][]",
+            "blockComment": "Merge url data with data in local storage"
+        },
+        {
+            "type": "variable-set",
+            "name": "savedData",
+            "valueGetter": "json(data)",
+            "blockComment": "Saves data to a LocalStorage variable called \"savedData\""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{   type: `\"object\"`,\n    title: `\"Survey\"`,\n    \"properties\": {\n            \"question_one\": { \"type\": `\"string\"`, \"title\": context.urlData.question_one, \"default\": \"\"},\n            \"question_two\": { \"type\": `\"string\"`, \"title\": context.urlData.question_two, \"default\": \"\"},\n            \"question_three\": { \"type\": `\"string\"`, \"title\": context.urlData.question_three, \"default\": \"\"},\n            \"question_four\": { \"type\": `\"string\"`, \"title\": context.urlData.question_four, \"default\": \"\"}\n    }\n}",
+            "blockComment": "Transforming data for form"
+        },
+        {
+            "type": "context-save",
+            "key": "formDecoded",
+            "valueGetter": "data",
+            "blockComment": "Save data formatted for the form"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": true,
+            "showState": true,
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Send",
+            "hasSubmit": true,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "questions": {
+                        "$ref": "#/definitions/context/formDecoded"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Display data in context.formDecoded"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "savedData",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[?keys(@) != `[]`]",
+            "blockComment": "remove empty objects"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "headerName": "Question One",
+                    "field": "question_one"
+                },
+                {
+                    "headerName": "Question Two",
+                    "field": "question_two"
+                },
+                {
+                    "headerName": "Question Three",
+                    "field": "question_three"
+                },
+                {
+                    "headerName": "Question Four",
+                    "field": "question_four"
+                }
+            ],
+            "blockComment": "Display data in localStorage, saveDate variable"
+        }
+    ],
+    "id": "formDecodeTable",
+    "workflowId": "formDecodeTable",
+    "adapterName": "form",
+    "created": "2023-09-19T16:08:57.829Z",
+    "tags": [],
+    "updated": "2023-09-19T16:08:57.829Z",
+    "modified": "2023-09-19T16:08:57.829Z",
+    "title": "Form Decode with Table"
+}

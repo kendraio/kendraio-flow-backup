@@ -1,0 +1,218 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "googleAuth",
+            "contextBlocks": [
+                {
+                    "type": "auth0",
+                    "provider": "google-oauth2"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "context.googleAuth.access_token"
+                },
+                {
+                    "type": "context-save",
+                    "key": "state.token"
+                },
+                {
+                    "type": "http",
+                    "method": "get",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "www.googleapis.com",
+                        "pathname": "/drive/v3/files"
+                    },
+                    "authentication": {
+                        "type": "bearer",
+                        "valueGetters": {
+                            "jwt": "context.googleAuth.access_token"
+                        }
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.files",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true,
+                    "wrapText": true,
+                    "autoHeight": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "name",
+                    "headerName": "File"
+                },
+                {
+                    "field": "comments",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "debug",
+                                "open": 1,
+                                "showData": true,
+                                "showContext": false,
+                                "showState": false
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "{id: data.id, token: state.local.token}"
+                            },
+                            {
+                                "type": "http",
+                                "method": "get",
+                                "useProxy": true,
+                                "endpoint": {
+                                    "protocol": "https:",
+                                    "host": "www.googleapis.com",
+                                    "valueGetters": {
+                                        "pathname": "join('', ['/drive/v3/files/', data.id, '/comments'])"
+                                    },
+                                    "query": {
+                                        "fields": "*"
+                                    }
+                                },
+                                "authentication": {
+                                    "type": "bearer",
+                                    "valueGetters": {
+                                        "jwt": "data.token"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "mapping",
+                                "mapping": "data.comments[*].merge(@, { createdTime:  formatDate(createdTime, 'yyyy/MM/dd'),modifiedTime:  formatDate(modifiedTime, 'yyyy/MM/dd'),author:   author.displayName   })"
+                            },
+                            {
+                                "type": "context-save",
+                                "key": "saved"
+                            },
+                            {
+                                "type": "grid",
+                                "gridOptions": {
+                                    "pagination": true,
+                                    "paginationPageSize": 20,
+                                    "defaultColDef": {
+                                        "sortable": true,
+                                        "resizable": true,
+                                        "wrapText": true,
+                                        "autoHeight": true
+                                    },
+                                    "autoSizeStrategy": {
+                                        "type": "fitCellContents"
+                                    }
+                                },
+                                "columnDefs": [
+                                    {
+                                        "field": "content",
+                                        "headerName": "Comment"
+                                    },
+                                    {
+                                        "field": "author",
+                                        "headerName": "Author"
+                                    },
+                                    {
+                                        "field": "createdTime",
+                                        "headerName": "Created"
+                                    },
+                                    {
+                                        "field": "modifiedTime",
+                                        "headerName": "Modified"
+                                    },
+                                    {
+                                        "field": "resolved",
+                                        "headerName": "Resolved?"
+                                    },
+                                    {
+                                        "field": "replies",
+                                        "cellRenderer": "workflowRenderer",
+                                        "cellRendererParams": {
+                                            "blocks": [
+                                                {
+                                                    "type": "mapping",
+                                                    "mapping": "data.replies[*].merge(@, {author: author.displayName, createdTime:  formatDate(createdTime, 'yyyy/MM/dd'), modifiedTime:  formatDate(modifiedTime, 'yyyy/MM/dd')})"
+                                                },
+                                                {
+                                                    "type": "grid",
+                                                    "gridOptions": {
+                                                        "pagination": true,
+                                                        "paginationPageSize": 20,
+                                                        "defaultColDef": {
+                                                            "sortable": true,
+                                                            "resizable": true,
+                                                            "wrapText": true,
+                                                            "autoHeight": true
+                                                        }
+                                                    },
+                                                    "columnDefs": [
+                                                        {
+                                                            "headerName": "Reply",
+                                                            "field": "content"
+                                                        },
+                                                        {
+                                                            "headerName": "Author",
+                                                            "field": "author"
+                                                        },
+                                                        {
+                                                            "field": "createdTime",
+                                                            "headerName": "Created"
+                                                        },
+                                                        {
+                                                            "field": "modifiedTime",
+                                                            "headerName": "Modified"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "listfilesandcomments",
+    "workflowId": "listfilesandcomments",
+    "adapterName": "googledrive",
+    "created": "2024-05-23T14:17:55.747Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-05-23T14:17:55.746Z",
+    "modified": "2024-05-23T14:17:55.746Z",
+    "title": "List Files"
+}

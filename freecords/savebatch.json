@@ -1,0 +1,22 @@
+{
+    "blocks": [
+        {
+            "type": "db",
+            "adapterName": "ddex",
+            "schema": "batches",
+            "operation": "add",
+            "blockComment": ""
+        }
+    ],
+    "id": "savebatch",
+    "workflowId": "savebatch",
+    "adapterName": "freecords",
+    "created": "2025-01-31T19:03:39.513Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-01-31T19:03:39.513Z",
+    "modified": "2025-01-31T19:03:39.513Z",
+    "title": "Freecords Save Batch"
+}

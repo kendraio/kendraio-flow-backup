@@ -1,0 +1,33 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[data][?updatedAt != createdAtRead]",
+            "blockComment": ""
+        },
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "message",
+                    "message": "Edited at {{data.updatedAt}}"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "updatedissue",
+    "workflowId": "updatedissue",
+    "adapterName": "task",
+    "created": "2025-02-05T17:26:59.897Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-02-05T17:26:59.896Z",
+    "modified": "2025-02-05T17:26:59.896Z",
+    "title": "Display Issue Update Time"
+}

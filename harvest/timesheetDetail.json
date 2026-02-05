@@ -1,0 +1,167 @@
+{
+    "blocks": [
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Go back",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "harvest",
+                            "workflowId": "timesheet"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<h2>{{{ context.queryParams.name  }}}</h2>",
+            "blockComment": ""
+        },
+        {
+            "type": "init",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "!data || {\n    \"token\": context.queryParams.token,\n    \"accountID\": context.queryParams.accountId,\n    \"from\": context.queryParams.from,\n    \"to\": context.queryParams.to\n}",
+            "blockComment": "Saving query params as data"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.harvestapp.com/api/v2",
+                "pathname": "/time_entries",
+                "valueGetters": {
+                    "query": "{ from: context.queryParams.from, to: context.queryParams.to}"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "User-Agent": "'Harvest API Example'",
+                "harvest-account-ID": "data.accountID",
+                "authorization": "data.token"
+            },
+            "useProxy": true,
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "Error with submission:<p>{{data.error.error}} - {{data.error.error_description}}</p>"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.time_entries",
+            "cases": [
+                {
+                    "value": null,
+                    "blocks": []
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "card",
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "API call was successful!"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.time_entries",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "timeEntriesSaved",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "headerName": "Date",
+                    "field": "spent_date"
+                },
+                {
+                    "headerName": "Task",
+                    "field": "task.name"
+                },
+                {
+                    "headerName": "Notes",
+                    "field": "notes"
+                },
+                {
+                    "headerName": "Started",
+                    "field": "started_time"
+                },
+                {
+                    "headerName": "Ended",
+                    "field": "ended_time"
+                },
+                {
+                    "headerName": "Hours",
+                    "field": "hours"
+                },
+                {
+                    "headerName": "Full Date",
+                    "field": "created_at"
+                },
+                {
+                    "headerName": "Client",
+                    "field": "client.name"
+                },
+                {
+                    "headerName": "Project",
+                    "field": "project.name"
+                },
+                {
+                    "headerName": "Billable Rate",
+                    "field": "billable_rate"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "timesheetDetail",
+    "workflowId": "timesheetDetail",
+    "adapterName": "harvest",
+    "created": "2024-02-02T14:07:50.129Z",
+    "tags": [],
+    "updated": "2024-02-02T14:07:50.129Z",
+    "modified": "2024-02-02T14:07:50.129Z",
+    "title": "Harvest timesheet detail"
+}

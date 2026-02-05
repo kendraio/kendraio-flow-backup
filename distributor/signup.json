@@ -1,0 +1,62 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "label": "Sign up",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "password",
+                        "title": "Password"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Full name"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "auth.kendra.io",
+                "pathname": "/dbconnections/signup"
+            },
+            "payload": "{name: data.name, email: data.email, password: data.password, client_id: `cgW1ngajSlWUwSpF2KHq4MuiC29x05cv`, connection: `demodsp1` }",
+            "onError": {
+                "blocks": [
+                    {
+                        "type": "mapping",
+                        "mapping": "data.error"
+                    },
+                    {
+                        "type": "debug"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        }
+    ],
+    "id": "signup",
+    "workflowId": "signup",
+    "adapterName": "distributor",
+    "created": "2024-09-19T12:21:28.034Z",
+    "tags": [],
+    "updated": "2024-09-19T12:21:28.034Z",
+    "modified": "2024-09-19T12:21:28.034Z",
+    "title": "Sign up (Distributor)"
+}

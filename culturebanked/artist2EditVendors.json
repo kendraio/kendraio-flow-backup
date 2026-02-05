@@ -1,0 +1,93 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"id\": to_number(context.queryParams.id)\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "query GetVendorsById($vendor_id: Int!) {\n  vendors(limit: 1, where: { vendor_id: { _eq: $vendor_id } }) {\n   vendor_id\n    name\n\t}\n}",
+            "variables": {
+                "vendor_id": "data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.vendors[0]",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "title": "Name",
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "mutation UpdateVendorById($vendor_id: Int!, $new_name: String!) {\n  update_vendors(\n    where: { vendor_id: { _eq: $vendor_id } },\n    _set: { name: $new_name }\n  ) {\n    returning {\n      vendor_id\n      name\n    }\n  }\n}",
+            "variables": {
+                "vendor_id": "data.vendor_id",
+                "new_name": "data.name"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to Database",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "culturebanked",
+                            "workflowId": "artist2Database"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2EditVendors",
+    "workflowId": "artist2EditVendors",
+    "adapterName": "culturebanked",
+    "created": "2025-01-30T15:32:57.903Z",
+    "tags": [],
+    "updated": "2025-01-30T15:32:57.903Z",
+    "modified": "2025-01-30T15:32:57.903Z",
+    "title": "Edit Vendors Details"
+}

@@ -1,0 +1,194 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords"
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": "See if keys are loaded"
+        },
+        {
+            "type": "context-save",
+            "key": "api"
+        },
+        {
+            "type": "message",
+            "message": "About to load local 72x72 icon"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "/assets/icons/icon-72x72.png",
+            "responseType": "arraybuffer",
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": "Load local 72x72 icon"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data }",
+            "blockComment": "Map fetched bytes to content for upload"
+        },
+        {
+            "type": "message",
+            "message": "About to upload 72x72 icon to freecords bucket; this step should store the file at icon-72x72.png."
+        },
+        {
+            "type": "http",
+            "method": "BPUT",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-72x72.png",
+            "useProxy": true,
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "headers": {
+                "Content-Type": "'image/png'"
+            },
+            "storeMetadataInContext": false,
+            "blockComment": "Upload 72x72 icon to freecords"
+        },
+        {
+            "type": "message",
+            "message": "Finished upload attempt for 72x72 to freecords; this step should store the file at icon-72x72.png."
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": true,
+            "showContext": true,
+            "blockComment": "Debug after 72x72 upload"
+        },
+        {
+            "type": "message",
+            "message": "About to GET 72x72 icon from freecords for verification; this step should return image bytes."
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-72x72.png",
+            "useProxy": true,
+            "responseType": "arraybuffer",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": "Verify 72x72 icon from freecords"
+        },
+        {
+            "type": "message",
+            "message": "Finished GET attempt for 72x72 from freecords; this step should provide image bytes for verification."
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": true,
+            "showContext": true,
+            "blockComment": "Debug after 72x72 verification GET"
+        },
+        {
+            "type": "message",
+            "message": "About to load local 96x96 icon"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "/assets/icons/icon-96x96.png",
+            "responseType": "arraybuffer",
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": "Load local 96x96 icon"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data }",
+            "blockComment": "Map fetched bytes to content for upload"
+        },
+        {
+            "type": "message",
+            "message": "About to upload 96x96 icon to freecords bucket; this step should store the file at icon-96x96.png."
+        },
+        {
+            "type": "http",
+            "method": "BPUT",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-96x96.png",
+            "useProxy": true,
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "headers": {
+                "Content-Type": "'image/png'"
+            },
+            "storeMetadataInContext": false,
+            "blockComment": "Upload 96x96 icon to freecords"
+        },
+        {
+            "type": "message",
+            "message": "Finished upload attempt for 96x96 to freecords; this step should store the file at icon-96x96.png."
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": true,
+            "showContext": true,
+            "blockComment": "Debug after 96x96 upload"
+        },
+        {
+            "type": "message",
+            "message": "About to GET 96x96 icon from freecords for verification; this step should return image bytes."
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-96x96.png",
+            "useProxy": true,
+            "responseType": "arraybuffer",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": "Verify 96x96 icon from freecords"
+        },
+        {
+            "type": "message",
+            "message": "Finished GET attempt for 96x96 from freecords; this step should provide image bytes for verification."
+        },
+        {
+            "type": "debug",
+            "open": 0,
+            "showData": true,
+            "showContext": true,
+            "blockComment": "Debug after 96x96 verification GET"
+        }
+    ],
+    "id": "imagedoublesj2Xk1En6H",
+    "workflowId": "imagedoublesj2Xk1En6H",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:38:01.049Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:38:01.049Z",
+    "modified": "2025-10-08T16:38:01.049Z",
+    "title": "Double image upload test"
+}

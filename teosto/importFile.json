@@ -1,0 +1,43 @@
+{
+    "blocks": [
+        {
+            "type": "file-input",
+            "label": "Import Works",
+            "accept": [
+                "json"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "parse-data",
+            "csvOptions": {
+                "header": true,
+                "skipEmptyLines": true
+            },
+            "xmlOptions": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "variable-set",
+            "name": "teosto-works",
+            "blockComment": ""
+        }
+    ],
+    "id": "importFile",
+    "workflowId": "importFile",
+    "adapterName": "teosto",
+    "created": "2025-05-21T09:21:28.940Z",
+    "tags": [
+        "remove",
+        "hidden"
+    ],
+    "updated": "2025-05-21T09:21:28.940Z",
+    "modified": "2025-05-21T09:21:28.940Z",
+    "title": "Import unidentified works file"
+}

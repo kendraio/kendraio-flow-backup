@@ -1,0 +1,68 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "Edit product details below to generate a link with those details encoded in the link. <br> Clicking on the link should populate LocalStorage with the item details. <br> Multiple items can be stored.",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Enter product details",
+            "hasSubmit": false,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "vendor": {
+                        "type": "string",
+                        "title": "Vendor",
+                        "default": "Example.com"
+                    },
+                    "productName": {
+                        "type": "string",
+                        "title": "Product name",
+                        "default": "Product name"
+                    },
+                    "productId": {
+                        "type": "string",
+                        "title": "Product ID",
+                        "default": "Product ID"
+                    },
+                    "cost": {
+                        "type": "number",
+                        "title": "Cost",
+                        "default": 1
+                    },
+                    "currency": {
+                        "type": "string",
+                        "title": "Currency",
+                        "default": "GBP"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{content:json(data)}"
+        },
+        {
+            "type": "mapping",
+            "mapping": "qs(data)"
+        },
+        {
+            "type": "template",
+            "template": "<a href='https://app.kendra.io/cart/decode?{{data}}'>https://app.kendra.io/cart/decode?{{data}}</a>",
+            "blockComment": ""
+        }
+    ],
+    "id": "encode",
+    "workflowId": "encode",
+    "adapterName": "cart",
+    "created": "2023-06-20T10:47:36.335Z",
+    "tags": [],
+    "updated": "2023-06-20T10:47:36.335Z",
+    "modified": "2023-06-20T10:47:36.335Z",
+    "title": "Flow to encode product data in links"
+}

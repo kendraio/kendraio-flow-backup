@@ -1,0 +1,80 @@
+{
+    "blocks": [
+        {
+            "type": "template",
+            "template": "<h4>String of schema</h4>",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": false,
+            "schemaGetter": "{\"jsonSchema\": {\"type\": \"object\", \"properties\": {\"firstName\": {\"type\": \"string\", \"title\": \"First Name\"}, \"lastName\": {\"type\": \"string\", \"title\": \"Last Name\"}}}}",
+            "blockComment": "string direclty, containing json object"
+        },
+        {
+            "type": "template",
+            "template": "<h4>String of context</h4>",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "`https://test-library.murmurations.network/v2/schemas/people_schema-v0.1.0`",
+            "blockComment": ""
+        },
+        {
+            "type": "json-dereference"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"jsonSchema\": \"data\"\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "saved"
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": false,
+            "schemaGetter": "context.saved",
+            "blockComment": "string directly, with context"
+        },
+        {
+            "type": "template",
+            "template": "<h4>String of data</h4>",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.saved",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": false,
+            "schemaGetter": "data",
+            "blockComment": "string directly, as data"
+        }
+    ],
+    "id": "schemaForm",
+    "workflowId": "schemaForm",
+    "adapterName": "kendraio",
+    "created": "2025-02-26T15:53:26.905Z",
+    "tags": [
+        "sample"
+    ],
+    "updated": "2025-02-26T15:53:26.905Z",
+    "modified": "2025-02-26T15:53:26.905Z",
+    "title": "simple test schema form "
+}

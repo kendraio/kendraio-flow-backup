@@ -1,0 +1,130 @@
+{
+    "blocks": [
+        {
+            "type": "context-save",
+            "key": "assetId",
+            "blockComment": "assetId"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": "hasura"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "query GetAllOwners {\n    owners {\n        owner_id\n        name\n    }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.owners",
+            "blockComment": "results"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": data[*].{\n    \"title\": name,\n    \"const\": owner_id\n  }\n}",
+            "blockComment": "anyOf"
+        },
+        {
+            "type": "context-save",
+            "key": "ownersList",
+            "blockComment": "ownersList"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "query GetOwnerSplitByAssetId ($asset_id: Int)  {\n  splits_rights_owner(where: {asset_id: {_eq: $asset_id}}) {\n    owner_id\n    splits\n  }\n}",
+            "variables": {
+                "asset_id": "context.assetId"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data",
+            "blockComment": "results"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "splits_rights_owner": {
+                        "title": "Owner",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "owner_id": {
+                                    "$ref": "#/definitions/context/ownersList"
+                                },
+                                "splits": {
+                                    "type": "string",
+                                    "title": "split"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "splits_rights_owner": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Owner",
+                        "Split"
+                    ]
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.splits_rights_owner[*].merge(@, {\n    \"asset_id\": $.context.assetId\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "mutation UpdateSplitsOwner($list: [splits_rights_owner_insert_input!]!, $asset_id: Int!) {\n  delete_splits_rights_owner(where: { asset_id: { _eq: $asset_id } }) {\n    affected_rows\n  }\n  insert_splits_rights_owner(objects: $list) {\n    affected_rows\n    returning {\n      asset_id\n      owner_id\n      splits \n    }\n  }\n}",
+            "variables": {
+                "asset_id": "context.assetId",
+                "list": "data"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        }
+    ],
+    "id": "artist2EditOwnerSplit",
+    "workflowId": "artist2EditOwnerSplit",
+    "adapterName": "culturebanked",
+    "created": "2025-04-16T15:13:20.998Z",
+    "tags": [],
+    "updated": "2025-04-16T15:13:20.998Z",
+    "modified": "2025-04-16T15:13:20.998Z",
+    "title": "Edit Owner and Split"
+}

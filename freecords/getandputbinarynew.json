@@ -1,0 +1,60 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "api",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": "https://my.freecords.com/uploads/cover-art/0388b05d-a8b2-448a-ab6e-6f716736273a/210cbd58-3da9-4f00-bf44-937f00fd593f.jpg",
+            "responseType": "arraybuffer",
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{content: data}",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "bput",
+            "useProxy": true,
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/5063212017308/GX8LD2272332.png",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "headers": {
+                "Content-Type": "'image/jpeg'"
+            },
+            "storeMetadataInContext": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "getandputbinarynew",
+    "workflowId": "getandputbinarynew",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:47:13.654Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:47:13.653Z",
+    "modified": "2025-10-08T16:47:13.653Z",
+    "title": "Get and Put Binary"
+}

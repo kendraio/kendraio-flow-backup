@@ -1,0 +1,26 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "context.endpoints.get"
+            },
+            "responseType": "arraybuffer",
+            "headers": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "getandputbinarytemp",
+    "workflowId": "getandputbinarytemp",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:50:57.524Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:50:57.524Z",
+    "modified": "2025-10-10T15:50:57.524Z",
+    "title": "Get and Put Binary"
+}

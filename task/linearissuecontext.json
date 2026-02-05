@@ -1,0 +1,314 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "newValue",
+            "contextBlocks": [
+                {
+                    "type": "init"
+                },
+                {
+                    "type": "variable-get",
+                    "name": "issuekeys",
+                    "blockComment": ""
+                },
+                {
+                    "type": "context-save",
+                    "key": "issuekeys",
+                    "blockComment": ""
+                },
+                {
+                    "type": "variable-get",
+                    "name": "lineartoken",
+                    "blockComment": ""
+                },
+                {
+                    "type": "context-save",
+                    "key": "lineartoken",
+                    "blockComment": ""
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "{\n    id: context.issuekeys.id,\n    lineartoken: data.lineartoken\n}",
+                    "blockComment": ""
+                },
+                {
+                    "type": "init"
+                },
+                {
+                    "type": "graphql",
+                    "endpoint": "https://api.linear.app/graphql",
+                    "query": "query MyQuery($id: String!) {\n    issue(id: $id) {\n        id\n        title \n        description \n        createdAt \n        updatedAt \n        archivedAt \n        creator {\n            name\n        }\n        assignee {\n            name\n        } \n        parent {\n            id\n        } \n        children {\n            nodes {\n                title\n                id\n            }\n        } \n        comments { \n            nodes {\n                createdAt \n                updatedAt \n                archivedAt \n                body \n                editedAt \n                user {\n                    name\n                }\n            }\n        }\n    }\n}",
+                    "variables": {
+                        "id": "data.id"
+                    },
+                    "headers": {
+                        "authorization": "data.lineartoken"
+                    },
+                    "allowFirst": false,
+                    "allowEmpty": false
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data.data.issue.merge(@, {\n    source:  `Linear`,\n    asset:   title,\n    preview: description,\n    assignee: assignee.name\n})",
+                    "blockComment": ""
+                },
+                {
+                    "type": "context-save",
+                    "key": "state.issue",
+                    "blockComment": ""
+                },
+                {
+                    "type": "card",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "task",
+                            "workflowId": "populatelinearcard"
+                        }
+                    ],
+                    "blockComment": ""
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "state.local.issue.comments.nodes",
+                    "blockComment": ""
+                },
+                {
+                    "type": "debug",
+                    "open": 1,
+                    "showData": true,
+                    "showContext": true,
+                    "showState": true,
+                    "consoleLog": true,
+                    "blockComment": ""
+                },
+                {
+                    "type": "batch",
+                    "blocks": [
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "data.merge(@, { createdAt: formatDate(createdAt, 'T, dd/MM/yyyy'), updatedAt: formatDate(updatedAt, 'T, dd/MM/yyyy'), assignee: assignee.name})"
+                                },
+                                {
+                                    "type": "message",
+                                    "title": "{{data.body}}"
+                                },
+                                {
+                                    "type": "message",
+                                    "message": "Created at {{data.createdAt}} by {{data.user.name}}"
+                                },
+                                {
+                                    "type": "mapping",
+                                    "mapping": "[data][?updatedAt != createdAt]"
+                                },
+                                {
+                                    "type": "batch",
+                                    "blocks": [
+                                        {
+                                            "type": "message",
+                                            "message": "Edited at {{data.updatedAt}}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "switch",
+                                    "valueGetter": "data.assignee",
+                                    "cases": [
+                                        {
+                                            "value": null,
+                                            "blocks": []
+                                        }
+                                    ],
+                                    "default": {
+                                        "blocks": [
+                                            {
+                                                "type": "message",
+                                                "message": "Assigned to {{data.assignee}}"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "switch",
+                                    "valueGetter": "data.archivedAt",
+                                    "cases": [
+                                        {
+                                            "value": null,
+                                            "blocks": []
+                                        }
+                                    ],
+                                    "default": {
+                                        "blocks": [
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "data.merge(@, {archivedAt: formatDate(archivedAt, 'T, dd/MM/yyyy')})"
+                                            },
+                                            {
+                                                "type": "message",
+                                                "message": "Archived at {{data.archivedAt}}"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "blockComment": ""
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "state.local.issue.children.nodes",
+                    "blockComment": ""
+                },
+                {
+                    "type": "switch",
+                    "valueGetter": "data[0]",
+                    "cases": [
+                        {
+                            "value": null,
+                            "blocks": []
+                        }
+                    ],
+                    "default": {
+                        "blocks": [
+                            {
+                                "type": "grid",
+                                "gridOptions": {
+                                    "pagination": true,
+                                    "paginationPageSize": 10,
+                                    "defaultColDef": {
+                                        "autoHeight": true,
+                                        "resizable": true,
+                                        "sortable": true
+                                    }
+                                },
+                                "passThrough": false,
+                                "firstRowHeaders": false,
+                                "columnDefs": [
+                                    {
+                                        "field": "title",
+                                        "headerName": "Sub-issues"
+                                    },
+                                    {
+                                        "field": "details",
+                                        "headerName": "",
+                                        "cellRenderer": "workflowRenderer",
+                                        "cellRendererParams": {
+                                            "blocks": [
+                                                {
+                                                    "type": "actions",
+                                                    "buttons": [
+                                                        {
+                                                            "label": "Details",
+                                                            "color": "primary",
+                                                            "blocks": [
+                                                                {
+                                                                    "type": "context",
+                                                                    "contextPath": "newValue",
+                                                                    "contextBlocks": [
+                                                                        {
+                                                                            "type": "mapping",
+                                                                            "mapping": "{id: data.id, source: `Linear`}"
+                                                                        },
+                                                                        {
+                                                                            "type": "variable-set",
+                                                                            "name": "issuekeys"
+                                                                        }
+                                                                    ],
+                                                                    "blocks": [
+                                                                        {
+                                                                            "type": "launch",
+                                                                            "adapter": "task",
+                                                                            "workflowId": "linearissueredirect"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "enabled": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "blockComment": ""
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "state.local.issue",
+                    "blockComment": ""
+                },
+                {
+                    "type": "switch",
+                    "valueGetter": "data.parent",
+                    "cases": [
+                        {
+                            "value": null,
+                            "blocks": []
+                        }
+                    ],
+                    "default": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Parent Issue",
+                                        "color": "default",
+                                        "blocks": [
+                                            {
+                                                "type": "context",
+                                                "contextPath": "newValue",
+                                                "contextBlocks": [
+                                                    {
+                                                        "type": "mapping",
+                                                        "mapping": "{id: data.parent.id, source: `Linear`}"
+                                                    },
+                                                    {
+                                                        "type": "variable-set",
+                                                        "name": "issuekeys"
+                                                    }
+                                                ],
+                                                "blocks": [
+                                                    {
+                                                        "type": "launch",
+                                                        "adapter": "task",
+                                                        "workflowId": "linearissueredirect"
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "blockComment": ""
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "linearissuecontext",
+    "workflowId": "linearissuecontext",
+    "adapterName": "task",
+    "created": "2025-02-05T17:44:19.913Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-02-05T17:44:19.913Z",
+    "modified": "2025-02-05T17:44:19.913Z",
+    "title": "Display Linear Issue with Context"
+}

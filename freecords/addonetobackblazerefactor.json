@@ -1,0 +1,113 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "song",
+            "contextBlocks": [
+                {
+                    "type": "context-save",
+                    "key": "song"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "{ISRC: context.song.ISRC}"
+                },
+                {
+                    "type": "http",
+                    "method": "post",
+                    "useProxy": false,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "app.freecords.com/api/1.1/wf",
+                        "pathname": "/get_song",
+                        "valueGetters": {
+                            "query": "{api_token: context.api.key}"
+                        }
+                    }
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data.data.response.merge(@, {ReleaseYear: @.\"Release-year\", artistName: @.\"artist-name\", composerFirstName: @.\"composer-first-name\", composerLastName: @.\"composer-last-name\", songName: @.\"song-name\"})"
+                },
+                {
+                    "type": "context-save",
+                    "key": "details"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "{ data: { NewReleaseMessage: { PartyList: { Party: [{ PartyReference: PartyReference, PartyName: [{ FullName: FullName, FullNameIndexed: FullNameIndexed, _LanguageAndScriptCode: _LanguageAndScriptCode }]}]}, ResourceList: { SoundRecording: [data.merge(@, { ResourceReference: `A1`, Contributor: { ContributorPartyReference: Contributor.PartyReference, Role: Contributor.Role, _SequenceNumber: Contributor._SequenceNumber }, CreationDate: { __text: CreationDate.__text, _IsApproximate: CreationDate._IsApproximate }, ResourceId: { ISRC: $.context.song.ISRC }, DisplayTitleText: \"song-name\", DisplayTitle: [{ TitleText: DisplayTitle.TitleText, _ApplicableTerritoryCode: DisplayTitle._ApplicableTerritoryCode, _IsDefault: DisplayTitle._IsDefault }], LanguageOfPerformance: LanguageOfPerformance, Duration: duration, IsInstrumental: IsInstrumental, PLine: { PLineText: PLine.Text }})]}, \"_xmlns:avs\": `http://ddex.net/xml/avs/avs`, \"_xmlns:ern\": `http://ddex.net/xml/ern/42`, \"_xmlns:xsi\": `http://www.w3.org/2001/XMLSchema-instance`, \"_xsi:schemaLocation\": `http://ddex.net/xml/ern/42 http://ddex.net/xml/ern/42/release-notification.xsd`, _ReleaseProfileVersionId: `Audio`, LanguageAndScriptCode: `en`, __prefix: `ern` }}, created: now(), batchName: state.local.batchName || `Freecords`}"
+                },
+                {
+                    "type": "context-save",
+                    "key": "ddex"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "join('', ['<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ern:NewReleaseMessage xmlns:avs=\"http://ddex.net/xml/avs/avs\"\n   xmlns:ern=\"http://ddex.net/xml/ern/42\"\n   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n   xsi:schemaLocation=\"http://ddex.net/xml/ern/42 http://ddex.net/xml/ern/42/release-notification.xsd\"\n   ReleaseProfileVersionId=\"Audio\" LanguageAndScriptCode=\"en\">\n   <MessageHeader>\n      <MessageThreadId></MessageThreadId>\n      <MessageId></MessageId>\n      <MessageSender>\n         <PartyId></PartyId>\n         <PartyName>\n            <FullName></FullName>\n         </PartyName>\n      </MessageSender>\n      <MessageRecipient>\n         <PartyId></PartyId>\n         <PartyName>\n            <FullName></FullName>\n         </PartyName>\n      </MessageRecipient>\n      <MessageCreatedDateTime></MessageCreatedDateTime>\n   </MessageHeader>\n   <PartyList>\n      <Party>\n         <PartyReference></PartyReference>\n         <PartyName LanguageAndScriptCode=\"\">\n            <FullName></FullName>\n            <FullNameIndexed></FullNameIndexed>\n         </PartyName>\n      </Party>\n   </PartyList>\n   <ResourceList>\n      <SoundRecording>\n         <songName>', $.context.details.songName, '</songName>\n         <UPC>', $.context.details.UPC, '</UPC>\n         <genre>', $.context.details.genre, '</genre>\n         <artistName>', $.context.details.artistName, '</artistName>\n         <label>', $.context.details.label, '</label>\n         <ReleaseYear>', $.context.details.ReleaseYear, '</ReleaseYear>\n         <CandPline>', $.context.details.CandPline, '</CandPline>\n         <composerFirstName>', $.context.details.composerFirstName, '</composerFirstName>\n         <composerLastName>', $.context.details.composerLastName, '</composerLastName>\n         <ResourceReference>A1</ResourceReference>\n         <Type></Type>\n         <ResourceId>\n            <ISRC>', $.context.song.ISRC, '</ISRC>\n         </ResourceId>\n         <DisplayTitleText>', $.context.details.songName, '</DisplayTitleText>\n         <DisplayTitle ApplicableTerritoryCode=\"\" IsDefault=\"true\">\n            <TitleText></TitleText>\n         </DisplayTitle>\n         <DisplayArtistName ApplicableTerritoryCode=\"\" LanguageAndScriptCode=\"\" IsDefault=\"\"></DisplayArtistName>\n         <DisplayArtist SequenceNumber=\"1\">\n            <ArtistPartyReference></ArtistPartyReference>\n            <DisplayArtistRole></DisplayArtistRole>\n         </DisplayArtist>\n         <Contributor SequenceNumber=\"1\">\n            <ContributorPartyReference></ContributorPartyReference>\n            <Role></Role>\n         </Contributor>\n         <PLine>\n            <Year></Year>\n            <PLineText></PLineText>\n         </PLine>\n         <Duration></Duration>\n         <CreationDate IsApproximate=\"\"></CreationDate>\n         <ParentalWarningType></ParentalWarningType>\n         <IsInstrumental></IsInstrumental>\n         <LanguageOfPerformance></LanguageOfPerformance>\n         <TechnicalDetails>\n            <TechnicalResourceDetailsReference>T1</TechnicalResourceDetailsReference>\n            <PreviewDetails>\n               <StartPoint></StartPoint>\n               <ExpressionType></ExpressionType>\n            </PreviewDetails>\n            <File>\n               <URI></URI>\n            </File>\n         </TechnicalDetails>\n      </SoundRecording>\n      <Image>\n         <ResourceReference></ResourceReference>\n         <Type></Type>\n         <ResourceId>\n            <ProprietaryId Namespace=\"\"></ProprietaryId>\n         </ResourceId>\n         <ParentalWarningType></ParentalWarningType>\n         <TechnicalDetails>\n            <TechnicalResourceDetailsReference></TechnicalResourceDetailsReference>\n            <File>\n               <URI></URI>\n            </File>\n         </TechnicalDetails>\n      </Image>\n   </ResourceList>\n   <ReleaseList>\n      <Release>\n         <ReleaseReference></ReleaseReference>\n         <ReleaseType></ReleaseType>\n         <ReleaseId>\n            <ICPN></ICPN>\n         </ReleaseId>\n         <DisplayTitleText></DisplayTitleText>\n         <DisplayTitle ApplicableTerritoryCode=\"\" IsDefault=\"\">\n            <TitleText></TitleText>\n         </DisplayTitle>\n         <DisplayArtistName ApplicableTerritoryCode=\"\" LanguageAndScriptCode=\"\" IsDefault=\"\"></DisplayArtistName>\n         <DisplayArtist SequenceNumber=\"1\">\n            <ArtistPartyReference></ArtistPartyReference>\n            <DisplayArtistRole></DisplayArtistRole>\n         </DisplayArtist>\n         <ReleaseLabelReference ApplicableTerritoryCode=\"\"></ReleaseLabelReference>\n         <Duration></Duration>\n         <Genre ApplicableTerritoryCode=\"\">\n            <GenreText></GenreText>\n         </Genre>\n         <ParentalWarningType></ParentalWarningType>\n         <RelatedRelease>\n            <ReleaseRelationshipType></ReleaseRelationshipType>\n            <ReleaseId>\n               <ICPN></ICPN>\n            </ReleaseId>\n         </RelatedRelease>\n         <IsMultiArtistCompilation></IsMultiArtistCompilation>\n         <ResourceGroup>\n            <AdditionalTitle>\n               <TitleText></TitleText>\n            </AdditionalTitle>\n            <SequenceNumber>1</SequenceNumber>\n            <ResourceGroupContentItem>\n               <SequenceNumber>1</SequenceNumber>\n               <ReleaseResourceReference>A1</ReleaseResourceReference>\n            </ResourceGroupContentItem>\n         </ResourceGroup>\n      </Release>\n      <TrackRelease>\n         <ReleaseReference>R1</ReleaseReference>\n         <ReleaseId>\n            <ProprietaryId Namespace=\"\"></ProprietaryId>\n         </ReleaseId>         <ReleaseResourceReference>A1</ReleaseResourceReference>\n         <ReleaseLabelReference ApplicableTerritoryCode=\"\"></ReleaseLabelReference>\n         <Genre ApplicableTerritoryCode=\"\">\n            <GenreText></GenreText>\n         </Genre>\n      </TrackRelease>\n   </ReleaseList>\n   <DealList>\n      <ReleaseDeal>\n         <DealReleaseReference>R1</DealReleaseReference>\n         <Deal>\n            <DealTerms>\n               <TerritoryCode></TerritoryCode>\n               <ValidityPeriod>\n                  <StartDate></StartDate>\n               </ValidityPeriod>\n               <CommercialModelType></CommercialModelType>\n               <UseType></UseType>\n               <PriceInformation>\n                  <PriceCode Namespace=\"\"></PriceCode>\n               </PriceInformation>\n            </DealTerms>\n         </Deal>\n      </ReleaseDeal>\n   </DealList>\n</ern:NewReleaseMessage>'])"
+                },
+                {
+                    "type": "context-save",
+                    "key": "realDdex"
+                },
+                {
+                    "type": "debug",
+                    "consoleLog": true
+                },
+                {
+                    "type": "http",
+                    "method": "put",
+                    "useProxy": true,
+                    "responseType": "text",
+                    "endpoint": {
+                        "valueGetter": "join('', [`https://freecords.s3.eu-central-003.backblazeb2.com/`, context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '/', context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '.xml'])"
+                    },
+                    "authentication": {
+                        "type": "aws-sigv4",
+                        "secretKeyGetter": "context.api.secretKey",
+                        "accessKeyIdGetter": "context.api.accessKeyId"
+                    }
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "{get: context.song.AAC, put: join('', [`https://freecords.s3.eu-central-003.backblazeb2.com/`, context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '/', context.song.ISRC, '.wav'])}"
+                },
+                {
+                    "type": "context-save",
+                    "key": "audioEndpoints"
+                },
+                {
+                    "type": "gosub",
+                    "adapterName": "freecords",
+                    "workflowId": "getandputaudio"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "{get: context.song.artwork, put: join('', [`https://freecords.s3.eu-central-003.backblazeb2.com/`, context.ddex.data.NewReleaseMessage.ResourceList.SoundRecording[0].UPC, '/', context.song.ISRC, '.jpg'])}"
+                },
+                {
+                    "type": "context-save",
+                    "key": "imageEndpoints"
+                },
+                {
+                    "type": "gosub",
+                    "adapterName": "freecords",
+                    "workflowId": "getandputimage"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "addonetobackblazerefactor",
+    "workflowId": "addonetobackblazerefactor",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:49:10.636Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:49:10.636Z",
+    "modified": "2025-10-10T15:49:10.636Z",
+    "title": "Add One Song to Backblaze"
+}

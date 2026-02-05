@@ -1,0 +1,38 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "label": "Authenticate",
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "fireflies-hasura",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect2",
+    "workflowId": "connect2",
+    "adapterName": "fireflies",
+    "created": "2025-04-03T01:25:51.582Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2025-04-03T01:25:51.581Z",
+    "modified": "2025-04-03T01:25:51.581Z",
+    "title": "Fireflies Connect 2"
+}

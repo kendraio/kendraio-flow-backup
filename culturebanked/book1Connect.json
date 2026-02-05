@@ -1,0 +1,38 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "label": "Authenticate",
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "culturebanked-book-hasura",
+            "blockComment": ""
+        }
+    ],
+    "id": "book1Connect",
+    "workflowId": "book1Connect",
+    "adapterName": "culturebanked",
+    "created": "2025-12-19T14:49:08.088Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2025-12-19T14:49:08.088Z",
+    "modified": "2025-12-19T14:49:08.088Z",
+    "title": "CultureBanked Book 1"
+}

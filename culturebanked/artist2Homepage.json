@@ -1,0 +1,54 @@
+{
+    "blocks": [
+        {
+            "type": "link-action",
+            "label": "Go to Database",
+            "adapterName": "culturebanked",
+            "workflowId": "artist2Database",
+            "blockComment": "Database"
+        },
+        {
+            "type": "link-action",
+            "label": "Go to Beneficiaries",
+            "adapterName": "culturebanked",
+            "workflowId": "artist2Beneficiaries",
+            "blockComment": "Beneficiaries"
+        },
+        {
+            "type": "link-action",
+            "label": "Go to Vendors",
+            "adapterName": "culturebanked",
+            "workflowId": "artist2Vendors",
+            "blockComment": "Vendors"
+        },
+        {
+            "type": "link-action",
+            "label": "Go to Owners",
+            "adapterName": "culturebanked",
+            "workflowId": "artist2Owners",
+            "blockComment": "Owners"
+        },
+        {
+            "type": "link-action",
+            "label": "Go to Licenses",
+            "adapterName": "culturebanked",
+            "workflowId": "artist2Licenses",
+            "blockComment": "Licenses"
+        },
+        {
+            "type": "link-action",
+            "label": "Go to Assets",
+            "adapterName": "culturebanked",
+            "workflowId": "artist2Assets",
+            "blockComment": "Assets"
+        }
+    ],
+    "id": "artist2Homepage",
+    "workflowId": "artist2Homepage",
+    "adapterName": "culturebanked",
+    "created": "2025-04-07T11:57:20.383Z",
+    "tags": [],
+    "updated": "2025-04-07T11:57:20.383Z",
+    "modified": "2025-04-07T11:57:20.383Z",
+    "title": "Homepage"
+}

@@ -1,0 +1,30 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "put",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "s3.eu-central-003.backblazeb2.com",
+                "pathname": "/freecords"
+            },
+            "payload": "'grant_type=client_credentials'",
+            "blockComment": ""
+        }
+    ],
+    "id": "hitbackblazeapi",
+    "workflowId": "hitbackblazeapi",
+    "adapterName": "freecords",
+    "created": "2025-01-31T19:01:20.708Z",
+    "tags": [
+        "hidden",
+        " delete"
+    ],
+    "updated": "2025-01-31T19:01:20.708Z",
+    "modified": "2025-01-31T19:01:20.708Z",
+    "title": "Flow"
+}

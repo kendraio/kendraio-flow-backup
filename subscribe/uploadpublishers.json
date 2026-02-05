@@ -1,0 +1,19 @@
+{
+    "blocks": [
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        }
+    ],
+    "id": "uploadpublishers",
+    "workflowId": "uploadpublishers",
+    "adapterName": "subscribe",
+    "created": "2024-10-17T16:47:56.855Z",
+    "tags": [],
+    "updated": "2024-10-17T16:47:56.855Z",
+    "modified": "2024-10-17T16:47:56.855Z",
+    "title": "Subscribe Upload Publishers"
+}

@@ -1,0 +1,201 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "boonbooks": {
+                        "title": "Boon Books API Key",
+                        "type": "password"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "api_keys",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "9597d8-c1.myshopify.com",
+                "pathname": "/admin/api/2023-10/products.json",
+                "query": {
+                    "limit": 40
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "X-Shopify-Access-Token": "data.boonbooks"
+            },
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.products",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "floatingFilter": true,
+                "pagination": true,
+                "paginationPageSize": 20,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "columnDefs": [
+                {
+                    "width": 20,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "headerName": "Title",
+                    "field": "title",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Vendor",
+                    "field": "vendor",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Created At",
+                    "field": "created_at",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Publish At",
+                    "field": "published_at",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                },
+                {
+                    "headerName": "Status",
+                    "field": "status",
+                    "filter": "agTextColumnFilter",
+                    "filterParams": {
+                        "applyButton": true,
+                        "resetButton": true
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Create a list",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "Title": {
+                                    "type": "string"
+                                },
+                                "Description": {
+                                    "type": "string"
+                                },
+                                "Quantity": {
+                                    "type": "number",
+                                    "title": "Quantity",
+                                    "default": 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "items": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Title",
+                        "Description",
+                        "Quantity"
+                    ],
+                    "allowAdd": false,
+                    "allowRemove": false,
+                    "items": {
+                        "Title": {
+                            "ui:widget": "readonly"
+                        },
+                        "Description": {
+                            "ui:widget": "readonly"
+                        },
+                        "Quantity": {
+                            "ui:widget": "readonly"
+                        }
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "<p>Hello,</p><p>Here is my order:</p><ul>{{#each data.items}}<li><b>{{Quantity}} x</b> {{Title}} - &pound;{{Price}}</li>{{/each}}</ul><p>I make that a total of {{data.total}}</p><p>Thanks!</p>"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "bookProductsEndpoint",
+    "workflowId": "bookProductsEndpoint",
+    "adapterName": "culturebanked",
+    "created": "2025-09-09T12:16:23.862Z",
+    "tags": [],
+    "updated": "2025-09-09T12:16:23.861Z",
+    "modified": "2025-09-09T12:16:23.861Z",
+    "title": "Books List"
+}

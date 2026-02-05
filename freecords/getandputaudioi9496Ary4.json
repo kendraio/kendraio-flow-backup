@@ -1,0 +1,44 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "context.song.AAC"
+            },
+            "responseType": "arraybuffer",
+            "headers": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data }",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "bput",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "context.wavBackblazeEndpoint"
+            },
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "getandputaudioi9496Ary4",
+    "workflowId": "getandputaudioi9496Ary4",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:51:56.833Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:51:56.833Z",
+    "modified": "2025-10-10T15:51:56.833Z",
+    "title": "Get and Put Audio"
+}

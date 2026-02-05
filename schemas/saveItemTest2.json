@@ -1,0 +1,81 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "parseQs('schemaId=6a0a2dc0-de40-447d-aca3-d50144fb1229&id=5f6058aa-a328-46e5-bb08-9b24f7a7bd39')",
+            "blockComment": "data instead of query string"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "savedQuery",
+            "blockComment": "Saves to context.savedQuery"
+        },
+        {
+            "type": "db",
+            "operation": "fetch",
+            "adapterName": "schemas",
+            "schema": "schemas",
+            "uuidGetter": "data.schemaId",
+            "blockComment": "Get schema from DB (schemaId from mapping)"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data && data[0]",
+            "blockComment": "Get main data, strips metadata"
+        },
+        {
+            "type": "context-save",
+            "contextKey": "schema",
+            "blockComment": "Saves to context.schema"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.uuid",
+            "valueGetter": "data.uuid",
+            "blockComment": "Saves record UUID to state.local.uuid"
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": true,
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "load-schema",
+                        "adapterName": "schemas",
+                        "schemaGetter": "context.schema && context.schema.name"
+                    }
+                ]
+            },
+            "injectContext": false,
+            "blockComment": "Form populated by load-schema"
+        },
+        {
+            "type": "context-save",
+            "key": "state.global.record",
+            "valueGetter": "data",
+            "blockComment": "Saves latest record to state.global.record"
+        },
+        {
+            "type": "db",
+            "operation": "save",
+            "adapterName": "schemas",
+            "schemaGetter": "context.schema.name",
+            "blockComment": "Saves the record to the database"
+        }
+    ],
+    "id": "saveItemTest2",
+    "workflowId": "saveItemTest2",
+    "adapterName": "schemas",
+    "created": "2023-10-25T13:54:15.148Z",
+    "tags": [
+        "hidden",
+        " review"
+    ],
+    "updated": "2023-10-25T13:54:15.148Z",
+    "modified": "2023-10-25T13:54:15.148Z",
+    "title": "Save Item Test"
+}

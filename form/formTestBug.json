@@ -1,0 +1,49 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "{   type: `\"object\"`,\n    title: `\"Survey\"`,\n    \"properties\": {\n            \"question_one\": { \"type\": `\"string\"`, \"title\": `how are you?`, \"default\": \"\"},\n            \"question_two\": { \"type\": `\"string\"`, \"title\": `how is your dog?`, \"default\": \"\"}\n    }\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "urlData",
+            "valueGetter": "data",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Send",
+            "hasSubmit": true,
+            "emitOnInit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "lala": {
+                        "$ref": "#/definitions/context/urlData"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "formTestBug",
+    "workflowId": "formTestBug",
+    "adapterName": "form",
+    "created": "2023-09-20T15:39:07.429Z",
+    "tags": [
+        "hidden"
+    ],
+    "updated": "2023-09-20T15:39:07.429Z",
+    "modified": "2023-09-20T15:39:07.429Z",
+    "title": "testing form bug injected data"
+}

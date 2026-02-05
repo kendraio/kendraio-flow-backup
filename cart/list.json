@@ -1,0 +1,70 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "savedData",
+            "default": "[]",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "saved"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "columnDefs": [
+                {
+                    "headerName": "Product Name",
+                    "field": "productName"
+                },
+                {
+                    "headerName": "Product ID",
+                    "field": "productId"
+                },
+                {
+                    "headerName": "Vendor",
+                    "field": "vendor"
+                },
+                {
+                    "headerName": "Cost",
+                    "field": "cost"
+                },
+                {
+                    "headerName": "Currency",
+                    "field": "currency"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.saved",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "template",
+            "template": "<a href='https://app.kendra.io/cart/encode'>Flow to encode data as links</a>",
+            "blockComment": ""
+        }
+    ],
+    "id": "list",
+    "workflowId": "list",
+    "adapterName": "cart",
+    "created": "2023-06-20T10:55:09.681Z",
+    "tags": [],
+    "updated": "2023-06-20T10:55:09.680Z",
+    "modified": "2023-06-20T10:55:09.680Z",
+    "title": "Flow to list locally saved objects saved from links"
+}

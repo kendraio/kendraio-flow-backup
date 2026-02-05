@@ -1,0 +1,57 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "label": "Authenticate",
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "fireflies-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Launch",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "fireflies",
+                            "workflowId": "listMeetings"
+                        }
+                    ],
+                    "enabledGetter": "data.token",
+                    "enabled": null
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "connectnolaunch",
+    "workflowId": "connectnolaunch",
+    "adapterName": "fireflies",
+    "created": "2025-12-10T17:30:08.308Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2025-12-10T17:30:08.308Z",
+    "modified": "2025-12-10T17:30:08.308Z",
+    "title": "Fireflies Connect (no launch)"
+}

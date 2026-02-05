@@ -1,0 +1,72 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "song",
+            "contextBlocks": [
+                {
+                    "type": "context-save",
+                    "key": "song"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "'sample text'"
+                },
+                {
+                    "type": "http",
+                    "method": "put",
+                    "useProxy": true,
+                    "responseType": "text",
+                    "endpoint": {
+                        "valueGetter": "join('', [context.api.endpoint, '0123456789', '/', '0123456789', '.xml'])"
+                    },
+                    "authentication": {
+                        "type": "aws-sigv4",
+                        "secretKeyGetter": "context.api.secretKey",
+                        "accessKeyIdGetter": "context.api.accessKeyId"
+                    }
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "{get: context.song.AAC, put: join('', [context.api.endpoint, '0123456789', '/', context.song.ISRC, '.wav'])}"
+                },
+                {
+                    "type": "context-save",
+                    "key": "audioEndpoints"
+                },
+                {
+                    "type": "gosub",
+                    "adapterName": "freecords",
+                    "workflowId": "getandputaudionoddex"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "{get: context.song.artwork, put: join('', [context.api.endpoint, '0123456789', '/', context.song.ISRC, '.jpg'])}"
+                },
+                {
+                    "type": "context-save",
+                    "key": "imageEndpoints"
+                },
+                {
+                    "type": "gosub",
+                    "adapterName": "freecords",
+                    "workflowId": "getandputimagenoddex"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "addonetobackblazenoddex",
+    "workflowId": "addonetobackblazenoddex",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:48:00.150Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:48:00.150Z",
+    "modified": "2025-10-08T16:48:00.150Z",
+    "title": "Add One Song to Backblaze"
+}

@@ -1,0 +1,52 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "api",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Action",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "delete",
+                            "useProxy": true,
+                            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/0123456789/GX8LD2272332.wav",
+                            "authentication": {
+                                "type": "aws-sigv4",
+                                "secretKeyGetter": "context.api.secretKey",
+                                "accessKeyIdGetter": "context.api.accessKeyId"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "replacebinary",
+    "workflowId": "replacebinary",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:49:30.748Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:49:30.748Z",
+    "modified": "2025-10-08T16:49:30.748Z",
+    "title": "Replace Binary"
+}

@@ -1,0 +1,39 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "label": "Save name",
+                "properties": {
+                    "batchName": {
+                        "title": "Batch name",
+                        "type": "string",
+                        "default": "Freecords"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.batchName",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.batchName",
+            "blockComment": ""
+        }
+    ],
+    "id": "batchnameform",
+    "workflowId": "batchnameform",
+    "adapterName": "freecords",
+    "created": "2025-01-31T19:07:27.501Z",
+    "tags": [],
+    "updated": "2025-01-31T19:07:27.501Z",
+    "modified": "2025-01-31T19:07:27.501Z",
+    "title": "Batchname Form"
+}

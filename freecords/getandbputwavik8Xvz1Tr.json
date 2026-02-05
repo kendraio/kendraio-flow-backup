@@ -1,0 +1,38 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "valueGetter": "context.wavFetchEndpoint"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "bput",
+            "useProxy": true,
+            "responseType": "text",
+            "endpoint": {
+                "valueGetter": "context.wavBackblazeEndpoint"
+            },
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.credentials.aws.secretKey",
+                "accessKeyIdGetter": "context.credentials.aws.accessKeyId"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "getandbputwavik8Xvz1Tr",
+    "workflowId": "getandbputwavik8Xvz1Tr",
+    "adapterName": "freecords",
+    "created": "2025-04-21T14:49:09.740Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-04-21T14:49:09.740Z",
+    "modified": "2025-04-21T14:49:09.740Z",
+    "title": "Get and BPut Wav"
+}

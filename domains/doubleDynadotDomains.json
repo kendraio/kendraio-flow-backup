@@ -1,0 +1,110 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "authkey1": {
+                        "type": "string",
+                        "title": "Key 1"
+                    },
+                    "authkey2": {
+                        "type": "string",
+                        "title": "Key 2"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "authkeys",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.dynadot.com",
+                "pathname": "/api3.json",
+                "query": {},
+                "valueGetters": {
+                    "query": "data.{command: 'list_domain', key: join('', [authkey1]) }",
+                    "dummy": ""
+                }
+            },
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "domains1",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.dynadot.com",
+                "pathname": "/api3.json",
+                "query": {},
+                "valueGetters": {
+                    "query": "context.authkeys.{command: 'list_domain', key: join('', [authkey2]) }",
+                    "dummy": ""
+                }
+            },
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[\n    context.domains1.ListDomainInfoResponse.MainDomains[*].[\n        Name, \n        formatDate(\n            parseUnixTimestamp(to_number(Registration), 'ms'), \n            'yyyy/MM/dd'\n        ), \n        formatDate(\n            parseUnixTimestamp(to_number(Expiration), 'ms'), \n            'yyyy/MM/dd'\n        ),\n    \t`1`\n\t],\n\tdata.ListDomainInfoResponse.MainDomains[*].[\n        Name, \n        formatDate(\n            parseUnixTimestamp(to_number(Registration), 'ms'), 'yyyy/MM/dd'\n        ), \n        formatDate(\n            parseUnixTimestamp(to_number(Expiration), 'ms'), 'yyyy/MM/dd'\n        ),\n    \t`2`\n\t]\n][]\n",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 20,
+                "defaultColDef": {
+                    "sortable": true,
+                    "resizable": true
+                }
+            },
+            "columnDefs": [
+                {
+                    "field": "0",
+                    "headerName": "Domain"
+                },
+                {
+                    "field": "1",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "2",
+                    "headerName": "Expires"
+                },
+                {
+                    "field": "3",
+                    "headerName": "Key"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "doubleDynadotDomains",
+    "workflowId": "doubleDynadotDomains",
+    "adapterName": "domains",
+    "created": "2023-09-21T15:33:20.613Z",
+    "tags": [],
+    "updated": "2023-09-21T15:33:20.613Z",
+    "modified": "2023-09-21T15:33:20.613Z",
+    "title": "Double Dynadot Domains"
+}

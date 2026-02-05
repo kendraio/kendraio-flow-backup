@@ -1,0 +1,72 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "default": "Grace Hopper"
+                    },
+                    "job": {
+                        "type": "string",
+                        "title": "Job",
+                        "default": "Software Engineering"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "emitOnInit": true,
+            "hasSubmit": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ \"name\": data.name, \"job\": data.job }",
+            "blockComment": "Return a proper object for the HTTP block to send"
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "useProxy": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "httpbin.org",
+                "pathname": "/post"
+            },
+            "headers": {
+                "Content-Type": "'application/json'"
+            },
+            "skipInit": false,
+            "blockComment": "No `payload`: HTTP uses the model (the Mapping\u2019s object)"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.json",
+            "blockComment": "httpbin echoes your JSON here"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": false
+            }
+        }
+    ],
+    "id": "corsHttpMappingEcho",
+    "workflowId": "corsHttpMappingEcho",
+    "adapterName": "demo",
+    "created": "2025-11-05T13:42:34.366Z",
+    "tags": [],
+    "updated": "2025-11-05T13:42:34.366Z",
+    "modified": "2025-11-05T13:42:34.366Z",
+    "title": "CORS Post with mapping and httpbin echo"
+}

@@ -1,0 +1,44 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "BoonBooks API Key"
+                    }
+                }
+            },
+            "label": "Authenticate",
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "culturebanked-book-boonbooks",
+            "blockComment": ""
+        },
+        {
+            "type": "launch",
+            "adapter": "culturebanked",
+            "workflowId": "book1BookList",
+            "blockComment": ""
+        }
+    ],
+    "id": "bookBoonBooksConnect",
+    "workflowId": "bookBoonBooksConnect",
+    "adapterName": "culturebanked",
+    "created": "2025-11-28T12:19:42.000Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2025-11-28T12:19:41.999Z",
+    "modified": "2025-11-28T12:19:41.999Z",
+    "title": "BoonBooks API"
+}

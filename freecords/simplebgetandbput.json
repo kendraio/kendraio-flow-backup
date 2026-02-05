@@ -1,0 +1,80 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "This Flow should be run on https://kendraio-ik8xvz1tr-kendraio.vercel.app",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "api",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "BGET",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "endpoint": "https://streaming-production-spaces.ams3.cdn.digitaloceanspaces.com/evearawav/AEA2M2465862.wav",
+                            "responseType": "arraybuffer",
+                            "headers": {
+                                "Accept": "'audio/mpeg'"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "BPUT",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "bput",
+                            "useProxy": true,
+                            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/5063010554029/GX38U2262057.wav",
+                            "authentication": {
+                                "type": "aws-sigv4",
+                                "secretKeyGetter": "context.api.secretKey",
+                                "accessKeyIdGetter": "context.api.accessKeyId"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        }
+    ],
+    "id": "simplebgetandbput",
+    "workflowId": "simplebgetandbput",
+    "adapterName": "freecords",
+    "created": "2025-04-24T15:09:52.642Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-04-24T15:09:52.642Z",
+    "modified": "2025-04-24T15:09:52.642Z",
+    "title": "Simple Binary Get and Binary Put"
+}

@@ -1,0 +1,72 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "Don't forget to login and run this Flow on https://kendraio-ik8xvz1tr-kendraio.vercel.app",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "api",
+            "blockComment": ""
+        },
+        {
+            "type": "file-input",
+            "label": "Import mp3",
+            "accept": [
+                "mp3"
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "audio",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "showContext": true,
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "BPUT",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "bput",
+                            "useProxy": true,
+                            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/5063010554029/GX38U2262057.wav",
+                            "authentication": {
+                                "type": "aws-sigv4",
+                                "secretKeyGetter": "context.api.secretKey",
+                                "accessKeyIdGetter": "context.api.accessKeyId"
+                            }
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "importlocalandbput",
+    "workflowId": "importlocalandbput",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:55:00.727Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:55:00.727Z",
+    "modified": "2025-10-10T15:55:00.727Z",
+    "title": "Import local binary, fetch DDEX, put in Backblaze"
+}

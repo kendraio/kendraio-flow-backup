@@ -1,0 +1,218 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "search": {
+                        "type": "string",
+                        "title": "Search here..."
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "teosto-works",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.works",
+            "blockComment": "looping works"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "sequence",
+                    "headerName": "Sequence",
+                    "width": "80"
+                },
+                {
+                    "field": "worktitle",
+                    "headerName": "Worktitle"
+                },
+                {
+                    "headerName": "Composers",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.C[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "<table style='border-collapse: collapse;'><thead><tr><th style='background-color: grey; padding: 8px;'>Name</th><th style='background-color: grey; padding: 8px;'>IPI</th></tr></thead><tbody><tr><td>{{data.name}}</td><td>{{data.ipi}}</td></tr></tbody></table>"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Lyricists",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.A[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "<table style='border-collapse: collapse;'><thead><tr><th style='background-color: grey; padding: 8px;'>Name</th><th style='background-color: grey; padding: 8px;'>IPI</th></tr></thead><tbody><tr><td>{{data.name}}</td><td>{{data.ipi}}</td></tr></tbody></table>"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Arrangers",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.AR[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "<table style='border-collapse: collapse;'><thead><tr><th style='background-color: grey; padding: 8px;'>Name</th><th style='background-color: grey; padding: 8px;'>IPI</th></tr></thead><tbody><tr><td>{{data.name}}</td><td>{{data.ipi}}</td></tr></tbody></table>"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Translators",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.SA[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "<table style='border-collapse: collapse;'><thead><tr><th style='background-color: grey; padding: 8px;'>Name</th><th style='background-color: grey; padding: 8px;'>IPI</th></tr></thead><tbody><tr><td>{{data.name}}</td><td>{{data.ipi}}</td></tr></tbody></table>"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Music publishers",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.E[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "<table style='border-collapse: collapse;'><thead><tr><th style='background-color: grey; padding: 8px;'>Name</th><th style='background-color: grey; padding: 8px;'>IPI</th></tr></thead><tbody><tr><td>{{data.name}}</td><td>{{data.ipi}}</td></tr></tbody></table>"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "unidentifiedWorkList",
+    "workflowId": "unidentifiedWorkList",
+    "adapterName": "teosto",
+    "created": "2025-05-21T09:15:50.246Z",
+    "tags": [
+        "remove",
+        "hidden"
+    ],
+    "updated": "2025-05-21T09:15:50.246Z",
+    "modified": "2025-05-21T09:15:50.246Z",
+    "title": "Unidentified work list"
+}

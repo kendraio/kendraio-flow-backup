@@ -1,0 +1,104 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "distributor-auth",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "contextKey": "saved"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
+            "query": "query MyQuery($trackId: uuid!) {\n  tracks_by_pk(id: $trackId) {\n    display_artist\n    display_title\n    public\n  }\n}\n",
+            "variables": {
+                "trackId": "context.queryParams.id"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.tracks_by_pk"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "display_artist": {
+                        "type": "string",
+                        "title": "Artist"
+                    },
+                    "display_title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "public": {
+                        "type": "boolean",
+                        "title": "public"
+                    }
+                }
+            },
+            "uiSchema": {}
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
+            "query": "\nmutation MyMutation($trackId: uuid!, $input: tracks_set_input!) {\n  update_tracks_by_pk(pk_columns: {id: $trackId}, _set: $input) {\n    id\n    display_artist\n    display_title\n    public\n  }\n}",
+            "variables": {
+                "trackId": "context.queryParams.id",
+                "input": "data"
+            },
+            "headers": {
+                "Authorization": "join(' ', [`Bearer`, context.saved.access_token])"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": false
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "distributor",
+                            "workflowId": "myTracks"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "editTrack",
+    "workflowId": "editTrack",
+    "adapterName": "distributor",
+    "created": "2024-12-17T20:23:41.901Z",
+    "tags": [],
+    "updated": "2024-12-17T20:23:41.901Z",
+    "modified": "2024-12-17T20:23:41.901Z",
+    "title": "Edit Track (distributor)"
+}

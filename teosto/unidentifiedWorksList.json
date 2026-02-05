@@ -1,0 +1,432 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "search": {
+                        "type": "string",
+                        "title": "Search here..."
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "searchForm",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "teosto-works",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.works",
+            "blockComment": "looping works"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.searchForm.search!=null && \ndata[?\n    contains(toLower(worktitle), toLower(trim($.context.searchForm.search))) || \n    contains(to_string(workkey), toLower(trim($.context.searchForm.search))) || \n    contains(to_string(sequence), toLower(trim($.context.searchForm.search))) || \n    C[?contains(toLower(name), toLower(trim($.context.searchForm.search)))] || \n    A[?contains(toLower(name), toLower(trim($.context.searchForm.search)))] || \n    AR[?contains(toLower(name), toLower(trim($.context.searchForm.search)))] || \n    SA[?contains(toLower(name), toLower(trim($.context.searchForm.search)))] || \n    E[?contains(toLower(name), toLower(trim($.context.searchForm.search)))]\n] || data",
+            "blockComment": "filter by search term"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                },
+                "pagination": true,
+                "paginationPageSize": 5,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "field": "sequence",
+                    "headerName": "Sequence",
+                    "width": "80"
+                },
+                {
+                    "field": "worktitle",
+                    "headerName": "Worktitle"
+                },
+                {
+                    "headerName": "Composers",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.C[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "{{data.name}} ({{data.ipi}})"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Lyricists",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.A[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "{{data.name}} ({{data.ipi}})"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Arrangers",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.AR[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "{{data.name}} ({{data.ipi}})"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Translators",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.SA[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "{{data.name}} ({{data.ipi}})"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    "headerName": "Music publishers",
+                    "width": "200",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "data.E[]"
+                            },
+                            {
+                                "type": "init"
+                            },
+                            {
+                                "type": "batch",
+                                "blocks": [
+                                    {
+                                        "type": "mapping",
+                                        "mapping": "data"
+                                    },
+                                    {
+                                        "type": "template",
+                                        "template": "{{data.name}} ({{data.ipi}})"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ items: data }",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Send",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "sequence": {
+                                    "type": "number"
+                                },
+                                "worktitle": {
+                                    "type": "string"
+                                },
+                                "C": {
+                                    "type": "string"
+                                },
+                                "A": {
+                                    "type": "string"
+                                },
+                                "AR": {
+                                    "type": "string"
+                                },
+                                "SA": {
+                                    "type": "string"
+                                },
+                                "E": {
+                                    "type": "string"
+                                },
+                                "comment": {
+                                    "type": "string",
+                                    "title": "Comment"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "items": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "Sequence",
+                        "Worktitle",
+                        "Composers",
+                        "Lyricists",
+                        "Arrangers",
+                        "Translators",
+                        "Music Publisher",
+                        "Comment"
+                    ],
+                    "allowAdd": false,
+                    "allowRemove": false,
+                    "items": {
+                        "sequence": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "template",
+                                        "template": "{{data}}"
+                                    }
+                                ]
+                            }
+                        },
+                        "worktitle": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "template",
+                                        "template": "{{data}}"
+                                    }
+                                ]
+                            }
+                        },
+                        "C": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "batch",
+                                        "blocks": [
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "data"
+                                            },
+                                            {
+                                                "type": "template",
+                                                "template": "{{data.name}} ({{data.ipi}})"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "A": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "batch",
+                                        "blocks": [
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "data"
+                                            },
+                                            {
+                                                "type": "template",
+                                                "template": "{{data.name}} ({{data.ipi}})"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "AR": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "batch",
+                                        "blocks": [
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "data"
+                                            },
+                                            {
+                                                "type": "template",
+                                                "template": "{{data.name}} ({{data.ipi}})"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "SA": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "batch",
+                                        "blocks": [
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "data"
+                                            },
+                                            {
+                                                "type": "template",
+                                                "template": "{{data.name}} ({{data.ipi}})"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        "E": {
+                            "ui:widget": "blocks",
+                            "blocksConfig": {
+                                "blocks": [
+                                    {
+                                        "type": "batch",
+                                        "blocks": [
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "data"
+                                            },
+                                            {
+                                                "type": "template",
+                                                "template": "{{data.name}} ({{data.ipi}})"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "<p>Hi there,</p><p>Please find here the information for the following unidentified works:</p>{{#each data.items}}<div><b>{{sequence}}. {{worktitle}}</b><br><i>Composers:</i> {{#each C}}{{name}} ({{ipi}}){{#unless @last}}, {{/unless}}{{/each}}<br><i>Lyricist:</i> {{#each A}}{{name}} ({{ipi}}){{#unless @last}}, {{/unless}}{{/each}}<br><i>Arrangers:</i> {{#each AR}}{{name}} ({{ipi}}){{#unless @last}}, {{/unless}}{{/each}}<br><i>Translators:</i> {{#each SA}}{{name}} ({{ipi}}){{#unless @last}}, {{/unless}}{{/each}}<br><i>Music Publisher:</i> {{#each E}}{{name}} ({{ipi}}){{#unless @last}}, {{/unless}}{{/each}}<br><i>My comment:</i> {{comment}}</div><br>{{/each}}"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "unidentifiedWorksList",
+    "workflowId": "unidentifiedWorksList",
+    "adapterName": "teosto",
+    "created": "2025-06-17T13:58:09.239Z",
+    "tags": [],
+    "updated": "2025-06-17T13:58:09.238Z",
+    "modified": "2025-06-17T13:58:09.238Z",
+    "title": "Teosto Unidentified Works List"
+}

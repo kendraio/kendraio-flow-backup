@@ -1,0 +1,89 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "isrc",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "state.isrc",
+            "blockComment": ""
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, {ISRC: $.state.local.isrc})",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "useProxy": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "app.freecords.com/api/1.1/wf",
+                "pathname": "/get_song",
+                "valueGetters": {
+                    "query": "{ api_token: data.key }"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 3,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ \n    data: {\n        NewReleaseMessage: {\n            PartyList: {\n                Party: [\n                    {\n                        \"PartyReference\": data.response.PartyReference,\n                        \"PartyName\": [\n                            {\n                                \"FullName\": data.response.FullName,\n                                \"FullNameIndexed\": data.response.FullNameIndexed,\n                                \"_LanguageAndScriptCode\": data.response._LanguageAndScriptCode\n                            }\n                        ]\n                    }            \n                ]\n            },\n            \"ResourceList\": {\n                \"SoundRecording\": [\n                    {\n                        \"ResourceReference\": `A1`,\n                        \"Contributor\": {\n                            \"ContributorPartyReference\":  data.response.Contributor.PartyReference,\n                            \"Role\": data.response.Contributor.Role,\n                            \"_SequenceNumber\": data.response.Contributor._SequenceNumber\n                        },\n                        \"CreationDate\": {\n                            \"__text\": data.response.CreationDate.__text,                                \n                            \"_IsApproximate\": data.response.CreationDate._IsApproximate\n                        },\n                        \"ResourceId\": {\n                            \"ISRC\": state.local.isrc\n                        },\n                        \"DisplayTitleText\": data.response.\"song-name\",\n                        \"DisplayTitle\": [\n                            {\n                                \"TitleText\": data.response.DisplayTitle.TitleText\n                                \"_ApplicableTerritoryCode\": data.response.DisplayTitle._ApplicableTerritoryCode\n                                \"_IsDefault\": data.response.DisplayTitle._IsDefault\n                            }\n                        ],\n                        \"LanguageOfPerformance\": data.response.LanguageOfPerformance,\n                        \"Duration\":  data.response.duration,\n                        \"IsInstrumental\": data.response.IsInstrumental,\n                        \"PLine\": {\n                            \"PLineText\": data.response.PLine.Text\n                        },\n                        \"Year\": data.response.\"Release-year\"\n                    }\n                ]\n            },\n            \"_xmlns:avs\":               `http://ddex.net/xml/avs/avs`,\n            \"_xmlns:ern\":               `http://ddex.net/xml/ern/42`,\n            \"_xmlns:xsi\":               `http://www.w3.org/2001/XMLSchema-instance`,\n            \"_xsi:schemaLocation\":      `http://ddex.net/xml/ern/42 http://ddex.net/xml/ern/42/release-notification.xsd`,\n            \"_ReleaseProfileVersionId\": `Audio`,\n            \"LanguageAndScriptCode\":    `en`,\n            \"__prefix\":                 `ern`\n        }\n    },\n    created: now(),\n    batchName: `Unencoded`\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Add batch to local database",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "db",
+                            "adapterName": "ddex",
+                            "schema": "batches",
+                            "operation": "add"
+                        },
+                        {
+                            "type": "launch",
+                            "adapter": "freecords",
+                            "workflowId": "getsongsbackblaze"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "getsongbackblaze",
+    "workflowId": "getsongbackblaze",
+    "adapterName": "freecords",
+    "created": "2025-04-21T14:59:02.858Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-04-21T14:59:02.858Z",
+    "modified": "2025-04-21T14:59:02.858Z",
+    "title": "Freecords Retrieve Song Details"
+}

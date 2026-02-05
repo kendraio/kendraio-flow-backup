@@ -1,0 +1,60 @@
+{
+    "blocks": [
+        {
+            "type": "mapping",
+            "mapping": "`https://test-library.murmurations.network/v2/schemas/people_schema-v0.1.0`",
+            "blockComment": ""
+        },
+        {
+            "type": "json-dereference",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"jsonSchema\": \"data\"\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "saved"
+        },
+        {
+            "type": "variable-set",
+            "name": "savedSchema",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": true,
+            "schemaGetter": {
+                "blocks": [
+                    {
+                        "type": "variable-get",
+                        "name": "savedSchema",
+                        "blockComment": "Load the serialized schema from local storage"
+                    }
+                ]
+            },
+            "blockComment": "example with get variable"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        }
+    ],
+    "id": "schemaFormContextBlocks",
+    "workflowId": "schemaFormContextBlocks",
+    "adapterName": "kendraio",
+    "created": "2025-02-26T15:31:49.003Z",
+    "tags": [
+        "sample"
+    ],
+    "updated": "2025-02-26T15:31:49.002Z",
+    "modified": "2025-02-26T15:31:49.002Z",
+    "title": "Schema form with context and blocks"
+}

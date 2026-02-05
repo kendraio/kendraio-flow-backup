@@ -1,0 +1,164 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords"
+        },
+        {
+            "type": "context-save",
+            "key": "api"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "/assets/icons/icon-72x72.png",
+            "responseType": "arraybuffer",
+            "skipInit": true,
+            "storeMetadataInContext": true,
+            "blockComment": "Load local 72x72 icon"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data }",
+            "blockComment": "Map fetched bytes to content for upload"
+        },
+        {
+            "type": "http",
+            "method": "BPUT",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-72x72.png",
+            "useProxy": true,
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": true,
+            "headers": {
+                "Content-Type": "'image/png'"
+            },
+            "storeMetadataInContext": false,
+            "blockComment": "Upload 72x72 icon to freecords"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-72x72.png",
+            "useProxy": true,
+            "responseType": "arraybuffer",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": true,
+            "storeMetadataInContext": true,
+            "blockComment": "Verify 72x72 icon from freecords"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "/assets/icons/icon-96x96.png",
+            "responseType": "arraybuffer",
+            "skipInit": true,
+            "storeMetadataInContext": true,
+            "blockComment": "Load local 96x96 icon"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data }",
+            "blockComment": "Map fetched bytes to content for upload"
+        },
+        {
+            "type": "http",
+            "method": "BPUT",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-96x96.png",
+            "useProxy": true,
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": true,
+            "headers": {
+                "Content-Type": "'image/png'"
+            },
+            "storeMetadataInContext": false,
+            "blockComment": "Upload 96x96 icon to freecords"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-96x96.png",
+            "useProxy": true,
+            "responseType": "arraybuffer",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": true,
+            "storeMetadataInContext": true,
+            "blockComment": "Verify 96x96 icon from freecords"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "/assets/icons/icon-128x128.png",
+            "responseType": "arraybuffer",
+            "skipInit": true,
+            "storeMetadataInContext": true,
+            "blockComment": "Load local 128x128 icon"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data }",
+            "blockComment": "Map fetched bytes to content for upload"
+        },
+        {
+            "type": "http",
+            "method": "BPUT",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-128x128.png",
+            "useProxy": true,
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": true,
+            "headers": {
+                "Content-Type": "'image/png'"
+            },
+            "storeMetadataInContext": false,
+            "blockComment": "Upload 128x128 icon to freecords"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-128x128.png",
+            "useProxy": true,
+            "responseType": "arraybuffer",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": true,
+            "storeMetadataInContext": true,
+            "blockComment": "Verify 128x128 icon from freecords"
+        }
+    ],
+    "id": "imagetriplej2Xk1En6H",
+    "workflowId": "imagetriplej2Xk1En6H",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:36:22.645Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:36:22.645Z",
+    "modified": "2025-10-08T16:36:22.645Z",
+    "title": "Triple image upload test"
+}

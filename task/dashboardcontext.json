@@ -1,0 +1,323 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "newValue",
+            "contextBlocks": [
+                {
+                    "type": "init"
+                },
+                {
+                    "type": "context",
+                    "contextPath": "googleAuth",
+                    "contextBlocks": [
+                        {
+                            "type": "auth0",
+                            "provider": "google-oauth2"
+                        }
+                    ],
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "context.googleAuth.access_token"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "state.token"
+                        },
+                        {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "endpoint": {
+                                "protocol": "https:",
+                                "host": "www.googleapis.com",
+                                "pathname": "/drive/v3/files"
+                            },
+                            "authentication": {
+                                "type": "bearer",
+                                "valueGetters": {
+                                    "jwt": "context.googleAuth.access_token"
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data.files"
+                },
+                {
+                    "type": "batch",
+                    "blocks": [
+                        {
+                            "type": "context",
+                            "contextPath": "file_data",
+                            "contextBlocks": [
+                                {
+                                    "type": "context-save",
+                                    "key": "file_data"
+                                }
+                            ],
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "{id: data.id, token: state.local.token}"
+                                },
+                                {
+                                    "type": "http",
+                                    "method": "get",
+                                    "useProxy": true,
+                                    "endpoint": {
+                                        "protocol": "https:",
+                                        "host": "www.googleapis.com",
+                                        "valueGetters": {
+                                            "pathname": "join('', ['/drive/v3/files/', data.id, '/comments'])"
+                                        },
+                                        "query": {
+                                            "fields": "*"
+                                        }
+                                    },
+                                    "authentication": {
+                                        "type": "bearer",
+                                        "valueGetters": {
+                                            "jwt": "data.token"
+                                        }
+                                    }
+                                },
+                                {
+                                    "type": "mapping",
+                                    "mapping": "data.comments[*].merge(@, {source: `Google Drive`, asset: $.context.file_data.name, preview: content, created: createdTime})"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data[]"
+                },
+                {
+                    "type": "context-save",
+                    "key": "googledrive"
+                },
+                {
+                    "type": "form",
+                    "label": "Submit",
+                    "jsonSchema": {
+                        "type": "object",
+                        "properties": {
+                            "linearkey": {
+                                "type": "string",
+                                "title": "Linear API Key",
+                                "default": ""
+                            }
+                        }
+                    },
+                    "uiSchema": {
+                        "linearkey": {
+                            "ui:widget": "password"
+                        }
+                    }
+                },
+                {
+                    "type": "http",
+                    "method": "post",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "api.linear.app",
+                        "pathname": "/graphql"
+                    },
+                    "headers": {
+                        "authorization": "data.linearkey"
+                    },
+                    "payload": "{ query: '{ issues { nodes { id title description        assignee {          id          name        }        createdAt        archivedAt} } }'}"
+                },
+                {
+                    "type": "mapping",
+                    "mapping": "data.data.issues.nodes[*].merge(@, {    source:  `Linear`,    asset:   title,    preview: description,    created: createdAt})"
+                },
+                {
+                    "type": "context-save",
+                    "key": "linear"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "switch",
+                    "valueGetter": "context.linear[0]",
+                    "cases": [
+                        {
+                            "value": null,
+                            "blocks": [
+                                {
+                                    "type": "message",
+                                    "message": "Linear Issues not fetched"
+                                },
+                                {
+                                    "type": "switch",
+                                    "valueGetter": "context.googledrive[0]",
+                                    "cases": [
+                                        {
+                                            "value": null,
+                                            "blocks": [
+                                                {
+                                                    "type": "message",
+                                                    "message": "Google Comments not fetched"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "default": {
+                                        "blocks": [
+                                            {
+                                                "type": "message",
+                                                "message": "Google Comments fetched"
+                                            },
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "context.googledrive"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "default": {
+                        "blocks": [
+                            {
+                                "type": "message",
+                                "message": "Linear Issues fetched"
+                            },
+                            {
+                                "type": "switch",
+                                "valueGetter": "context.googledrive[0]",
+                                "cases": [
+                                    {
+                                        "value": null,
+                                        "blocks": [
+                                            {
+                                                "type": "message",
+                                                "message": "Google Comments not fetched"
+                                            },
+                                            {
+                                                "type": "mapping",
+                                                "mapping": "context.linear"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "default": {
+                                    "blocks": [
+                                        {
+                                            "type": "message",
+                                            "message": "Google Comments fetched"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": "[context.linear, context.googledrive][]"
+                                        },
+                                        {
+                                            "type": "mapping",
+                                            "mapping": " data[*].merge(@, {created: formatDate(created, 'yyyy/MM/dd, T')})"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "created",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "source",
+                    "headerName": "Source"
+                },
+                {
+                    "field": "asset",
+                    "headerName": "Asset"
+                },
+                {
+                    "field": "preview",
+                    "headerName": "Preview"
+                },
+                {
+                    "field": "edit",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "mapping",
+                                "mapping": "{id: data.id, token: context.hasura.token}"
+                            },
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "variable-set",
+                                                "name": "flow_data"
+                                            },
+                                            {
+                                                "type": "launch",
+                                                "adapter": "task",
+                                                "workflowId": "edit"
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ],
+                                "blockComment": ""
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "dashboardcontext",
+    "workflowId": "dashboardcontext",
+    "adapterName": "task",
+    "created": "2024-07-03T13:13:01.746Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-07-03T13:13:01.746Z",
+    "modified": "2024-07-03T13:13:01.746Z",
+    "title": "Kendraio Task Dashboard"
+}

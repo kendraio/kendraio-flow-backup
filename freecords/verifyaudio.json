@@ -1,0 +1,31 @@
+{
+    "blocks": [
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "context.audioEndpoints.get"
+            },
+            "responseType": "arraybuffer",
+            "headers": {},
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "audio",
+            "blockComment": ""
+        }
+    ],
+    "id": "verifyaudio",
+    "workflowId": "verifyaudio",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:49:44.540Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:49:44.540Z",
+    "modified": "2025-10-08T16:49:44.540Z",
+    "title": "Verify Audio"
+}

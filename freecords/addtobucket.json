@@ -1,0 +1,32 @@
+{
+    "blocks": [
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "http",
+                    "method": "put",
+                    "useProxy": true,
+                    "endpoint": {
+                        "protocol": "https:",
+                        "host": "s3.eu-central-003.backblazeb2.com",
+                        "pathname": "/freecords"
+                    },
+                    "payload": "'grant_type=client_credentials'"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "addtobucket",
+    "workflowId": "addtobucket",
+    "adapterName": "freecords",
+    "created": "2025-01-31T19:02:01.213Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-01-31T19:02:01.213Z",
+    "modified": "2025-01-31T19:02:01.213Z",
+    "title": "Flow name"
+}

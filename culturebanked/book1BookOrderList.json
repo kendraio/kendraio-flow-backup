@@ -1,0 +1,55 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-book-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasuraToken",
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebanked-book-1.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  books {\n    id\n    isbn\n    title\n    featured_image_url\n    featured_image_alt\n    vendor\n    author\n    price\n    account\n    order_id\n    order_quantity\n    inventory_quantity\n  }\n}\n",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "context.hasuraToken.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.books",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false
+        }
+    ],
+    "id": "book1BookOrderList",
+    "workflowId": "book1BookOrderList",
+    "adapterName": "culturebanked",
+    "created": "2025-12-15T12:19:47.267Z",
+    "tags": [],
+    "updated": "2025-12-15T12:19:47.267Z",
+    "modified": "2025-12-15T12:19:47.267Z",
+    "title": "Book Order List"
+}

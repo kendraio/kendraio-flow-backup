@@ -1,0 +1,61 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "api",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": "https://streaming-production-spaces.ams3.cdn.digitaloceanspaces.com/freecords/3b089145-1219-4b5b-ba8e-339491bab5b2/audio/5126719a-dbaf-481e-b90c-ef718214ded8_1.mp3",
+            "responseType": "arraybuffer",
+            "headers": {},
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data.data }",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "bput",
+            "useProxy": true,
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/5063212017308/GX8LD2272332.wav",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "getandputbinaryold",
+    "workflowId": "getandputbinaryold",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:44:13.241Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:44:13.241Z",
+    "modified": "2025-10-08T16:44:13.241Z",
+    "title": "Get and Put Binary"
+}

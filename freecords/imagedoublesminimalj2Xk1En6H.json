@@ -1,0 +1,118 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords"
+        },
+        {
+            "type": "context-save",
+            "key": "api"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "/assets/icons/icon-72x72.png",
+            "responseType": "arraybuffer",
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": "Load local 72x72 icon"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data }",
+            "blockComment": "Map fetched bytes to content for upload"
+        },
+        {
+            "type": "http",
+            "method": "BPUT",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-72x72.png",
+            "useProxy": true,
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "headers": {
+                "Content-Type": "'image/png'"
+            },
+            "storeMetadataInContext": false,
+            "blockComment": "Upload 72x72 icon to freecords"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-72x72.png",
+            "useProxy": true,
+            "responseType": "arraybuffer",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": "Verify 72x72 icon from freecords"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "/assets/icons/icon-96x96.png",
+            "responseType": "arraybuffer",
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": "Load local 96x96 icon"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ content: data }",
+            "blockComment": "Map fetched bytes to content for upload"
+        },
+        {
+            "type": "http",
+            "method": "BPUT",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-96x96.png",
+            "useProxy": true,
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "headers": {
+                "Content-Type": "'image/png'"
+            },
+            "storeMetadataInContext": false,
+            "blockComment": "Upload 96x96 icon to freecords"
+        },
+        {
+            "type": "http",
+            "method": "GET",
+            "endpoint": "https://freecords.s3.eu-central-003.backblazeb2.com/icon-96x96.png",
+            "useProxy": true,
+            "responseType": "arraybuffer",
+            "authentication": {
+                "type": "aws-sigv4",
+                "secretKeyGetter": "context.api.secretKey",
+                "accessKeyIdGetter": "context.api.accessKeyId"
+            },
+            "skipInit": false,
+            "storeMetadataInContext": true,
+            "blockComment": "Verify 96x96 icon from freecords"
+        }
+    ],
+    "id": "imagedoublesminimalj2Xk1En6H",
+    "workflowId": "imagedoublesminimalj2Xk1En6H",
+    "adapterName": "freecords",
+    "created": "2025-10-08T16:37:42.644Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-08T16:37:42.643Z",
+    "modified": "2025-10-08T16:37:42.643Z",
+    "title": "Double image upload test"
+}

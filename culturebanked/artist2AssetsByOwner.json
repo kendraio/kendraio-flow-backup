@@ -1,0 +1,111 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"id\":  to_number(context.queryParams.id)\n    \"owner_name\": context.queryParams.owner_name\n}",
+            "blockComment": "queryParam Id"
+        },
+        {
+            "type": "template",
+            "template": "<br><h3>Assets By {{data.owner_name}}</h3>",
+            "blockComment": "Assets by Owner"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "query GetAssetsByOwner ($owner_id: Int!) {\n  assets (where: { assets_owners: { owner_id: { _eq: $owner_id } }}) {\n    asset_id\n    asset_title\n  }\n}",
+            "variables": {
+                "owner_id": "data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.assets",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "headerName": "Asset title",
+                    "field": "asset_title"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit Asset",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "culturebanked",
+                                                "workflowId": "artist2EditWork",
+                                                "context": {
+                                                    "id": "data.asset_id"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to Owners List",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "culturebanked",
+                            "workflowId": "artist2Owners"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2AssetsByOwner",
+    "workflowId": "artist2AssetsByOwner",
+    "adapterName": "culturebanked",
+    "created": "2025-04-16T15:23:58.003Z",
+    "tags": [],
+    "updated": "2025-04-16T15:23:58.002Z",
+    "modified": "2025-04-16T15:23:58.002Z",
+    "title": "Assets By Owner"
+}

@@ -1,0 +1,102 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+            "query": "query {\n  backstage_gigs {\n    headline_artist_name\n    venue_name\n    venue_city\n    start_date\n    start_time\n    lineup\n    description\n  }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "data.token"
+            },
+            "allowFirst": true,
+            "allowEmpty": true
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.backstage_gigs[*].merge(@, {\n    start_time: start_time && formatDate(start_time, 'T'),\n    venue: venue_name && venue_city && join(', ', [venue_name, venue_city])\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "headline_artist_name",
+                    "headerName": "Headline Act"
+                },
+                {
+                    "field": "venue",
+                    "headerName": "Venue"
+                },
+                {
+                    "field": "start_date",
+                    "headerName": "Date"
+                },
+                {
+                    "field": "start_time",
+                    "headerName": "Time"
+                },
+                {
+                    "field": "lineup",
+                    "headerName": "Lineup"
+                },
+                {
+                    "field": "delete",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "form",
+                                "label": "Delete"
+                            },
+                            {
+                                "type": "graphql",
+                                "endpoint": "https://kendraio-backstage.hasura.app/v1/graphql",
+                                "query": "mutation MyMutation($id: 20) { delete_backstage_gigs_by_pk(gig_id: $id)}",
+                                "variables": {},
+                                "headers": {
+                                    "x-hasura-admin-secret": "context.hasura.token"
+                                },
+                                "allowFirst": true,
+                                "allowEmpty": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "read",
+    "workflowId": "read",
+    "adapterName": "backstage",
+    "created": "2024-01-24T14:30:36.648Z",
+    "tags": [
+        "hidden",
+        " delete"
+    ],
+    "updated": "2024-01-24T14:30:36.648Z",
+    "modified": "2024-01-24T14:30:36.648Z",
+    "title": "Kendraio Backstage (read)"
+}

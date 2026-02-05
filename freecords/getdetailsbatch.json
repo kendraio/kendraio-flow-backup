@@ -1,0 +1,58 @@
+{
+    "blocks": [
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "context",
+                    "contextPath": "isrc",
+                    "contextBlocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.ISRC"
+                        },
+                        {
+                            "type": "context-save",
+                            "key": "isrc"
+                        }
+                    ],
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "{ key: context.api.key, ISRC: data.ISRC }"
+                        },
+                        {
+                            "type": "http",
+                            "method": "post",
+                            "useProxy": false,
+                            "endpoint": {
+                                "protocol": "https:",
+                                "host": "app.freecords.com/api/1.1/wf",
+                                "pathname": "/get_song",
+                                "valueGetters": {
+                                    "query": "{ api_token: data.key }"
+                                }
+                            }
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.response"
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "getdetailsbatch",
+    "workflowId": "getdetailsbatch",
+    "adapterName": "freecords",
+    "created": "2025-04-21T14:41:52.750Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-04-21T14:41:52.750Z",
+    "modified": "2025-04-21T14:41:52.750Z",
+    "title": "Get Details"
+}

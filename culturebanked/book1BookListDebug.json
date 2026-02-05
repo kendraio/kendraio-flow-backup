@@ -1,0 +1,389 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-book-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "context-save",
+            "key": "hasuraToken",
+            "blockComment": "hasuraToken"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-book-boonbooks",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": true,
+            "showState": false,
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "boonbooksToken",
+            "blockComment": "boonbooksToken"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"order_id\": uuid(data.title)\n}",
+            "blockComment": "Creating UUID"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "account": {
+                        "title": "Account",
+                        "type": "string"
+                    },
+                    "order_id": {
+                        "title": "Order ID",
+                        "type": "string",
+                        "readOnly": true
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "account, order_id"
+        },
+        {
+            "type": "context-save",
+            "key": "orderData",
+            "blockComment": "orderData"
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "search": {
+                        "type": "string",
+                        "title": "Search here..."
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Search"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ \n    query: join('', ['{ \n        products(\n            first: 250, \n            query: \"', data.search, '\"\n        ) { \n            edges { \n                node { \n                    title \n                    handle \n                    vendor \n                    featuredMedia { \n                        preview { \n                            image { \n                                url \n                                altText \n                            } \n                        } \n                    } \n                    variants(first: 1) { \n                        edges { \n                            node { \n                                price \n                                inventoryQuantity \n                            } \n                        } \n                    } \n                    metafield(\n                        namespace: \"isbn_db_connector\", \n                        key: \"authors\"\n                    ) { \n                        value \n                    } \n                } \n            } \n        } \n    }']) \n}",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "9597d8-c1.myshopify.com",
+                "pathname": "/admin/api/2025-10/graphql.json"
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "X-Shopify-Access-Token": "context.boonbooksToken.token"
+            },
+            "payload": "data",
+            "useProxy": true,
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.products.edges[*].node.merge(@, {\n    price: @.variants.edges[0].node.price\n    inventoryQuantity: @.variants.edges[0].node.inventoryQuantity,\n    author: @.metafield.value\n})",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                },
+                "pagination": true,
+                "paginationPageSize": 5,
+                "rowSelection": "multiple",
+                "suppressRowClickSelection": true
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "width": 50,
+                    "resizable": false,
+                    "checkboxSelection": true
+                },
+                {
+                    "field": "handle",
+                    "headerName": "ISBN"
+                },
+                {
+                    "field": "featuredMedia.preview.image.url",
+                    "headerName": "Featured Image",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "template",
+                                "template": "<img width='150' height='150' src='{{data.featuredMedia.preview.image.url}}' />"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "field": "title",
+                    "headerName": "Title"
+                },
+                {
+                    "field": "author",
+                    "headerName": "Author"
+                },
+                {
+                    "field": "vendor",
+                    "headerName": "Vendor"
+                },
+                {
+                    "field": "price",
+                    "headerName": "Price"
+                },
+                {
+                    "field": "inventoryQuantity",
+                    "headerName": "Inventory Quantity"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[*].merge(@, {\n    \"imageCoverSrc\": featuredMedia.preview.image.url,\n    \"imageCoverAlt\": featuredMedia.preview.image.altText\n})\n\n",
+            "blockComment": "short path to image cover"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{items: data}",
+            "blockComment": "items: data"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "form",
+            "label": "Create a list",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "handle": {
+                                    "type": "string"
+                                },
+                                "imageCoverSrc": {
+                                    "type": "string"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "author": {
+                                    "type": "string"
+                                },
+                                "vendor": {
+                                    "type": "string"
+                                },
+                                "price": {
+                                    "type": "string"
+                                },
+                                "inventoryQuantity": {
+                                    "type": "string"
+                                },
+                                "order_quantity": {
+                                    "type": "number",
+                                    "default": 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "uiSchema": {
+                "items": {
+                    "ui:widget": "table",
+                    "colHeadings": [
+                        "ISBN",
+                        "Image",
+                        "Title",
+                        "Author",
+                        "Vendor",
+                        "Price",
+                        "Inventory Quantity",
+                        "Order Quantity"
+                    ],
+                    "allowAdd": false,
+                    "allowRemove": false,
+                    "items": {
+                        "imageCoverSrc": {
+                            "ui:widget": "remote-image"
+                        },
+                        "handle": {
+                            "ui:widget": "readonly"
+                        },
+                        "title": {
+                            "ui:widget": "readonly"
+                        },
+                        "author": {
+                            "ui:widget": "readonly"
+                        },
+                        "vendor": {
+                            "ui:widget": "readonly"
+                        },
+                        "price": {
+                            "ui:widget": "readonly"
+                        },
+                        "inventoryQuantity": {
+                            "ui:widget": "readonly"
+                        }
+                    }
+                }
+            },
+            "blockComment": "Order Form/Table"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{ items: data.items, total: currency(product(sum(data.items[].product(product(to_number(price), `100`), order_quantity) || `[]`), `0.01`), 'en-GB', 'GBP') }",
+            "blockComment": ""
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "<p>Here is my order:</p><ul>{{#each data.items}}<li><b>{{order_quantity}} x</b> {{title}} </li>{{/each}}</ul>"
+                },
+                {
+                    "type": "template",
+                    "template": "<p>Total Order: {{data.total}}</p></ul>"
+                }
+            ],
+            "blockComment": "Card Order Sumup"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Save to shoplist",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "mapping",
+                            "mapping": "data.items"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "selectedProducts",
+            "blockComment": "selectedProducts"
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.selectedProducts[*].merge(@, {\n    \"featured_image_url\": featuredMedia.preview.image.url,\n    \"featured_image_alt\": featuredMedia.preview.image.altText,\n    \"inventory_quantity\": inventoryQuantity,\n    \"order_id\": $.context.orderData.order_id,\n    \"account\": $.context.orderData.account,\n    \"isbn\": handle\n}).omit(@, ['renderedHtml', 'inventoryQuantity', 'featuredMedia', 'variants', 'metafield', 'handle', 'imageCoverSrc', 'imageCoverAlt' ])",
+            "blockComment": "manipulate data to save on DB"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebanked-book-1.hasura.app/v1/graphql",
+            "query": "mutation MyMutation($products: [books_insert_input!]!) {\n  insert_books(objects: $products) {\n    returning {\n      title\n    }\n  }\n}",
+            "variables": {
+                "products": "data"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasuraToken.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebanked-book-1.hasura.app/v1/graphql",
+            "query": "query GetOrderBYOrderId($order_id: uuid!) {\n  books(where: {order_id: {_eq: $order_id}}) {\n    isbn\n    order_id\n  }\n}\n\n",
+            "variables": {
+                "order_id": "context.orderData.order_id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasuraToken.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "{{#if data.data.books.length}}<p>\u2705 Products saved successfully!</p>{{else}}<p>\u274c There was a problem saving your order. Please try again later.</p>{{/if}}"
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "notify": false,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "9597d8-c1.myshopify.com",
+                "pathname": "/admin/api/2025-07/graphql.json"
+            },
+            "headers": {
+                "Content-Type": "'application/json'",
+                "X-Shopify-Access-Token": "context.boonbooksToken.token"
+            },
+            "payload": "{ query: 'query { products(first: 250) { edges { node { title handle vendor featuredMedia { preview { image { url altText } } } variants(first: 1) { edges { node { price inventoryQuantity } } } metafield(namespace: \"isbn_db_connector\", key: \"authors\") { value } } } } }' }",
+            "useProxy": true,
+            "blockComment": "old request"
+        }
+    ],
+    "id": "book1BookListDebug",
+    "workflowId": "book1BookListDebug",
+    "adapterName": "culturebanked",
+    "created": "2025-11-05T15:43:21.977Z",
+    "tags": [],
+    "updated": "2025-11-05T15:43:21.977Z",
+    "modified": "2025-11-05T15:43:21.977Z",
+    "title": "Book List"
+}

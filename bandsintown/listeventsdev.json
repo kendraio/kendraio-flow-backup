@@ -1,0 +1,83 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "saved",
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "bandsintown",
+            "workflowId": "selectArtist",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "label": "Search",
+            "emitOnInit": true,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "default": "PAST",
+                        "enum": [
+                            "PAST",
+                            "UPCOMING"
+                        ]
+                    },
+                    "status": {
+                        "type": "string",
+                        "default": "PUBLISHED",
+                        "enum": [
+                            "PUBLISHED",
+                            "DRAFT"
+                        ]
+                    }
+                }
+            },
+            "uiSchema": {
+                "id": {
+                    "ui:widget": "kendraio-hidden"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "kendraio-bit-proxy.vercel.app",
+                "valueGetters": {
+                    "pathname": "join('', ['/artist/', '15524696', '/events'])",
+                    "query": "{ type: data.type, status: data.status }"
+                }
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJtYW5hZ2VySWQiOiIxNTU1OTA4IiwiYXV0aG1ldGhvZCI6ImNvZ25pdG8iLCJpYXQiOjE3NDM1MjQ0Nzl9.WuVO5VnRtxVL6fzTwEFA8uI6zB90YJ6g5pv94_T2Yvvf9_ojWT80_Ld54nEv9SmzLGB9Hzw123ckngTavbUbDZNL7R-zVa07AgUKk-V6wZSHLaNhoNoBLZD8T-cIepf-sTe7ybk2CCS7QY_9heV5CahWNYZtGuDTv4fqxYHZvLza5uj863sGzXciRem9lD3Op48qiXI-6f7CesvhMUihxXFor41f7fjiISccOx-rt3jpAMk_Oobrmz5LXJl31w-YMbBXfdxJdUrmhOZ-sXkwGz7BdNICxN2cS9UmEzSHYV-UWMjBfwOjjS_TteLhmM1ZxZHDXKSYD0XWX1E91UjmAA'])"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "listeventsdev",
+    "workflowId": "listeventsdev",
+    "adapterName": "bandsintown",
+    "created": "2025-04-02T14:52:21.287Z",
+    "tags": [],
+    "updated": "2025-04-02T14:52:21.286Z",
+    "modified": "2025-04-02T14:52:21.286Z",
+    "title": "List Events Dev Version"
+}

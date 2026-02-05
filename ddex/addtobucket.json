@@ -1,0 +1,40 @@
+{
+    "blocks": [
+        {
+            "type": "batch",
+            "blocks": [
+                {
+                    "type": "context",
+                    "contextPath": "isrc",
+                    "contextBlocks": [],
+                    "blocks": [
+                        {
+                            "type": "debug",
+                            "open": 1,
+                            "consoleLog": true
+                        },
+                        {
+                            "type": "http",
+                            "method": "put",
+                            "useProxy": true,
+                            "endpoint": {
+                                "protocol": "https:",
+                                "host": "s3.eu-central-003.backblazeb2.com",
+                                "pathname": "/freecords"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "addtobucket",
+    "workflowId": "addtobucket",
+    "adapterName": "ddex",
+    "created": "2025-01-16T09:44:02.900Z",
+    "tags": [],
+    "updated": "2025-01-16T09:44:02.899Z",
+    "modified": "2025-01-16T09:44:02.899Z",
+    "title": "Flow name"
+}

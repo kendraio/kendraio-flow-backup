@@ -1,0 +1,44 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "label": "Authenticate",
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "launch",
+            "adapter": "culturebanked",
+            "workflowId": "artist2Homepage",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "culturebanked",
+    "created": "2025-03-16T18:09:59.135Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2025-03-16T18:09:59.134Z",
+    "modified": "2025-03-16T18:09:59.134Z",
+    "title": "CultureBanked Connect"
+}

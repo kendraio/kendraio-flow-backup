@@ -1,0 +1,44 @@
+{
+    "blocks": [
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Hasura Secret"
+                    }
+                }
+            },
+            "label": "Authenticate",
+            "uiSchema": {
+                "token": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "subscribe",
+            "blockComment": ""
+        },
+        {
+            "type": "launch",
+            "adapter": "subscribe",
+            "workflowId": "encode",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "subscribe",
+    "created": "2024-10-11T16:34:09.317Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2024-10-11T16:34:09.317Z",
+    "modified": "2024-10-11T16:34:09.317Z",
+    "title": "Kendraio Subscribe Connect"
+}

@@ -1,0 +1,41 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "sandboxAuth",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": {
+                "protocol": "https:",
+                "pathname": "/artist",
+                "host": "kendraio-bit-proxy.vercel.app"
+            },
+            "headers": {
+                "Authorization": "join('', ['Bearer ', data.token])"
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "reference",
+            "fieldLabel": "Select artist",
+            "labelGetter": "name",
+            "valueField": "id",
+            "outputGetter": "@",
+            "blockComment": ""
+        }
+    ],
+    "id": "emptysub",
+    "workflowId": "emptysub",
+    "adapterName": "bandsintown",
+    "created": "2025-04-02T16:35:47.081Z",
+    "tags": [],
+    "updated": "2025-04-02T16:35:47.081Z",
+    "modified": "2025-04-02T16:35:47.081Z",
+    "title": "Empty Subroutine"
+}

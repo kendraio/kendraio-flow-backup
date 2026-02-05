@@ -1,0 +1,254 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "endpoint": "https://test-library.murmurations.network/v2/schemas",
+            "useProxy": true,
+            "blockComment": "Getting Murmurations Schemas"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data[?url!=''].merge(@, {\n    \"fullUrl\": join('', ['https://test-library.murmurations.network/v2/schemas/', @.name])\n    \n})",
+            "blockComment": "adding url to fetch schema"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data[? !starts_with(name, 'test_schema')]",
+            "blockComment": "Filter out all test schema"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": data[*].{\n    \"title\": name,\n    \"const\": fullUrl\n  }\n}",
+            "blockComment": "anyOf"
+        },
+        {
+            "type": "context-save",
+            "key": "testSchemas",
+            "blockComment": "testSchemas"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "selectedUrl": {
+                        "title": "Select a schema",
+                        "$ref": "#/definitions/context/testSchemas"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Dropdown Schema"
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.selectedUrl",
+            "blockComment": "selectedUrl"
+        },
+        {
+            "type": "json-dereference",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"jsonSchema\": \"data\"\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Save",
+            "hasSubmit": false,
+            "schemaGetter": "data",
+            "blockComment": "Show Schema"
+        },
+        {
+            "type": "context-save",
+            "key": "schemaProfile",
+            "blockComment": "schemaProfile"
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Validate Schema",
+                    "color": "primary",
+                    "blocks": [
+                        {
+                            "type": "http",
+                            "method": "post",
+                            "endpoint": {
+                                "protocol": "https:",
+                                "host": "test-index.murmurations.network",
+                                "pathname": "/v2/validate"
+                            },
+                            "headers": {
+                                "Content-Type": "'application/json'"
+                            },
+                            "payload": "data",
+                            "useProxy": false
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": "Validate against Murmurations network"
+        },
+        {
+            "type": "switch",
+            "valueGetter": "data.hasError",
+            "cases": [
+                {
+                    "value": true,
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "Has errors"
+                        },
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "json(data, null,`2`)"
+                                },
+                                {
+                                    "type": "template",
+                                    "template": "<code><pre>{{data}}</pre></code>"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "value": null,
+                    "blocks": [
+                        {
+                            "type": "message",
+                            "message": "No errors"
+                        },
+                        {
+                            "type": "card",
+                            "blocks": [
+                                {
+                                    "type": "mapping",
+                                    "mapping": "json(context.schemaProfile, null,`2`)"
+                                },
+                                {
+                                    "type": "template",
+                                    "template": "<code><pre>{{data}}</pre></code>"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "default": {
+                "blocks": [
+                    {
+                        "type": "message",
+                        "message": "Default message"
+                    }
+                ]
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"jsonProfile\": data\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "apiKey": {
+                        "title": "jsonStorage.net API Key",
+                        "type": "string"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": "Submit to jsonStorage"
+        },
+        {
+            "type": "context-save",
+            "key": "apiKey",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "context.apiKey",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "api.jsonstorage.net",
+                "pathname": "/v1/json",
+                "valueGetters": {
+                    "query": "{ apiKey: context.apiKey.apiKey }"
+                }
+            },
+            "headers": {
+                "Content-Type": "'application/json'"
+            },
+            "payload": "context.schemaProfile",
+            "useProxy": false,
+            "blockComment": "Post Item to jsonStorage.net"
+        },
+        {
+            "type": "template",
+            "template": "{{data.uri}}",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"profile_url\": data.uri\n}",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "post",
+            "endpoint": {
+                "protocol": "https:",
+                "host": "test-index.murmurations.network",
+                "pathname": "/v2/nodes-sync"
+            },
+            "headers": {
+                "Content-Type": "'application/json'"
+            },
+            "payload": "data",
+            "useProxy": false,
+            "blockComment": "Post Profile to Murmurations Network "
+        },
+        {
+            "type": "card",
+            "blocks": [
+                {
+                    "type": "template",
+                    "template": "{{#if data.data}}<h3>Your Profile is {{data.data.status}} </h3>{{else}}<p>\u274c There was a problem saving your profile: Error: {{data.errors.title}} {{data.errors.detail}}</p>{{/if}}"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "loadSchema",
+    "workflowId": "loadSchema",
+    "adapterName": "murmurations",
+    "created": "2025-11-10T17:28:22.785Z",
+    "tags": [],
+    "updated": "2025-11-10T17:28:22.785Z",
+    "modified": "2025-11-10T17:28:22.785Z",
+    "title": "Display loaded schema"
+}

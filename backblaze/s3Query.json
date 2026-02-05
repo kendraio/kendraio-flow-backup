@@ -1,0 +1,33 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "auth",
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "valueGetter": "data.endpoint"
+            },
+            "headers": {
+                "X-Amz-Date": "data.XAmzDate",
+                "Authorization": "data.Authorization"
+            },
+            "blockComment": ""
+        }
+    ],
+    "id": "s3Query",
+    "workflowId": "s3Query",
+    "adapterName": "backblaze",
+    "created": "2025-01-22T10:16:20.713Z",
+    "tags": [],
+    "updated": "2025-01-22T10:16:20.713Z",
+    "modified": "2025-01-22T10:16:20.713Z",
+    "title": "Flow"
+}

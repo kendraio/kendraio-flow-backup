@@ -1,0 +1,59 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "backblaze",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data || `{}`",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Connect",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "secretKey": {
+                        "type": "string",
+                        "title": "Secret Key"
+                    },
+                    "accessKeyId": {
+                        "type": "string",
+                        "title": "Access Key ID"
+                    }
+                }
+            },
+            "uiSchema": {
+                "secretKey": {
+                    "ui:widget": "password"
+                },
+                "accessKeyId": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "backblaze",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "backblaze",
+    "created": "2025-04-16T12:41:53.579Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-04-16T12:41:53.579Z",
+    "modified": "2025-04-16T12:41:53.579Z",
+    "title": "Backblaze Connect"
+}

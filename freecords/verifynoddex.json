@@ -1,0 +1,41 @@
+{
+    "blocks": [
+        {
+            "type": "context",
+            "contextPath": "song",
+            "contextBlocks": [
+                {
+                    "type": "context-save",
+                    "key": "song"
+                }
+            ],
+            "blocks": [
+                {
+                    "type": "mapping",
+                    "mapping": "{get: context.song.AAC, put: join('', [context.api.endpoint, '0123456789', '/', context.song.ISRC, '.wav'])}"
+                },
+                {
+                    "type": "context-save",
+                    "key": "audioEndpoints"
+                },
+                {
+                    "type": "gosub",
+                    "adapterName": "freecords",
+                    "workflowId": "verifyaudio"
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "verifynoddex",
+    "workflowId": "verifynoddex",
+    "adapterName": "freecords",
+    "created": "2025-10-10T15:48:11.327Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-10-10T15:48:11.327Z",
+    "modified": "2025-10-10T15:48:11.327Z",
+    "title": "Verify Bucket Contents"
+}

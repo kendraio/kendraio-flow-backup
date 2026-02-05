@@ -1,0 +1,111 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"id\":  to_number(context.queryParams.id),\n    \"vendor_name\": context.queryParams.vendor_name\n}",
+            "blockComment": "queryParam Id"
+        },
+        {
+            "type": "template",
+            "template": "<br><h3>Assets by {{data.vendor_name}}</h3>",
+            "blockComment": "Assets by Vendor"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "query GetAssetsByVendor ($vendor_id: Int!) {\n  assets (where: { assets_vendors: { vendor_id: { _eq: $vendor_id } }}) {\n    asset_id\n    asset_title\n  }\n}",
+            "variables": {
+                "vendor_id": "data.id"
+            },
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.assets",
+            "blockComment": ""
+        },
+        {
+            "type": "grid",
+            "gridOptions": {},
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "headerName": "Asset title",
+                    "field": "asset_title"
+                },
+                {
+                    "headerName": "Operations",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Edit Asset",
+                                        "blocks": [
+                                            {
+                                                "type": "launch",
+                                                "adapter": "culturebanked",
+                                                "workflowId": "artist2EditWork",
+                                                "context": {
+                                                    "id": "data.asset_id"
+                                                }
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "actions",
+            "buttons": [
+                {
+                    "label": "Back to Vendors List",
+                    "color": "default",
+                    "blocks": [
+                        {
+                            "type": "launch",
+                            "adapter": "culturebanked",
+                            "workflowId": "artist2Vendors"
+                        }
+                    ],
+                    "enabled": true
+                }
+            ],
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2AssetsByVendor",
+    "workflowId": "artist2AssetsByVendor",
+    "adapterName": "culturebanked",
+    "created": "2025-04-16T15:22:08.211Z",
+    "tags": [],
+    "updated": "2025-04-16T15:22:08.211Z",
+    "modified": "2025-04-16T15:22:08.211Z",
+    "title": "Assets By Vendor"
+}

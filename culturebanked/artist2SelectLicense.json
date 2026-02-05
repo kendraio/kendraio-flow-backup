@@ -1,0 +1,79 @@
+{
+    "blocks": [
+        {
+            "type": "init"
+        },
+        {
+            "type": "context-save",
+            "key": "state.local.licenseSelected",
+            "blockComment": "local.licenseSelected"
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "culturebanked-hasura",
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "hasura",
+            "blockComment": "Hasura Key"
+        },
+        {
+            "type": "graphql",
+            "endpoint": "https://culturebankedartist2.hasura.app/v1/graphql",
+            "query": "query GetAllLicense {\n    license_details {\n        license_id\n        name\n    }\n}",
+            "variables": {},
+            "headers": {
+                "x-hasura-admin-secret": "context.hasura.token"
+            },
+            "allowFirst": false,
+            "allowEmpty": false
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.data.license_details",
+            "blockComment": "license_details"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n  \"anyOf\": data[*].{\n    \"title\": name,\n    \"const\": license_id\n  }\n}",
+            "blockComment": "anyOf"
+        },
+        {
+            "type": "context-save",
+            "key": "licenses",
+            "blockComment": "licenses"
+        },
+        {
+            "type": "mapping",
+            "mapping": "{\n    \"licenseSelected\": to_number(state.local.licenseSelected)\n}",
+            "blockComment": "licenseSelected"
+        },
+        {
+            "type": "form",
+            "hasSubmit": false,
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "licenseSelected": {
+                        "title": "Select a license",
+                        "$ref": "#/definitions/context/licenses"
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        }
+    ],
+    "id": "artist2SelectLicense",
+    "workflowId": "artist2SelectLicense",
+    "adapterName": "culturebanked",
+    "created": "2024-11-06T14:57:11.817Z",
+    "tags": [],
+    "updated": "2024-11-06T14:57:11.816Z",
+    "modified": "2024-11-06T14:57:11.816Z",
+    "title": "Select License"
+}

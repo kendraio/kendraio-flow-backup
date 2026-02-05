@@ -1,0 +1,75 @@
+{
+    "blocks": [
+        {
+            "type": "message",
+            "title": "Please make sure you are logging into the right URL.",
+            "message": "Auth is saved in Bitwarden as Freecords / Backblaze.",
+            "blockComment": ""
+        },
+        {
+            "type": "init"
+        },
+        {
+            "type": "variable-get",
+            "name": "freecords",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data || `{}`",
+            "blockComment": ""
+        },
+        {
+            "type": "form",
+            "label": "Connect",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "title": "Freecords Key"
+                    },
+                    "secretKey": {
+                        "type": "string",
+                        "title": "Backblaze Secret Key"
+                    },
+                    "accessKeyId": {
+                        "type": "string",
+                        "title": "Backblaze Access Key ID"
+                    },
+                    "endpoint": {
+                        "type": "string",
+                        "title": "Bucket Endpoint"
+                    }
+                }
+            },
+            "uiSchema": {
+                "key": {
+                    "ui:widget": "password"
+                },
+                "secretKey": {
+                    "ui:widget": "password"
+                },
+                "accessKeyId": {
+                    "ui:widget": "password"
+                }
+            },
+            "blockComment": ""
+        },
+        {
+            "type": "variable-set",
+            "name": "freecords",
+            "blockComment": ""
+        }
+    ],
+    "id": "connect",
+    "workflowId": "connect",
+    "adapterName": "freecords",
+    "created": "2025-07-10T10:16:24.889Z",
+    "tags": [
+        "connect"
+    ],
+    "updated": "2025-07-10T10:16:24.889Z",
+    "modified": "2025-07-10T10:16:24.889Z",
+    "title": "Freecords Connect"
+}
