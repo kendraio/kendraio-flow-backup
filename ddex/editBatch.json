@@ -12,12 +12,13 @@
         },
         {
             "type": "mapping",
-            "mapping": "data[0]"
+            "mapping": "data[0]",
+            "blockComment": ""
         },
         {
-            "type": "debug",
-            "open": 0,
-            "showContext": false
+            "type": "context-save",
+            "key": "batch",
+            "blockComment": ""
         },
         {
             "type": "form",
@@ -45,7 +46,7 @@
                                                 "items": {
                                                     "type": "object",
                                                     "properties": {
-                                                        "SoundRecordingId": {
+                                                        "ResourceId": {
                                                             "type": "object",
                                                             "properties": {
                                                                 "ISRC": {
@@ -54,18 +55,13 @@
                                                                 }
                                                             }
                                                         },
-                                                        "ReferenceTitle": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "TitleText": {
-                                                                    "type": "string",
-                                                                    "title": "ReferenceTitle.TitleText"
-                                                                }
-                                                            }
+                                                        "DisplayTitleText": {
+                                                            "type": "string",
+                                                            "title": "Title"
                                                         },
                                                         "LanguageOfPerformance": {
                                                             "type": "string",
-                                                            "title": "LanguageOfPerformance"
+                                                            "title": "Language of Performance"
                                                         },
                                                         "Duration": {
                                                             "type": "string",
@@ -219,11 +215,23 @@
                         }
                     }
                 }
-            }
+            },
+            "blockComment": ""
         },
         {
             "type": "context-save",
-            "contextKey": "saved"
+            "key": "updatedBatch",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, $.context.batch)",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "data.merge(@, { batchName: $.context.updatedBatch.batchName})",
+            "blockComment": ""
         },
         {
             "type": "actions",
@@ -233,11 +241,22 @@
                     "color": "primary",
                     "blocks": [
                         {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "ddex",
+                            "schema": "batches"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.merge(@, {batchName: $.context.updatedBatch.batchName})"
+                        },
+                        {
                             "type": "launch",
                             "adapter": "ddex",
                             "workflowId": "batches"
                         }
-                    ]
+                    ],
+                    "enabled": true
                 },
                 {
                     "label": "Cancel",
@@ -248,7 +267,8 @@
                             "adapter": "ddex",
                             "workflowId": "batches"
                         }
-                    ]
+                    ],
+                    "enabled": true
                 },
                 {
                     "label": "Delete",
@@ -264,7 +284,8 @@
                             "adapter": "ddex",
                             "workflowId": "batches"
                         }
-                    ]
+                    ],
+                    "enabled": true
                 },
                 {
                     "label": "Export",
@@ -307,17 +328,31 @@
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "enabled": true
+                },
+                {
+                    "label": "Export to Backblaze",
+                    "color": "accent",
+                    "blocks": [
+                        {
+                            "type": "gosub",
+                            "adapterName": "ddex",
+                            "workflowId": "addtobucket"
+                        }
+                    ],
+                    "enabled": true
                 }
-            ]
+            ],
+            "blockComment": ""
         }
     ],
     "id": "editBatch",
     "workflowId": "editBatch",
     "adapterName": "ddex",
-    "created": "2021-03-26T14:46:49.963Z",
+    "created": "2025-01-10T15:17:20.720Z",
     "tags": [],
-    "updated": "2021-03-26T14:46:49.963Z",
-    "modified": "2021-03-26T14:46:49.963Z",
+    "updated": "2025-01-10T15:17:20.719Z",
+    "modified": "2025-01-10T15:17:20.719Z",
     "title": "Edit Batch"
 }

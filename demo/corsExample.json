@@ -23,12 +23,16 @@
                 "host": "reqres.in",
                 "pathname": "/api/users",
                 "query": {
-                    "page": 2
+                    "page": 1
                 },
                 "valueGetters": {
                     "query": "{ page: data.page }"
                 }
-            }
+            },
+            "headers": {
+                "x-api-key": "`reqres-free-v1`"
+            },
+            "blockComment": ""
         },
         {
             "type": "mapping",
@@ -37,14 +41,57 @@
         {
             "type": "grid",
             "gridOptions": {}
+        },
+        {
+            "type": "form",
+            "jsonSchema": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "type": "number",
+                        "title": "Page",
+                        "default": 2
+                    }
+                }
+            },
+            "uiSchema": {},
+            "blockComment": ""
+        },
+        {
+            "type": "http",
+            "method": "get",
+            "useProxy": true,
+            "endpoint": {
+                "protocol": "https:",
+                "host": "reqres.in",
+                "pathname": "/api/users",
+                "query": {
+                    "page": 1
+                },
+                "valueGetters": {
+                    "query": "{ page: data.page }"
+                }
+            },
+            "headers": {
+                "x-api-key": "`reqres-free-v1`"
+            },
+            "blockComment": "test 2"
+        },
+        {
+            "type": "debug",
+            "open": 2,
+            "showData": true,
+            "showContext": false,
+            "showState": false,
+            "blockComment": ""
         }
     ],
     "id": "corsExample",
     "workflowId": "corsExample",
     "adapterName": "demo",
-    "created": "2021-04-23T09:30:51.657Z",
+    "created": "2025-08-14T17:26:41.200Z",
     "tags": [],
-    "updated": "2021-04-23T09:30:51.657Z",
-    "modified": "2021-04-23T09:30:51.657Z",
+    "updated": "2025-08-14T17:26:41.200Z",
+    "modified": "2025-08-14T17:26:41.200Z",
     "title": "CORS Example"
 }

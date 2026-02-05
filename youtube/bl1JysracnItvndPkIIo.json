@@ -52,6 +52,7 @@
                 {
                     "type": "http",
                     "method": "get",
+                    "useProxy": true,
                     "endpoint": {
                         "protocol": "https:",
                         "host": "www.googleapis.com",
@@ -151,6 +152,7 @@
                 {
                     "type": "http",
                     "method": "get",
+                    "useProxy": true,
                     "endpoint": {
                         "protocol": "https:",
                         "host": "www.googleapis.com",
@@ -282,6 +284,7 @@
                 {
                     "type": "http",
                     "method": "PUT",
+                    "useProxy": true,
                     "endpoint": {
                         "protocol": "https:",
                         "host": "www.googleapis.com",
@@ -303,9 +306,9 @@
     "id": "bl1JysracnItvndPkIIo",
     "workflowId": "bl1JysracnItvndPkIIo",
     "adapterName": "youtube",
-    "created": "2022-07-07T19:54:16.940Z",
+    "created": "2023-10-30T17:15:29.915Z",
     "tags": [],
-    "updated": "2022-07-07T19:54:16.940Z",
-    "modified": "2022-07-07T19:54:16.940Z",
+    "updated": "2023-10-30T17:15:29.915Z",
+    "modified": "2023-10-30T17:15:29.915Z",
     "title": "YouTube: Video: List and Edit"
 }

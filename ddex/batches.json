@@ -188,9 +188,9 @@
     "id": "batches",
     "workflowId": "batches",
     "adapterName": "ddex",
-    "created": "2022-06-20T16:21:20.844Z",
+    "created": "2024-12-04T17:44:34.817Z",
     "tags": [],
-    "updated": "2022-06-20T16:21:20.844Z",
-    "modified": "2022-06-20T16:21:20.844Z",
+    "updated": "2024-12-04T17:44:34.817Z",
+    "modified": "2024-12-04T17:44:34.817Z",
     "title": "Batches"
 }

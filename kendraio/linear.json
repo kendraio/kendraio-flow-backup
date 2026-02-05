@@ -5,7 +5,7 @@
         },
         {
             "type": "form",
-            "label": "Enter Linear Key",
+            "label": "Submit",
             "jsonSchema": {
                 "type": "object",
                 "properties": {
@@ -31,20 +31,12 @@
             "headers": {
                 "authorization": "data.linearkey"
             },
-            "payload": "{ query: '{ issues { nodes { id title } } }'}",
-            "blockComment": ""
-        },
-        {
-            "type": "debug",
-            "open": 1,
-            "showData": true,
-            "showContext": true,
-            "showState": false,
+            "payload": "{ query: '{ issues { nodes { id title description        assignee {          id          name        }        createdAt        archivedAt} } }'}",
             "blockComment": ""
         },
         {
             "type": "mapping",
-            "mapping": "data.data.issues.nodes",
+            "mapping": "data.data.issues.nodes[*].merge(@, { \n    createdAt:  formatDate(createdAt, 'yyyy/MM/dd'),\n    assignee:   assignee.name   \n})",
             "blockComment": ""
         },
         {
@@ -52,7 +44,8 @@
             "open": 1,
             "showData": true,
             "showContext": false,
-            "showState": false
+            "showState": false,
+            "blockComment": ""
         },
         {
             "type": "grid",
@@ -66,12 +59,24 @@
             },
             "columnDefs": [
                 {
-                    "field": "0",
+                    "field": "title",
                     "headerName": "Issue"
                 },
                 {
-                    "field": "1",
-                    "headerName": "ID"
+                    "field": "description",
+                    "headerName": "Description"
+                },
+                {
+                    "field": "assignee",
+                    "headerName": "Assignee"
+                },
+                {
+                    "field": "createdAt",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "archivedAt",
+                    "headerName": "Archived"
                 }
             ],
             "blockComment": ""
@@ -80,9 +85,12 @@
     "id": "linear",
     "workflowId": "linear",
     "adapterName": "kendraio",
-    "created": "2023-03-07T16:40:55.250Z",
-    "tags": [],
-    "updated": "2023-03-07T16:40:55.249Z",
-    "modified": "2023-03-07T16:40:55.249Z",
-    "title": "Linear"
+    "created": "2024-05-23T13:20:25.750Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-05-23T13:20:25.750Z",
+    "modified": "2024-05-23T13:20:25.750Z",
+    "title": "Linear List Issues"
 }

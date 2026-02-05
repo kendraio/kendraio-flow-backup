@@ -1,6 +1,4 @@
 {
-    "id": "testWorkflow",
-    "modified": "2021-02-11T12:27:01.432Z",
     "blocks": [
         {
             "type": "file-input",
@@ -54,10 +52,12 @@
             "showContext": true
         }
     ],
+    "id": "testWorkflow",
     "workflowId": "testWorkflow",
     "adapterName": "test",
     "created": "2021-02-11T12:08:35.855Z",
     "tags": [],
     "updated": "2021-02-11T12:27:01.432Z",
+    "modified": "2021-02-11T12:27:01.432Z",
     "title": "Test Workflow"
 }

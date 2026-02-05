@@ -105,8 +105,12 @@
     "id": "createItem",
     "workflowId": "createItem",
     "adapterName": "culturebanked",
-    "created": "2020-06-25T14:37:00.635Z",
-    "updated": "2020-06-25T14:37:00.635Z",
-    "modified": "2020-06-25T14:37:00.635Z",
+    "created": "2025-03-27T17:26:05.452Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-03-27T17:26:05.452Z",
+    "modified": "2025-03-27T17:26:05.452Z",
     "title": "Create Item"
 }

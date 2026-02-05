@@ -15,6 +15,18 @@
         },
         {
             "type": "mapping",
+            "mapping": "`[\n    {\n      \"recovered\": 100,\n      \"lat\": 51.5074,\n      \"long\": -0.1278,\n      \"combinedKey\": \"London, UK\"\n    },\n    {\n      \"recovered\": 75,\n      \"lat\": 48.8566,\n      \"long\": 2.3522,\n      \"combinedKey\": \"Paris, France\"\n    },\n    {\n      \"recovered\": 60,\n      \"lat\": 41.9028,\n      \"long\": 12.4964,\n      \"combinedKey\": \"Rome, Italy\"\n    },\n    {\n      \"recovered\": 200,\n      \"lat\": 35.6895,\n      \"long\": 139.6917,\n      \"combinedKey\": \"Tokyo, Japan\"\n    }\n  ]`",
+            "blockComment": "mock"
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
+        },
+        {
+            "type": "mapping",
             "mapping": "data[?recovered > `50` && lat != `null`].{ lat: lat, long: long, label: join(' ', [to_string(recovered), 'recovered in', combinedKey][? @ != null]) }"
         },
         {
@@ -24,12 +36,11 @@
         }
     ],
     "id": "coronavirusRecoveries",
-    "adapter": "kendraio",
-    "org": "kendraio",
     "workflowId": "coronavirusRecoveries",
     "adapterName": "kendraio",
-    "created": "2020-04-03T06:14:58.042Z",
-    "updated": "2020-04-03T06:20:11.467Z",
-    "modified": "2020-04-03T06:20:11.467Z",
+    "created": "2023-07-14T16:57:24.835Z",
+    "tags": [],
+    "updated": "2023-07-14T16:57:24.834Z",
+    "modified": "2023-07-14T16:57:24.834Z",
     "title": "Coronavirus Recoveries (Map)"
 }

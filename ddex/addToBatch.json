@@ -11,7 +11,15 @@
         },
         {
             "type": "mapping",
-            "mapping": "data[?data.NewReleaseMessage]\n.[uuid, data.NewReleaseMessage.ResourceList.SoundRecording[]]\n.map(\n    &zip(split(pad('', product(length([1]), sum([length([0]), `1`])), join('', [[0], ','])), ',')[?@], [1]), \n    @)\n.map(\n    &map(&{ id: join(':', [to_string([0]), to_string([1].ResourceReference)]), \n            title: [1].ReferenceTitle.TitleText\n    } @)\n    @\n)[]"
+            "mapping": "data[*].data.NewReleaseMessage.ResourceList.SoundRecording[]",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showData": true,
+            "showContext": false,
+            "showState": false
         },
         {
             "type": "grid",
@@ -21,19 +29,22 @@
             },
             "columnDefs": [
                 {
+                    "headerCheckboxSelection": true,
                     "checkboxSelection": true,
                     "width": 70,
                     "suppressSizeToFit": true
                 },
                 {
                     "headerName": "Title",
-                    "field": "title"
-                },
-                {
-                    "headerName": "ID",
-                    "field": "id"
+                    "field": "DisplayTitleText"
                 }
-            ]
+            ],
+            "blockComment": ""
+        },
+        {
+            "type": "context-save",
+            "key": "additions",
+            "blockComment": ""
         },
         {
             "type": "message",
@@ -47,8 +58,29 @@
                     "color": "primary",
                     "blocks": [
                         {
+                            "type": "db",
+                            "operation": "fetch",
+                            "adapterName": "ddex",
+                            "schema": "batches",
+                            "uuidGetter": "context.queryParams.uuid"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data[0]"
+                        },
+                        {
+                            "type": "mapping",
+                            "mapping": "data.merge(@, {data: data.merge(@, {NewReleaseMessage: NewReleaseMessage.merge(@, {ResourceList: ResourceList.merge(@, {SoundRecording: [SoundRecording, $.context.additions][]})})})})"
+                        },
+                        {
                             "type": "debug",
                             "showContext": true
+                        },
+                        {
+                            "type": "db",
+                            "operation": "update",
+                            "adapterName": "ddex",
+                            "schema": "batches"
                         },
                         {
                             "type": "actions",
@@ -61,21 +93,24 @@
                                             "adapter": "ddex",
                                             "workflowId": "batches"
                                         }
-                                    ]
+                                    ],
+                                    "enabled": true
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "enabled": true
                 }
-            ]
+            ],
+            "blockComment": ""
         }
     ],
     "id": "addToBatch",
     "workflowId": "addToBatch",
     "adapterName": "ddex",
-    "created": "2021-04-01T12:46:31.771Z",
+    "created": "2024-12-10T15:30:25.703Z",
     "tags": [],
-    "updated": "2021-04-01T12:46:31.771Z",
-    "modified": "2021-04-01T12:46:31.771Z",
+    "updated": "2024-12-10T15:30:25.703Z",
+    "modified": "2024-12-10T15:30:25.703Z",
     "title": "Add to Batch"
 }

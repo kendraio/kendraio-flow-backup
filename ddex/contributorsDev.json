@@ -1,6 +1,4 @@
 {
-    "id": "contributorsDev",
-    "modified": "2021-03-05T12:08:07.803Z",
     "blocks": [
         {
             "type": "init"
@@ -45,10 +43,12 @@
             ]
         }
     ],
+    "id": "contributorsDev",
     "workflowId": "contributorsDev",
     "adapterName": "ddex",
     "created": "2021-03-05T11:48:08.498Z",
     "tags": [],
     "updated": "2021-03-05T12:08:07.803Z",
+    "modified": "2021-03-05T12:08:07.803Z",
     "title": "DDEX Contributors"
 }

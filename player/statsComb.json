@@ -5,12 +5,13 @@
         },
         {
             "type": "template",
-            "template": "Statistics of tracks played from DSP1 and Audiotarky on our player Flow are combined together here using track metadata from both services. Below we gather the data and explain how it works. Going through how the data is combined step by step. For a <a href='https://app.kendra.io/player/stats'>more minimal presentation of the stats see here</a>."
+            "template": "Statistics of tracks played from Distributor and Audiotarky on our player Flow are combined together here using track metadata from both services. Below we gather the data and explain how it works. Going through how the data is combined step by step. For a <a href='https://app.kendra.io/player/stats'>more minimal presentation of the stats see here</a>.",
+            "blockComment": ""
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
-            "query": "query {\\n  generic_xrp_rank {\\n      analyticsItemUUID\\n    total_xrp\\n    sessions\\n    total_session_mins\\n  }\\n}",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  generic_xrp_rank {\n    analyticsItemUUID\n    total_xrp\n    sessions\n    total_session_mins\n  }\n}\n",
             "variables": {},
             "headers": {},
             "allowFirst": true,
@@ -34,14 +35,9 @@
             "template": "Raw stats data:"
         },
         {
-            "type": "debug",
-            "open": 1,
-            "showContext": false
-        },
-        {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
-            "query": "query{ tracks {\\n    display_artist\\n    display_title\\n    id\\n  }\\n}",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
+            "query": "query MyQuery {\n  tracks {\n    display_artist\n    display_title\n    id\n  }\n}",
             "variables": {},
             "headers": {},
             "allowFirst": true,
@@ -58,20 +54,17 @@
         },
         {
             "type": "mapping",
-            "mapping": "data[].{\\n    id:id,\\n    title:display_title,\\n    artist:display_artist\\n} "
+            "mapping": "data[].{d:id, title:display_title, artist:display_artist} ",
+            "blockComment": ""
         },
         {
             "type": "template",
-            "template": "Downloads DSP1 metadata and make it the same format:"
+            "template": "Downloads Distributor metadata and make it the same format:",
+            "blockComment": ""
         },
         {
             "type": "context-save",
             "contextKey": "dsp1"
-        },
-        {
-            "type": "debug",
-            "open": 1,
-            "showContext": false
         },
         {
             "type": "http",
@@ -93,12 +86,8 @@
         },
         {
             "type": "mapping",
-            "mapping": "data.tracks[].{\\n    id: uuid(url),\\n    title:name,\\n    artist:artist\\n} "
-        },
-        {
-            "type": "debug",
-            "open": 0,
-            "showContext": false
+            "mapping": "data.tracks[].{id: uuid(url), title:name, artist:artist} ",
+            "blockComment": ""
         },
         {
             "type": "context-save",
@@ -106,7 +95,8 @@
         },
         {
             "type": "mapping",
-            "mapping": "[context.at_id,context.dsp1][].[\\n\\t\\t\\tid, \\n\\t\\t\\t{\\n                title:title, \\n                artist:artist, \\n                id:id\\n            }\\n\\t\\t].fromPairs(@)"
+            "mapping": "[context.at_id,context.dsp1][].[id, { title:title, artist:artist, id:id}].fromPairs(@)",
+            "blockComment": ""
         },
         {
             "type": "context-save",
@@ -114,7 +104,14 @@
         },
         {
             "type": "mapping",
-            "mapping": "[context.stats][].[\\n\\t\\t\\tid, \\n\\t\\t\\t{\\n               xrp:xrp\\n                id:id,\\n                sessions:sessions,\\n                total_session_mins:total_session_mins\\n            }\\n\\t\\t].fromPairs(@)"
+            "mapping": "[context.stats][].[id,{ xrp:xrp, id:id, sessions:sessions,total_session_mins:total_session_mins}].fromPairs(@)",
+            "blockComment": ""
+        },
+        {
+            "type": "debug",
+            "open": 1,
+            "showContext": true,
+            "blockComment": ""
         },
         {
             "type": "context-save",
@@ -126,12 +123,8 @@
         },
         {
             "type": "mapping",
-            "mapping": "context.stats[].id| [*].{\\n    id: @, \\n    title: get($.context.comb,@).title,\\n    artist: get($.context.comb,@).artist,\\n    xrp: get($.context.stats_index,@).xrp,\\n    sessions: get($.context.stats_index,@).sessions\\n    total_session_mins:get($.context.stats_index,@).total_session_mins\\n    }\\n    "
-        },
-        {
-            "type": "debug",
-            "open": 1,
-            "showContext": false
+            "mapping": "context.stats[].id| [*].{id: @, title: get($.context.comb,@).title, artist: get($.context.comb,@).artist, xrp: get($.context.stats_index,@).xrp, sessions: get($.context.stats_index,@).sessions, total_session_mins:get($.context.stats_index,@).total_session_mins}",
+            "blockComment": ""
         },
         {
             "type": "context-save",
@@ -192,9 +185,9 @@
     "id": "statsComb",
     "workflowId": "statsComb",
     "adapterName": "player",
-    "created": "2021-06-03T12:23:01.919Z",
+    "created": "2024-12-17T20:27:29.498Z",
     "tags": [],
-    "updated": "2021-06-03T12:23:01.919Z",
-    "modified": "2021-06-03T12:23:01.919Z",
+    "updated": "2024-12-17T20:27:29.498Z",
+    "modified": "2024-12-17T20:27:29.498Z",
     "title": "Kendraio Player Statistics"
 }

@@ -13,7 +13,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
             "query": "query MyQuery {\n  me {\n    id\n    created_at\n    name\n    last_seen\n    updated_at\n    payment_pointer\n  }\n}\n",
             "variables": {},
             "headers": {
@@ -50,7 +50,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
             "query": "mutation MyMutation($id: String!, $me: me_set_input) {\n  update_me(where: {id: {_eq: $id}}, _set: $me)\n  {\n      affected_rows\n  }\n}\n",
             "variables": {
                 "id": "data.id",
@@ -71,9 +71,12 @@
     "id": "me",
     "workflowId": "me",
     "adapterName": "dsp1",
-    "created": "2021-01-22T12:51:19.702Z",
-    "tags": [],
-    "updated": "2021-01-22T12:51:19.701Z",
-    "modified": "2021-01-22T12:51:19.701Z",
+    "created": "2024-12-17T20:18:39.420Z",
+    "tags": [
+        "hidden",
+        "remove"
+    ],
+    "updated": "2024-12-17T20:18:39.420Z",
+    "modified": "2024-12-17T20:18:39.420Z",
     "title": "Me (DSP1)"
 }

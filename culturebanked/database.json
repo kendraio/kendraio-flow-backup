@@ -13,7 +13,7 @@
                         },
                         {
                             "type": "message",
-                            "title": "Parties"
+                            "title": "Beneficiaries"
                         },
                         {
                             "type": "db",
@@ -48,7 +48,8 @@
                                                                     "id": "data.uuid"
                                                                 }
                                                             }
-                                                        ]
+                                                        ],
+                                                        "enabled": true
                                                     }
                                                 ]
                                             }
@@ -101,7 +102,8 @@
                                                                     "id": "data.uuid"
                                                                 }
                                                             }
-                                                        ]
+                                                        ],
+                                                        "enabled": true
                                                     }
                                                 ]
                                             }
@@ -119,7 +121,7 @@
                         },
                         {
                             "type": "message",
-                            "title": "Market platforms"
+                            "title": "Vendors"
                         },
                         {
                             "type": "db",
@@ -154,7 +156,8 @@
                                                                     "id": "data.uuid"
                                                                 }
                                                             }
-                                                        ]
+                                                        ],
+                                                        "enabled": true
                                                     }
                                                 ]
                                             }
@@ -211,7 +214,8 @@
                                                                     "id": "data.uuid"
                                                                 }
                                                             }
-                                                        ]
+                                                        ],
+                                                        "enabled": true
                                                     }
                                                 ]
                                             }
@@ -222,14 +226,16 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "blockComment": ""
         }
     ],
     "id": "database",
     "workflowId": "database",
     "adapterName": "culturebanked",
-    "created": "2020-06-26T09:05:12.034Z",
-    "updated": "2020-06-26T09:05:12.033Z",
-    "modified": "2020-06-26T09:05:12.033Z",
+    "created": "2025-01-22T13:19:21.397Z",
+    "tags": [],
+    "updated": "2025-01-22T13:19:21.397Z",
+    "modified": "2025-01-22T13:19:21.397Z",
     "title": "Database"
 }

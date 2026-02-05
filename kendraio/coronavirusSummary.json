@@ -6,11 +6,18 @@
         {
             "type": "http",
             "method": "get",
-            "endpoint": "https://covid19.mathdro.id/api"
+            "endpoint": "https://disease.sh/v3/covid-19/all",
+            "blockComment": ""
         },
         {
             "type": "mapping",
-            "mapping": "[{ label: 'Confirmed', value: data.confirmed.value},{ label: 'Recovered', value: data.recovered.value},{ label: 'Deaths', value: data.deaths.value}]"
+            "mapping": "`{\"updated\":1689351576964,\"cases\":691452177,\"todayCases\":1081,\"deaths\":6899402,\"todayDeaths\":26,\"recovered\":663970695,\"todayRecovered\":10120,\"active\":20582080,\"critical\":37193,\"casesPerOneMillion\":88707,\"deathsPerOneMillion\":885.1,\"tests\":6997571314,\"testsPerOneMillion\":880758.77,\"population\":7944935131,\"oneCasePerPeople\":0,\"oneDeathPerPeople\":0,\"oneTestPerPeople\":0,\"activePerOneMillion\":2590.59,\"recoveredPerOneMillion\":83571.57,\"criticalPerOneMillion\":4.68,\"affectedCountries\":231}`",
+            "blockComment": "mock"
+        },
+        {
+            "type": "mapping",
+            "mapping": "[{ label: 'Confirmed', value: data.cases},{ label: 'Recovered', value: data.recovered},{ label: 'Deaths', value: data.deaths}]",
+            "blockComment": ""
         },
         {
             "type": "batch",
@@ -30,12 +37,11 @@
         }
     ],
     "id": "coronavirusSummary",
-    "adapter": "kendraio",
-    "org": "kendraio",
     "workflowId": "coronavirusSummary",
     "adapterName": "kendraio",
-    "created": "2020-04-03T06:09:58.406Z",
-    "updated": "2020-04-03T06:09:58.406Z",
-    "modified": "2020-04-03T06:09:58.406Z",
+    "created": "2023-07-14T16:38:41.559Z",
+    "tags": [],
+    "updated": "2023-07-14T16:38:41.558Z",
+    "modified": "2023-07-14T16:38:41.558Z",
     "title": "Coronavirus Summary"
 }

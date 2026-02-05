@@ -5,11 +5,12 @@
         },
         {
             "type": "template",
-            "template": "Statistics of tracks played from DSP1 and Audiotarky on our player Flow are combined together here using track metadata from both services. To see <a href='https://app.kendra.io/player/statsComb'> more about how it works, here is a version of this flow, with comments</a>, going through how the data is combined step by step."
+            "template": "Statistics of tracks played from Distributor and Audiotarky on our player Flow are combined together here using track metadata from both services. To see <a href='https://app.kendra.io/player/statsComb'> more about how it works, here is a version of this flow, with comments</a>, going through how the data is combined step by step.",
+            "blockComment": ""
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
             "query": "query {\n  generic_xrp_rank {\n      analyticsItemUUID\n    total_xrp\n    sessions\n    total_session_mins\n  }\n}",
             "variables": {},
             "headers": {},
@@ -31,7 +32,7 @@
         },
         {
             "type": "graphql",
-            "endpoint": "https://star-grackle-36.hasura.app/v1/graphql",
+            "endpoint": "https://kendraio-distributor.hasura.app/v1/graphql",
             "query": "query{ tracks {\n    display_artist\n    display_title\n    id\n  }\n}",
             "variables": {},
             "headers": {},
@@ -53,7 +54,8 @@
         },
         {
             "type": "context-save",
-            "contextKey": "dsp1"
+            "contextKey": "distributor",
+            "blockComment": ""
         },
         {
             "type": "http",
@@ -79,7 +81,8 @@
         },
         {
             "type": "mapping",
-            "mapping": "[context.at_id,context.dsp1][].[\n\t\t\tid, \n\t\t\t{\n                title:title, \n                artist:artist, \n                id:id\n            }\n\t\t].fromPairs(@)"
+            "mapping": "[context.at_id,context.distributor][].[\n\t\t\tid, \n\t\t\t{\n                title:title, \n                artist:artist, \n                id:id\n            }\n\t\t].fromPairs(@)",
+            "blockComment": ""
         },
         {
             "type": "context-save",
@@ -150,15 +153,16 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "blockComment": ""
         }
     ],
     "id": "stats",
     "workflowId": "stats",
     "adapterName": "player",
-    "created": "2021-04-28T10:48:47.670Z",
+    "created": "2024-12-17T20:21:07.301Z",
     "tags": [],
-    "updated": "2021-04-28T10:48:47.670Z",
-    "modified": "2021-04-28T10:48:47.670Z",
+    "updated": "2024-12-17T20:21:07.301Z",
+    "modified": "2024-12-17T20:21:07.301Z",
     "title": "Kendraio Player Statistics"
 }

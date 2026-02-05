@@ -8,7 +8,7 @@
             "simple": true,
             "key": "https://docs.google.com/spreadsheets/d/1YIQCavPvOzTArBc1d2dlbP3bhHVHI65o3-AEHp_urXA/",
             "shareUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vS9bFRzFzBEQKOSNfGUh91JEUx4K3z0ZMRzmagW5TV6Arm4OtjI0H_ELzqHhPf7qi1EE9EV9u2j7a9h/pub?gid=0&single=true&output=csv",
-            "blockComment": ""
+            "blockComment": "Load asset data from existing spreadsheet"
         },
         {
             "type": "grid",
@@ -40,18 +40,21 @@
                     "field": "Owner"
                 },
                 {
-                    "headerName": "Market Platforms",
-                    "field": "Market Platform(s)"
+                    "headerName": "Vendors",
+                    "field": "Vendors"
                 }
-            ]
+            ],
+            "blockComment": "Show asset data grid for review and selection"
         },
         {
             "type": "message",
-            "message": "{{#if data.length}}{{data.length}} items selected{{/if}}"
+            "message": "{{#if data.length}}{{data.length}} items selected{{/if}}",
+            "blockComment": "Show number of asset rows selected for importing"
         },
         {
             "type": "mapping",
-            "mapping": "data[*].{asset: trim(Asset), width: trim(\"Width (mm)\"), height: trim(\"Height (mm)\"), medium: trim(Medium), after: trim(After), location: trim(Location), owner: Owner.split(@, ',')[].{ name: trim(@) }, marketPlatforms: \"Market Platform(s)\".split(@, ',')[].trim(@), beneficiaries: Beneficiaries.split(@, ',')[].{ name: trim(@) } , assetManager: trim(\"Asset Manager\"), licenseDetails: trim(\"License Details\")  }"
+            "mapping": "data[*].{asset: trim(Asset), width: trim(\"Width (mm)\"), height: trim(\"Height (mm)\"), medium: trim(Medium), after: trim(After), location: trim(Location), owner: Owner.split(@, ',')[].{ name: trim(@) }, vendors: \"Vendors\".split(@, ',')[].trim(@), beneficiaries: Beneficiaries.split(@, ',')[].{ name: trim(@) } , assetManager: trim(\"Asset Manager\"), licenseDetails: trim(\"License Details\")  }",
+            "blockComment": "Split comma-separated values of the Owner, Market Platforms, and Beneficiaries columns into arrays to allow viewing and editing."
         },
         {
             "type": "multi",
@@ -76,7 +79,7 @@
                     "blocks": [
                         {
                             "type": "mapping",
-                            "mapping": "data && uniq(data[].marketPlatforms[][])[?length(@) > `0`]"
+                            "mapping": "data && uniq(data[].vendors[][])[?length(@) > `0`]"
                         }
                     ]
                 },
@@ -88,24 +91,23 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "blockComment": "Extract unique parties from beneficiaries, licenses, and market platforms"
         },
         {
             "type": "mapping",
-            "mapping": "data && { parties: data[0][].{ type: `party`, id: uuid(), name: @ }, licenses: data[1][].{ type: `license`, id: uuid(), name: @ }, marketPlatforms: data[2][].{ type: `platform`, id: uuid(), name: @ }, works: data[3][].merge(@, { id: uuid(), type: `work` }) }"
+            "mapping": "data && { \n    parties: data[0][].{ type: `party`, id: uuid(), name: @ }, \n    licenses: data[1][].{ type: `license`, id: uuid(), name: @ }, \n    vendors: data[2][].{ type: `platform`, id: uuid(), name: @ }, \n    works: data[3][].merge(@, { id: uuid(), type: `work` }) \n}",
+            "blockComment": "Create separate entities for parties, licenses, platforms, and works"
         },
         {
             "type": "mapping",
-            "mapping": "data && merge(data,{ works: data.works[].merge(@, { assetManager: find($.data.parties, 'name', assetManager).id, owner: owner[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, marketPlatforms: marketPlatforms[].find($.data.marketPlatforms, 'name', @).id, beneficiaries: beneficiaries[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, licenseDetails: find($.data.licenses, 'name', licenseDetails).id }) })"
+            "mapping": "data && merge(data,\n    { works: data.works[].merge(@, { \n        assetManager: find($.data.parties, 'name', assetManager).id, \n        owner: owner[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, \n        vendors: vendors[].find($.data.vendors, 'name', @).{ marketId: id },\n        beneficiaries: beneficiaries[].find($.data.parties, 'name', name).{ partyId: id, split: `0` }, \n        licenseDetails: find($.data.licenses, 'name', licenseDetails).id \n    }) \n})",
+            "blockComment": "Link work entities to their asset manager, owners, market platforms, beneficiaries, and licence details using IDs"
         },
         {
             "type": "mapping",
-            "mapping": "data && data.[parties, licenses, marketPlatforms, works][].merge(@, { uuid: id, schema: type })"
-        },
-        {
-            "type": "debug",
-            "open": 0,
-            "showContext": false
+            "mapping": "data.parties && data.[parties, licenses, vendors, works][]\n    .merge(@, \n        { \n            uuid: id, \n            schema: type \n        }\n    )",
+            "blockComment": "Add schema and UUID to entities, to uniquely reference them when we import to the database"
         },
         {
             "type": "actions",
@@ -118,10 +120,6 @@
                             "type": "batch",
                             "blocks": [
                                 {
-                                    "type": "debug",
-                                    "consoleLog": true
-                                },
-                                {
                                     "type": "db",
                                     "skipFirst": false,
                                     "operation": "add",
@@ -133,20 +131,16 @@
                     ],
                     "enabled": true
                 }
-            ]
-        },
-        {
-            "type": "debug",
-            "open": 0,
-            "showContext": false
+            ],
+            "blockComment": "Action button to import the processed data"
         }
     ],
     "id": "import",
     "workflowId": "import",
     "adapterName": "culturebanked",
-    "created": "2022-07-27T15:03:22.230Z",
+    "created": "2024-11-27T18:31:36.522Z",
     "tags": [],
-    "updated": "2022-07-27T15:03:22.230Z",
-    "modified": "2022-07-27T15:03:22.230Z",
+    "updated": "2024-11-27T18:31:36.522Z",
+    "modified": "2024-11-27T18:31:36.522Z",
     "title": "Art (Import)"
 }

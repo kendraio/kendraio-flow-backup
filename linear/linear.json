@@ -80,9 +80,12 @@
     "id": "linear",
     "workflowId": "linear",
     "adapterName": "linear",
-    "created": "2023-03-02T12:01:01.086Z",
-    "tags": [],
-    "updated": "2023-03-02T12:01:01.085Z",
-    "modified": "2023-03-02T12:01:01.085Z",
+    "created": "2024-05-23T13:20:53.047Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2024-05-23T13:20:53.047Z",
+    "modified": "2024-05-23T13:20:53.047Z",
     "title": "Linear"
 }

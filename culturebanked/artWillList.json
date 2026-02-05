@@ -16,8 +16,12 @@
     "id": "artWillList",
     "workflowId": "artWillList",
     "adapterName": "culturebanked",
-    "created": "2020-06-25T09:18:49.829Z",
-    "updated": "2020-06-25T09:18:49.829Z",
-    "modified": "2020-06-25T09:18:49.829Z",
+    "created": "2025-03-27T17:26:35.745Z",
+    "tags": [
+        "hidden",
+        "delete"
+    ],
+    "updated": "2025-03-27T17:26:35.744Z",
+    "modified": "2025-03-27T17:26:35.744Z",
     "title": "Art"
 }

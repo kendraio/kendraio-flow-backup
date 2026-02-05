@@ -14,7 +14,8 @@
         {
             "type": "gosub",
             "adapterName": "bandsintown",
-            "workflowId": "selectArtist"
+            "workflowId": "selectArtist",
+            "blockComment": ""
         },
         {
             "type": "form",
@@ -150,9 +151,9 @@
     "id": "listEvents",
     "workflowId": "listEvents",
     "adapterName": "bandsintown",
-    "created": "2023-04-04T13:56:24.113Z",
+    "created": "2025-04-03T00:11:24.083Z",
     "tags": [],
-    "updated": "2023-04-04T13:56:24.113Z",
-    "modified": "2023-04-04T13:56:24.113Z",
+    "updated": "2025-04-03T00:11:24.083Z",
+    "modified": "2025-04-03T00:11:24.083Z",
     "title": "List Events"
 }

@@ -57,11 +57,12 @@
     "id": "login",
     "workflowId": "login",
     "adapterName": "dsp1",
-    "created": "2020-11-20T17:21:44.493Z",
+    "created": "2024-09-19T12:39:36.280Z",
     "tags": [
-        "connect"
+        "delete",
+        "hidden"
     ],
-    "updated": "2020-11-20T17:21:44.493Z",
-    "modified": "2020-11-20T17:21:44.493Z",
+    "updated": "2024-09-19T12:39:36.280Z",
+    "modified": "2024-09-19T12:39:36.280Z",
     "title": "Login (DSP1)"
 }

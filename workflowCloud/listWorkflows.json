@@ -25,7 +25,7 @@
         },
         {
             "type": "form",
-            "hasSubmit": false,
+            "hasSubmit": true,
             "emitOnInit": true,
             "jsonSchema": {
                 "type": "object",
@@ -42,7 +42,8 @@
                     }
                 }
             },
-            "uiSchema": {}
+            "uiSchema": {},
+            "blockComment": ""
         },
         {
             "type": "context-save",
@@ -92,28 +93,16 @@
                     "cellRendererParams": {
                         "blocks": [
                             {
-                                "type": "actions",
-                                "buttons": [
-                                    {
-                                        "label": "Launch",
-                                        "blocks": [
-                                            {
-                                                "type": "launch",
-                                                "valueGetters": {
-                                                    "adapter": "data.adapterName",
-                                                    "workflowId": "data.id"
-                                                }
-                                            }
-                                        ],
-                                        "enabled": true
-                                    }
-                                ]
+                                "type": "link-action",
+                                "label": "Launch",
+                                "adapterNameGetter": "data.adapterName",
+                                "workflowIdGetter": "data.id"
                             }
                         ]
                     }
                 },
                 {
-                    "headerName": "Workflow ID",
+                    "headerName": "Flow ID",
                     "field": "id"
                 },
                 {
@@ -131,7 +120,8 @@
                     "headerName": "tags",
                     "field": "tags"
                 }
-            ]
+            ],
+            "blockComment": ""
         },
         {
             "type": "mapping",
@@ -322,11 +312,9 @@
     "id": "listWorkflows",
     "workflowId": "listWorkflows",
     "adapterName": "workflowCloud",
-    "created": "2022-10-26T15:31:20.562Z",
-    "tags": [
-        "start"
-    ],
-    "updated": "2022-10-26T15:31:20.562Z",
-    "modified": "2022-10-26T15:31:20.562Z",
-    "title": "List Workflows"
+    "created": "2025-01-28T13:02:57.908Z",
+    "tags": [],
+    "updated": "2025-01-28T13:02:57.908Z",
+    "modified": "2025-01-28T13:02:57.908Z",
+    "title": "Flow Cloud"
 }
