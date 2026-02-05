@@ -1,0 +1,99 @@
+{
+    "blocks": [
+        {
+            "type": "gosub",
+            "adapterName": "task",
+            "workflowId": "fetchlinearissues",
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "task",
+            "workflowId": "fetchgithubissues",
+            "blockComment": ""
+        },
+        {
+            "type": "gosub",
+            "adapterName": "task",
+            "workflowId": "fetchgoogledrivecomments",
+            "blockComment": ""
+        },
+        {
+            "type": "mapping",
+            "mapping": "[\n    context.linear[0] && context.linear, \n    context.googledrive[0] && context.googledrive,\n    context.github[0] && context.github\n][]",
+            "blockComment": "combine arrays"
+        },
+        {
+            "type": "grid",
+            "gridOptions": {
+                "pagination": true,
+                "paginationPageSize": 10,
+                "defaultColDef": {
+                    "autoHeight": true,
+                    "resizable": true,
+                    "sortable": true
+                }
+            },
+            "passThrough": false,
+            "firstRowHeaders": false,
+            "columnDefs": [
+                {
+                    "field": "createdAtSort",
+                    "headerName": "Created"
+                },
+                {
+                    "field": "source",
+                    "headerName": "Source"
+                },
+                {
+                    "field": "asset",
+                    "headerName": "Issue"
+                },
+                {
+                    "field": "preview",
+                    "headerName": "Preview"
+                },
+                {
+                    "field": "details",
+                    "headerName": "",
+                    "cellRenderer": "workflowRenderer",
+                    "cellRendererParams": {
+                        "blocks": [
+                            {
+                                "type": "actions",
+                                "buttons": [
+                                    {
+                                        "label": "Details",
+                                        "color": "primary",
+                                        "blocks": [
+                                            {
+                                                "type": "variable-set",
+                                                "name": "issue"
+                                            },
+                                            {
+                                                "type": "launch",
+                                                "adapter": "task",
+                                                "workflowId": "issue"
+                                            }
+                                        ],
+                                        "enabled": true
+                                    }
+                                ],
+                                "blockComment": ""
+                            }
+                        ]
+                    }
+                }
+            ],
+            "blockComment": "display data"
+        }
+    ],
+    "id": "dashboardphase2",
+    "workflowId": "dashboardphase2",
+    "adapterName": "task",
+    "created": "2026-01-29T16:17:28.999Z",
+    "tags": [],
+    "updated": "2026-01-29T16:17:28.998Z",
+    "modified": "2026-01-29T16:17:28.998Z",
+    "title": "Kendraio Task Dashboard"
+}

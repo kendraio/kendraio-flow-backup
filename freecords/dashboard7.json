@@ -1,0 +1,1322 @@
+{
+  "blocks": [
+    {
+      "type": "gosub",
+      "adapterName": "freecords",
+      "workflowId": "batchnameform",
+      "blockComment": "🏷️ Run sub-workflow for batch name"
+    },
+    {
+      "type": "mapping",
+      "mapping": "{ hideBlanks: true }",
+      "blockComment": "⚙️ Set initial state for hide blanks"
+    },
+    {
+      "type": "form",
+      "hasSubmit": false,
+      "emitOnInit": true,
+      "jsonSchema": {
+        "type": "object",
+        "properties": {
+          "hideBlanks": {
+            "type": "boolean",
+            "title": "Hide blank ISRCs",
+            "default": true
+          }
+        }
+      },
+      "uiSchema": {},
+      "blockComment": "☑️ Display 'Hide blank ISRCs' checkbox"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data.hideBlanks",
+      "blockComment": "👉 Extract boolean from form output"
+    },
+    {
+      "type": "context-save",
+      "key": "hideBlanks",
+      "blockComment": "💾 Save 'hideBlanks' preference to context"
+    },
+    {
+      "type": "init",
+      "blockComment": "🚀 Initialise workflow"
+    },
+    {
+      "type": "variable-get",
+      "name": "freecords",
+      "blockComment": "🔑 Get Freecords API credentials"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data && merge(data, {\n  endpoint: data.endpoint && (\n    ends_with(data.endpoint, `/`) && data.endpoint\n    || join(``, [data.endpoint, `/`])\n  ) || data.endpoint\n})\n",
+      "blockComment": "🔧 Normalise Freecords endpoint to end with a slash"
+    },
+    {
+      "type": "debug",
+      "open": 1,
+      "showData": true,
+      "showContext": false,
+      "showState": false,
+      "blockComment": "🐛 Debug: Inspect calculated endpoint"
+    },
+    {
+      "type": "context-save",
+      "key": "api",
+      "blockComment": "💾 Save API credentials to context"
+    },
+    {
+      "type": "switch",
+      "valueGetter": "context.api.key != null && context.api.key != ''",
+      "cases": [
+        {
+          "value": true,
+          "blocks": [
+            {
+              "type": "http",
+              "method": "get",
+              "useProxy": true,
+              "endpoint": {
+                "protocol": "https:",
+                "host": "app.freecords.com/api/v1.1",
+                "pathname": "/obj/song",
+                "valueGetters": {
+                  "query": "{api_token: context.api.key}"
+                }
+              },
+              "blockComment": "📡 Fetch all songs from API 🌐x1"
+            },
+            {
+              "type": "context-save",
+              "key": "temp_http_response_1",
+              "blockComment": "💾 Bridge: Save all song list"
+            }
+          ]
+        }
+      ],
+      "default": {
+        "blocks": [
+          {
+            "type": "mapping",
+            "mapping": "null",
+            "blockComment": "⛔ Bridge: No song list result (fetch skipped)"
+          },
+          {
+            "type": "context-save",
+            "key": "temp_http_response_1",
+            "blockComment": "🧹 Bridge: Clear stale data"
+          }
+        ]
+      },
+      "blockComment": "🛡️ Guard & Fetch: Get songs list"
+    },
+    {
+      "type": "mapping",
+      "mapping": "context.temp_http_response_1",
+      "blockComment": "🔄 Bridge: Restore 'temp_http_response_1'"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data.data[*].merge(@, {\n    created: @.\"Created Date\",\n    modified: @.\"Modified Date\",\n    artwork: @.\"Cover Photo\"\n})",
+      "blockComment": "✨ Standardise field names"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data[*].merge(@, {\n    created: formatDate(created, 'yyyy/MM/dd, T'),\n    modified: formatDate(modified, 'yyyy/MM/dd, T')\n})",
+      "blockComment": "📅 Format date fields for display"
+    },
+    {
+      "type": "mapping",
+      "mapping": "context.hideBlanks && data[?ISRC != null] || data",
+      "blockComment": "🗑️ Filter out blank ISRCs if toggled"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data[:50]",
+      "blockComment": "🔢 Limit to first 50 rows for testing"
+    },
+    {
+      "type": "grid",
+      "gridOptions": {
+        "rowSelection": "multiple",
+        "rowMultiSelectWithClick": true,
+        "pagination": true,
+        "paginationPageSize": 20,
+        "defaultColDef": {
+          "autoHeight": true,
+          "resizable": true,
+          "sortable": true
+        }
+      },
+      "passThrough": false,
+      "firstRowHeaders": false,
+      "columnDefs": [
+        {
+          "headerCheckboxSelection": true,
+          "checkboxSelection": true,
+          "width": 70,
+          "suppressSizeToFit": true
+        },
+        {
+          "field": "artwork",
+          "headerName": "Artwork",
+          "cellRenderer": "workflowRenderer",
+          "cellRendererParams": {
+            "blocks": [
+              {
+                "type": "template",
+                "template": "<img width='150' height='150' src='{{data.artwork}}' />",
+                "blockComment": "🖼️ Show artwork image"
+              }
+            ]
+          }
+        },
+        {
+          "field": "Artist",
+          "headerName": "Artist"
+        },
+        {
+          "field": "Name",
+          "headerName": "Title"
+        },
+        {
+          "field": "created",
+          "headerName": "Created"
+        },
+        {
+          "field": "modified",
+          "headerName": "Modified"
+        },
+        {
+          "field": "ISRC",
+          "headerName": "ISRC",
+          "cellRenderer": "workflowRenderer",
+          "cellRendererParams": {
+            "blocks": [
+              {
+                "type": "message",
+                "message": "{{data.ISRC}}",
+                "blockComment": "💬 Show ISRC value"
+              }
+            ]
+          }
+        },
+        {
+          "field": "Details",
+          "headerName": "",
+          "cellRenderer": "workflowRenderer",
+          "cellRendererParams": {
+            "blocks": [
+              {
+                "type": "mapping",
+                "mapping": "data.ISRC",
+                "blockComment": "👉 Extract ISRC for details"
+              },
+              {
+                "type": "switch",
+                "valueGetter": "data",
+                "cases": [
+                  {
+                    "value": null,
+                    "blocks": []
+                  }
+                ],
+                "default": {
+                  "blocks": [
+                    {
+                      "type": "actions",
+                      "buttons": [
+                        {
+                          "label": "Details",
+                          "color": "primary",
+                          "blocks": [
+                            {
+                              "type": "variable-set",
+                              "name": "isrc",
+                              "blockComment": "💾 Set 'isrc' variable"
+                            },
+                            {
+                              "type": "launch",
+                              "adapter": "freecords",
+                              "workflowId": "getsongdetails",
+                              "blockComment": "🚀 Launch 'getsongdetails' workflow"
+                            }
+                          ],
+                          "enabled": true
+                        }
+                      ],
+                      "blockComment": "🔘 Action: Show Song Details"
+                    }
+                  ]
+                },
+                "blockComment": "🔀 Guard: Show details only if data exists"
+              }
+            ]
+          }
+        }
+      ],
+      "blockComment": "📊 Display songs in data grid"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data[?ISRC != \"\"]",
+      "blockComment": "🔎 Filter selection for valid ISRCs"
+    },
+    {
+      "type": "context-save",
+      "key": "state.selections",
+      "blockComment": "💾 Save 'state.selections' to context to restore AFTER upload"
+    },
+    {
+      "type": "actions",
+      "buttons": [
+        {
+          "label": "Prepare upload Selection for later automatic upload on completion",
+          "enabledGetter": "data[0]",
+          "color": "primary",
+          "blocks": [
+            {
+              "type": "batch",
+              "blocks": [
+                {
+                  "type": "context",
+                  "contextPath": "song",
+                  "contextBlocks": [
+                    {
+                      "type": "context-save",
+                      "key": "song",
+                      "blockComment": "💾 Save single song to context"
+                    }
+                  ],
+                  "blocks": [
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.api.key != null && context.api.key != '' && context.song.ISRC != null && context.song.ISRC != ''",
+                      "cases": [
+                        {
+                          "value": true,
+                          "blocks": [
+                            {
+                              "type": "http",
+                              "method": "get",
+                              "useProxy": true,
+                              "endpoint": {
+                                "protocol": "https:",
+                                "host": "app.freecords.com/api/v1.1/wf",
+                                "pathname": "/get_song",
+                                "valueGetters": {
+                                  "query": "{api_token: context.api.key, ISRC: context.song.ISRC}"
+                                }
+                              },
+                              "skipInit": false,
+                              "blockComment": "📡 GET song details from Freecords API"
+                            },
+                            {
+                              "type": "context-save",
+                              "key": "temp_http_response_3",
+                              "blockComment": "💾 Bridge: Save verification response"
+                            }
+                          ]
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "mapping",
+                            "mapping": "null",
+                            "blockComment": "⛔ Bridge: Null result (fetch skipped)"
+                          },
+                          {
+                            "type": "context-save",
+                            "key": "temp_http_response_3",
+                            "blockComment": "🧹 Bridge: Clear stale data"
+                          }
+                        ]
+                      },
+                      "blockComment": "🛡️ Guard & Fetch: Get song details safely"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "context.temp_http_response_3",
+                      "blockComment": "🔄 Bridge: Restore 'temp_http_response_3'"
+                    },
+                    {
+                      "type": "debug",
+                      "consoleLog": true,
+                      "blockComment": "🐛 Debug: Song details response"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "data.response && data.response.merge(@, {ReleaseYear: @.\"Release-year\", artistName: @.\"artist-name\", composerFirstName: @.\"composer-first-name\", composerLastName: @.\"composer-last-name\", songName: @.\"song-name\"})",
+                      "blockComment": "✨ Merge song response with metadata"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "details",
+                      "blockComment": "💾 Save merged 'details' to context"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "join('', ['      <SoundRecording>\n         <songName>', $.context.details.songName, '</songName>\n         <UPC>', $.context.details.UPC, '</UPC>\n         <genre>', $.context.details.genre, '</genre>\n         <artistName>', $.context.details.artistName, '</artistName>\n         <label>', $.context.details.label, '</label>\n         <ReleaseYear>', $.context.details.ReleaseYear, '</ReleaseYear>\n         <CandPline>', $.context.details.CandPline, '</CandPline>\n         <composerFirstName>', $.context.details.composerFirstName, '</composerFirstName>\n         <composerLastName>', $.context.details.composerLastName, '</composerLastName>\n         <ResourceReference>A1</ResourceReference>\n         <Type></Type>\n         <ResourceId>\n            <ISRC>', $.context.song.ISRC, '</ISRC>\n         </ResourceId>\n         <DisplayTitleText>', $.context.details.songName, '</DisplayTitleText>\n         <DisplayTitle ApplicableTerritoryCode=\"\" IsDefault=\"true\">\n            <TitleText></TitleText>\n         </DisplayTitle>\n         <DisplayArtistName ApplicableTerritoryCode=\"\" LanguageAndScriptCode=\"\" IsDefault=\"\"></DisplayArtistName>\n         <DisplayArtist SequenceNumber=\"1\">\n            <ArtistPartyReference></ArtistPartyReference>\n            <DisplayArtistRole></DisplayArtistRole>\n         </DisplayArtist>\n         <Contributor SequenceNumber=\"1\">\n            <ContributorPartyReference></ContributorPartyReference>\n            <Role></Role>\n         </Contributor>\n         <PLine>\n            <Year></Year>\n            <PLineText></PLineText>\n         </PLine>\n         <Duration></Duration>\n         <CreationDate IsApproximate=\"\"></CreationDate>\n         <ParentalWarningType></ParentalWarningType>\n         <IsInstrumental></IsInstrumental>\n         <LanguageOfPerformance></LanguageOfPerformance>\n         <TechnicalDetails>\n            <TechnicalResourceDetailsReference>T1</TechnicalResourceDetailsReference>\n            <PreviewDetails>\n               <StartPoint></StartPoint>\n               <ExpressionType></ExpressionType>\n            </PreviewDetails>\n            <File>\n               <URI></URI>\n            </File>\n         </TechnicalDetails>\n      </SoundRecording>\n'])",
+                      "blockComment": "📄 Generate DDEX XML segment for song"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "ddex",
+                      "blockComment": "💾 Save DDEX segment to 'ddex' context"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "[{get: context.song.AAC, put: join('', [context.api.endpoint, context.details.UPC, '/', context.song.ISRC, '.wav']), type: 'binary'},{get: context.song.artwork, put: join('', [context.api.endpoint, context.details.UPC, '/', context.song.ISRC, '.jpg']), type: 'binary'}, {put: join('', [context.api.endpoint, context.details.UPC, '/', context.details.UPC, '.xml']), type: 'metadata', UPC: context.details.UPC, ddex: context.ddex}]",
+                      "blockComment": "📦 Create file list: Binary (Audio/Image) + Metadata"
+                    }
+                  ],
+                  "blockComment": "🔗 Context: Song Processing Scope"
+                }
+              ],
+              "blockComment": "🔄 Batch: Process each song for upload prep"
+            }
+          ]
+        }
+      ],
+      "blockComment": "📤 Define 'Upload Selection' button and prep logic 🌐x1"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data && data[]",
+      "blockComment": "🥞 Flatten file data array of selected uploads if they exist"
+    },
+    {
+      "type": "context-save",
+      "key": "fileData",
+      "blockComment": "💾 Save 'fileData' to context"
+    },
+    {
+      "type": "batch",
+      "blocks": [
+        {
+          "type": "mapping",
+          "mapping": "data.type == 'metadata' && data.merge(@, { ddex: join('', ['<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ern:NewReleaseMessage xmlns:avs=\"http://ddex.net/xml/avs/avs\"\n   xmlns:ern=\"http://ddex.net/xml/ern/42\"\n   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n   xsi:schemaLocation=\"http://ddex.net/xml/ern/42 http://ddex.net/xml/ern/42/release-notification.xsd\"\n   ReleaseProfileVersionId=\"Audio\"Audio\" LanguageAndScriptCode=\"en\">\n   <MessageHeader>\n      <MessageThreadId></MessageThreadId>\n      <MessageId></MessageId>\n      <MessageSender>\n         <PartyId></PartyId>\n         <PartyName>\n            <FullName></FullName>\n         </PartyName>\n      </MessageSender>\n      <MessageRecipient>\n         <PartyId></PartyId>\n         <PartyName>\n            <FullName></FullName>\n         </PartyName>\n      </MessageRecipient>\n      <MessageCreatedDateTime></MessageCreatedDateTime>\n   </MessageHeader>\n   <PartyList>\n      <Party>\n         <PartyReference></PartyReference>\n         <PartyName LanguageAndScriptCode=\"\">\n            <FullName></FullName>\n            <FullNameIndexed></FullNameIndexed>\n         </PartyName>\n      </Party>\n   </PartyList>\n   <ResourceList>\n', join('', groupByKeys($.context.fileData[?UPC == $.data.UPC]).ddex), '      <Image>\n         <ResourceReference></ResourceReference>\n         <Type></Type>\n         <ResourceId>\n            <ProprietaryId Namespace=\"\"></ProprietaryId>\n         </ResourceId>\n         <ParentalWarningType></ParentalWarningType>\n         <TechnicalDetails>\n            <TechnicalResourceDetailsReference></TechnicalResourceDetailsReference>\n            <File>\n               <URI></URI>\n            </File>\n         </TechnicalDetails>\n      </Image>\n   </ResourceList>\n   <ReleaseList>\n      <Release>\n         <ReleaseReference></ReleaseReference>\n         <ReleaseType></ReleaseType>\n         <ReleaseId>\n            <ICPN></ICPN>\n         </ReleaseId>\n         <DisplayTitleText></DisplayTitleText>\n         <DisplayTitle ApplicableTerritoryCode=\"\" IsDefault=\"\">\n            <TitleText></TitleText>\n         </DisplayTitle>\n         <DisplayArtistName ApplicableTerritoryCode=\"\" LanguageAndScriptCode=\"\" IsDefault=\"\"></DisplayArtistName>\n         <DisplayArtist SequenceNumber=\"1\">\n            <ArtistPartyReference></ArtistPartyReference>\n            <DisplayArtistRole></DisplayArtistRole>\n         </DisplayArtist>\n         <ReleaseLabelReference ApplicableTerritoryCode=\"\"></ReleaseLabelReference>\n         <Duration></Duration>\n         <Genre ApplicableTerritoryCode=\"\">\n            <GenreText></GenreText>\n         </Genre>\n         <ParentalWarningType></ParentalWarningType>\n         <RelatedRelease>\n            <ReleaseRelationshipType></ReleaseRelationshipType>\n            <ReleaseId>\n               <ICPN></ICPN>\n            </ReleaseId>\n         </RelatedRelease>\n         <IsMultiArtistCompilation></IsMultiArtistCompilation>\n         <ResourceGroup>\n            <AdditionalTitle>\n               <TitleText></TitleText>\n            </AdditionalTitle>\n            <SequenceNumber>1</SequenceNumber>\n            <ResourceGroupContentItem>\n               <SequenceNumber>1</SequenceNumber>\n               <ReleaseResourceReference>A1</ReleaseResourceReference>\n            </ResourceGroupContentItem>\n         </ResourceGroup>\n      </Release>\n      <TrackRelease>\n         <ReleaseReference>R1</ReleaseReference>\n         <ReleaseId>\n            <ProprietaryId Namespace=\"\"></ProprietaryId>\n         </ReleaseId>         <ReleaseResourceReference>A1</ReleaseResourceReference>\n         <ReleaseLabelReference ApplicableTerritoryCode=\"\"></ReleaseLabelReference>\n         <Genre ApplicableTerritoryCode=\"\">\n            <GenreText></GenreText>\n         </Genre>\n      </TrackRelease>\n   </ReleaseList>\n   <DealList>\n      <ReleaseDeal>\n         <DealReleaseReference>R1</DealReleaseReference>\n         <Deal>\n            <DealTerms>\n               <TerritoryCode></TerritoryCode>\n               <ValidityPeriod>\n                  <StartDate></StartDate>\n               </ValidityPeriod>\n               <CommercialModelType></CommercialModelType>\n               <UseType></UseType>\n               <PriceInformation>\n                  <PriceCode Namespace=\"\"></PriceCode>\n               </PriceInformation>\n            </DealTerms>\n         </Deal>\n      </ReleaseDeal>\n   </DealList>\n</ern:NewReleaseMessage>'])}) || data",
+          "blockComment": "mapping to make DDEX"
+        }
+      ],
+      "blockComment": "🏗️ Creates DDEX XML by grouping by UPC"
+    },
+    {
+      "type": "context-save",
+      "key": "fileData",
+      "blockComment": "💾 Save completed XML metadata to context"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data && uniq(data[*].UPC[])",
+      "blockComment": "🆔 Get unique list of UPCs"
+    },
+    {
+      "type": "batch",
+      "blocks": [
+        {
+          "type": "mapping",
+          "mapping": "data && find(context.fileData[? type == 'metadata'], 'UPC', data)",
+          "blockComment": "mapping: DDEX metadata per UPC"
+        }
+      ],
+      "blockComment": "🔍 Get DDEX metadata XML for each UPC"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data && [data, context.fileData[? type == 'binary']][]",
+      "blockComment": "🧬 Merge metadata and binary files into upload queue"
+    },
+    {
+      "type": "batch",
+      "blocks": [
+        {
+          "type": "switch",
+          "valueGetter": "data.type",
+          "cases": [
+            {
+              "value": "binary",
+              "blocks": [
+                {
+                  "type": "context-save",
+                  "key": "endpoints",
+                  "blockComment": "💾 Save upload endpoints to context"
+                },
+                {
+                  "type": "context",
+                  "contextPath": "response",
+                  "blockComment": "🔗 Context: Capture binary response",
+                  "contextBlocks": [
+                    {
+                      "type": "http",
+                      "method": "get",
+                      "useProxy": true,
+                      "endpoint": {
+                        "valueGetter": "context.endpoints.get"
+                      },
+                      "responseType": "arraybuffer",
+                      "headers": {},
+                      "skipInit": true,
+                      "blockComment": "📥 Download binary asset (ArrayBuffer)"
+                    }
+                  ],
+                  "blocks": [
+                    {
+                      "type": "mapping",
+                      "mapping": "{ content: context.response }",
+                      "blockComment": "👉 Map ArrayBuffer to 'content' field"
+                    },
+                    {
+                      "type": "http",
+                      "method": "bput",
+                      "useProxy": true,
+                      "endpoint": {
+                        "valueGetter": "context.endpoints.put"
+                      },
+                      "authentication": {
+                        "type": "aws-sigv4",
+                        "secretKeyGetter": "context.api.secretKey",
+                        "accessKeyIdGetter": "context.api.accessKeyId"
+                      },
+                      "skipInit": true,
+                      "blockComment": "☁️ BPUT: Upload binary asset to bucket"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "value": "metadata",
+              "blocks": [
+                {
+                  "type": "context",
+                  "contextPath": "endpoints",
+                  "contextBlocks": [
+                    {
+                      "type": "context-save",
+                      "key": "endpoints",
+                      "blockComment": "💾 Save DDEX endpoints to context"
+                    }
+                  ],
+                  "blocks": [
+                    {
+                      "type": "mapping",
+                      "mapping": "data.ddex",
+                      "blockComment": "👉 Extract DDEX XML content"
+                    },
+                    {
+                      "type": "switch",
+                      "valueGetter": "data && context.endpoints.put || null",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "put",
+                            "useProxy": true,
+                            "responseType": "text",
+                            "endpoint": {
+                              "valueGetter": "context.endpoints.put"
+                            },
+                            "authentication": {
+                              "type": "aws-sigv4",
+                              "secretKeyGetter": "context.api.secretKey",
+                              "accessKeyIdGetter": "context.api.accessKeyId"
+                            },
+                            "skipInit": true,
+                            "blockComment": "☁️ Upload DDEX XML Metadata"
+                          }
+                        ]
+                      },
+                      "blockComment": "🔀 Guard: Ensure PUT endpoint path is set"
+                    }
+                  ],
+                  "blockComment": "🔗 Context: Metadata Upload Scope"
+                }
+              ]
+            }
+          ],
+          "blockComment": "switch to upload DDEX metadata and binary assets (image and audio)"
+        }
+      ],
+      "blockComment": "🚚 Upload all files in queue 🌐x3 📤x2"
+    },
+    {
+      "type": "mapping",
+      "mapping": "state.local.selections",
+      "blockComment": "🧮 Mapping to get grid selection back AFTER uploading to try and verify"
+    },
+    {
+      "type": "actions",
+      "buttons": [
+        {
+          "label": "Verify",
+          "color": "primary",
+          "enabledGetter": "data[0]",
+          "blocks": [
+            {
+              "type": "batch",
+              "blocks": [
+                {
+                  "type": "context",
+                  "contextPath": "song",
+                  "contextBlocks": [
+                    {
+                      "type": "context-save",
+                      "key": "song",
+                      "blockComment": "💾 Save song context for verification"
+                    }
+                  ],
+                  "blocks": [
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.song.ISRC != null && context.song.ISRC != '' && context.api.key != null && context.api.key != ''",
+                      "cases": [
+                        {
+                          "value": true,
+                          "blocks": [
+                            {
+                              "type": "http",
+                              "method": "get",
+                              "useProxy": true,
+                              "endpoint": {
+                                "protocol": "https:",
+                                "host": "app.freecords.com/api/v1.1/wf",
+                                "pathname": "/get_song",
+                                "valueGetters": {
+                                  "query": "{ISRC: context.song.ISRC, api_token: context.api.key}"
+                                }
+                              },
+                              "blockComment": "🔎 Verify: Get song details by ISRC"
+                            },
+                            {
+                              "type": "context-save",
+                              "key": "temp_http_response_2",
+                              "blockComment": "💾 Bridge: Save verification song data"
+                            }
+                          ]
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "mapping",
+                            "mapping": "null",
+                            "blockComment": "⛔ Bridge: Null result (song not found)"
+                          },
+                          {
+                            "type": "context-save",
+                            "key": "temp_http_response_2",
+                            "blockComment": "🧹 Bridge: Clear temp data"
+                          }
+                        ]
+                      },
+                      "blockComment": "🛡️ Guard & Fetch: Verify song existence"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "context.temp_http_response_2",
+                      "blockComment": "🔄 Bridge: Restore song verification data"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "data.response.merge(@, {ReleaseYear: @.\"Release-year\", artistName: @.\"artist-name\", composerFirstName: @.\"composer-first-name\", composerLastName: @.\"composer-last-name\", songName: @.\"song-name\"})",
+                      "blockComment": "✨ Merge verification details"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "details",
+                      "blockComment": "💾 Save verified details to context"
+                    },
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.song.artwork || null",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "endpoint": {
+                              "valueGetter": "context.song.artwork"
+                            },
+                            "responseType": "arraybuffer",
+                            "headers": {},
+                            "storeMetadataInContext": true,
+                            "blockComment": "📥 Fetch original artwork for comparison"
+                          }
+                        ]
+                      },
+                      "blockComment": "🔀 Guard: Fetch original artwork if exists"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "context.httpMetadata",
+                      "blockComment": "💾 Save artwork HTTP metadata"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "imageSourceResponse",
+                      "blockComment": "💾 Save artwork source response"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "join('', [context.api.endpoint, context.details.UPC, '/', context.song.ISRC, '.jpg'])",
+                      "blockComment": "🔗 Construct bucket artwork URL"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "imageBackblazeEndpoint",
+                      "blockComment": "💾 Save bucket endpoint"
+                    },
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.details && context.details.UPC && context.imageBackblazeEndpoint || null",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "endpoint": {
+                              "valueGetter": "context.imageBackblazeEndpoint"
+                            },
+                            "authentication": {
+                              "type": "aws-sigv4",
+                              "secretKeyGetter": "context.api.secretKey",
+                              "accessKeyIdGetter": "context.api.accessKeyId"
+                            },
+                            "responseType": "arraybuffer",
+                            "headers": {},
+                            "storeMetadataInContext": true,
+                            "blockComment": "📥 Fetch uploaded artwork from bucket"
+                          }
+                        ]
+                      },
+                      "blockComment": "🔀 Guard: Fetch bucket artwork if endpoint exists"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "context.httpMetadata.merge(@, { sourceHash: $.context.imageSourceResponse.responseHash, status: {responseHash: $.context.imageSourceResponse.responseHash}.includes(responseHash, $.context.httpMetadata.responseHash) && 'Success' || 'Failure', ISRC: $.context.song.ISRC, endpoint: $.context.imageBackblazeEndpoint, UPC: $.context.details.UPC, source: $.context.song.artwork, artwork: $.context.song.artwork, title: $.context.song.Name, artist: $.context.details.artistName, type: 'Image' })",
+                      "blockComment": "⚖️ Compare: Validate Artwork Upload (Hash Match)"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "imageStatus",
+                      "blockComment": "💾 Save artwork verification status"
+                    },
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.song.AAC || null",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "endpoint": {
+                              "valueGetter": "context.song.AAC"
+                            },
+                            "responseType": "arraybuffer",
+                            "headers": {},
+                            "storeMetadataInContext": true,
+                            "blockComment": "📥 Fetch original audio for comparison"
+                          }
+                        ]
+                      },
+                      "blockComment": "🔀 Guard: Fetch original audio if exists"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "context.httpMetadata",
+                      "blockComment": "💾 Save audio HTTP metadata"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "audioSourceResponse",
+                      "blockComment": "💾 Save audio source response"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "join('', [context.api.endpoint, context.details.UPC, '/', context.song.ISRC, '.wav'])",
+                      "blockComment": "🔗 Construct file bucket audio URL"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "wavBackblazeEndpoint",
+                      "blockComment": "💾 Save file bucket audio path"
+                    },
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.details && context.details.UPC && context.wavBackblazeEndpoint || null",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "endpoint": {
+                              "valueGetter": "context.wavBackblazeEndpoint"
+                            },
+                            "authentication": {
+                              "type": "aws-sigv4",
+                              "secretKeyGetter": "context.api.secretKey",
+                              "accessKeyIdGetter": "context.api.accessKeyId"
+                            },
+                            "responseType": "arraybuffer",
+                            "headers": {},
+                            "storeMetadataInContext": true,
+                            "blockComment": "📥 Fetch uploaded audio from file bucket"
+                          }
+                        ]
+                      },
+                      "blockComment": "🔀 Guard: Fetch audio from file bucket if path exists"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "context.httpMetadata.merge(@, { sourceHash: $.context.audioSourceResponse.responseHash, status: {responseHash: $.context.audioSourceResponse.responseHash}.includes(responseHash, $.context.httpMetadata.responseHash) && 'Success' || 'Failure', ISRC: $.context.song.ISRC, endpoint: $.context.wavBackblazeEndpoint, UPC: $.context.details.UPC, source: $.context.song.AAC, artwork: $.context.song.artwork, title: $.context.song.Name, artist: $.context.details.artistName, type: 'Audio' })",
+                      "blockComment": "⚖️ Compare: Validate Audio Upload (Hash Match)"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "wavStatus",
+                      "blockComment": "💾 Save audio verification status"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "join('', [context.api.endpoint, context.details.UPC, '/', context.details.UPC, '.xml'])",
+                      "blockComment": "🔗 Construct DDEX file URL path to file bucket"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "ddexBackblazeEndpoint",
+                      "blockComment": "💾 Save Backblaze DDEX endpoint"
+                    },
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.ddexBackblazeEndpoint || null",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "endpoint": {
+                              "valueGetter": "context.ddexBackblazeEndpoint"
+                            },
+                            "authentication": {
+                              "type": "aws-sigv4",
+                              "secretKeyGetter": "context.api.secretKey",
+                              "accessKeyIdGetter": "context.api.accessKeyId"
+                            },
+                            "responseType": "text",
+                            "storeMetadataInContext": true,
+                            "blockComment": "📥 Fetch uploaded DDEX XML from S3"
+                          }
+                        ]
+                      },
+                      "blockComment": "🔀 Guard: Fetch DDEX XML from file bucket if path exists"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "data",
+                      "blockComment": "👉 Pass through DDEX XML data"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "split(data, $.context.song.ISRC)",
+                      "blockComment": "✂️ Split DDEX XML to verify content"
+                    },
+                    {
+                      "type": "debug",
+                      "consoleLog": true,
+                      "consoleLabel": "debug block: with expected DDEX split",
+                      "blockComment": "🐛 Debug: Inspect DDEX content split"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "context.httpMetadata.merge(@, { sourceHash: 'N/A', status: $.data[0] == ' ' && 'Failure' || 'Success', ISRC: $.context.song.ISRC, endpoint: $.context.ddexBackblazeEndpoint, UPC: $.context.details.UPC, source: $.context.ddexBackblazeEndpoint, artwork: $.context.song.artwork, title: $.context.song.Name, artist: $.context.details.artistName, type: 'Metadata', bucketContents: $.context.metadataFileStatus, details: $.context.details })",
+                      "blockComment": "⚖️ Validate: Check DDEX Content Integrity"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "[context.imageStatus, context.wavStatus, [data]][]",
+                      "blockComment": "🥞 Flatten verification results (Image, Audio, DDEX)"
+                    }
+                  ],
+                  "blockComment": "🔗 Context: Verification Scope"
+                }
+              ],
+              "blockComment": "🔄 Batch: Run verification for each item"
+            }
+          ]
+        }
+      ],
+      "blockComment": "🧪 Verify uploaded files 🌐x6: hash check"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data[]",
+      "blockComment": "🧮 Flatten final grid data"
+    },
+    {
+      "type": "grid",
+      "gridOptions": {
+        "rowSelection": "multiple",
+        "rowMultiSelectWithClick": true,
+        "defaultColDef": {
+          "autoHeight": true,
+          "resizable": true,
+          "sortable": true
+        }
+      },
+      "columnDefs": [
+        {
+          "headerCheckboxSelection": true,
+          "checkboxSelection": true,
+          "width": 70,
+          "suppressSizeToFit": true
+        },
+        {
+          "field": "status",
+          "headerName": "Status"
+        },
+        {
+          "field": "artwork",
+          "headerName": "Artwork",
+          "cellRenderer": "workflowRenderer",
+          "cellRendererParams": {
+            "blocks": [
+              {
+                "type": "template",
+                "template": "<img width='150' height='150' src='{{data.artwork}}' />",
+                "blockComment": "🖼️ Show verified artwork"
+              }
+            ]
+          }
+        },
+        {
+          "field": "title",
+          "headerName": "Title"
+        },
+        {
+          "field": "artist",
+          "headerName": "Artist"
+        },
+        {
+          "field": "type",
+          "headerName": "Type"
+        },
+        {
+          "field": "ISRC",
+          "headerName": "ISRC"
+        },
+        {
+          "field": "UPC",
+          "headerName": "UPC"
+        },
+        {
+          "field": "Try Again",
+          "headerName": "",
+          "cellRenderer": "workflowRenderer",
+          "cellRendererParams": {
+            "blocks": [
+              {
+                "type": "switch",
+                "valueGetter": "data.status",
+                "cases": [
+                  {
+                    "value": "Success",
+                    "blocks": []
+                  }
+                ],
+                "default": {
+                  "blocks": [
+                    {
+                      "type": "debug",
+                      "consoleLog": true,
+                      "consoleLabel": "FAILED UPLOAD",
+                      "showData": true,
+                      "blockComment": "🐛 Log: Upload Failure"
+                    },
+                    {
+                      "type": "actions",
+                      "buttons": [
+                        {
+                          "label": "Retry Upload",
+                          "color": "primary",
+                          "blocks": [
+                            {
+                              "type": "switch",
+                              "valueGetter": "data.type",
+                              "cases": [
+                                {
+                                  "value": "Metadata",
+                                  "blocks": [
+                                    {
+                                      "type": "context-save",
+                                      "key": "file"
+                                    },
+                                    {
+                                      "type": "mapping",
+                                      "mapping": "join('', ['<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ern:NewReleaseMessage xmlns:avs=\"http://ddex.net/xml/avs/avs\"\n   xmlns:ern=\"http://ddex.net/xml/ern/42\"\n   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n   xsi:schemaLocation=\"http://ddex.net/xml/ern/42 http://ddex.net/xml/ern/42/release-notification.xsd\"\n   ReleaseProfileVersionId=\"Audio\" LanguageAndScriptCode=\"en\">\n   <MessageHeader>\n      <MessageThreadId></MessageThreadId>\n      <MessageId></MessageId>\n      <MessageSender>\n         <PartyId></PartyId>\n         <PartyName>\n            <FullName></FullName>\n         </PartyName>\n      </MessageSender>\n      <MessageRecipient>\n         <PartyId></PartyId>\n         <PartyName>\n            <FullName></FullName>\n         </PartyName>\n      </MessageRecipient>\n      <MessageCreatedDateTime></MessageCreatedDateTime>\n   </MessageHeader>\n   <PartyList>\n      <Party>\n         <PartyReference></PartyReference>\n         <PartyName LanguageAndScriptCode=\"\">\n            <FullName></FullName>\n            <FullNameIndexed></FullNameIndexed>\n         </PartyName>\n      </Party>\n   </PartyList>\n   <ResourceList>\n      <SoundRecording>\n         <songName>', data.details.songName, '</songName>\n         <UPC>', data.details.UPC, '</UPC>\n         <genre>', data.details.genre, '</genre>\n         <artistName>', data.details.artistName, '</artistName>\n         <label>', data.details.label, '</label>\n         <ReleaseYear>', data.details.ReleaseYear, '</ReleaseYear>\n         <CandPline>', data.details.CandPline, '</CandPline>\n         <composerFirstName>', data.details.composerFirstName, '</composerFirstName>\n         <composerLastName>', data.details.composerLastName, '</composerLastName>\n         <ResourceReference>A1</ResourceReference>\n         <Type></Type>\n         <ResourceId>\n            <ISRC>', data.ISRC, '</ISRC>\n         </ResourceId>\n         <DisplayTitleText>', data.details.songName, '</DisplayTitleText>\n         <DisplayTitle ApplicableTerritoryCode=\"\" IsDefault=\"true\">\n            <TitleText></TitleText>\n         </DisplayTitle>\n         <DisplayArtistName ApplicableTerritoryCode=\"\" LanguageAndScriptCode=\"\" IsDefault=\"\"></DisplayArtistName>\n         <DisplayArtist SequenceNumber=\"1\">\n            <ArtistPartyReference></ArtistPartyReference>\n            <DisplayArtistRole></DisplayArtistRole>\n         </DisplayArtist>\n         <Contributor SequenceNumber=\"1\">\n            <ContributorPartyReference></ContributorPartyReference>\n            <Role></Role>\n         </Contributor>\n         <PLine>\n            <Year></Year>\n            <PLineText></PLineText>\n         </PLine>\n         <Duration></Duration>\n         <CreationDate IsApproximate=\"\"></CreationDate>\n         <ParentalWarningType></ParentalWarningType>\n         <IsInstrumental></IsInstrumental>\n         <LanguageOfPerformance></LanguageOfPerformance>\n         <TechnicalDetails>\n            <TechnicalResourceDetailsReference>T1</TechnicalResourceDetailsReference>\n            <PreviewDetails>\n               <StartPoint></StartPoint>\n               <ExpressionType></ExpressionType>\n            </PreviewDetails>\n            <File>\n               <URI></URI>\n            </File>\n         </TechnicalDetails>\n      </SoundRecording>\n      <Image>\n         <ResourceReference></ResourceReference>\n         <Type></Type>\n         <ResourceId>\n            <ProprietaryId Namespace=\"\"></ProprietaryId>\n         </ResourceId>\n         <ParentalWarningType></ParentalWarningType>\n         <TechnicalDetails>\n            <TechnicalResourceDetailsReference></TechnicalResourceDetailsReference>\n            <File>\n               <URI></URI>\n            </File>\n         </TechnicalDetails>\n      </Image>\n   </ResourceList>\n   <ReleaseList>\n      <Release>\n         <ReleaseReference></ReleaseReference>\n         <ReleaseType></ReleaseType>\n         <ReleaseId>\n            <ICPN></ICPN>\n         </ReleaseId>\n         <DisplayTitleText></DisplayTitleText>\n         <DisplayTitle ApplicableTerritoryCode=\"\" IsDefault=\"\">\n            <TitleText></TitleText>\n         </DisplayTitle>\n         <DisplayArtistName ApplicableTerritoryCode=\"\" LanguageAndScriptCode=\"\" IsDefault=\"\"></DisplayArtistName>\n         <DisplayArtist SequenceNumber=\"1\">\n            <ArtistPartyReference></ArtistPartyReference>\n            <DisplayArtistRole></DisplayArtistRole>\n         </DisplayArtist>\n         <ReleaseLabelReference ApplicableTerritoryCode=\"\"></ReleaseLabelReference>\n         <Duration></Duration>\n         <Genre ApplicableTerritoryCode=\"\">\n            <GenreText></GenreText>\n         </Genre>\n         <ParentalWarningType></ParentalWarningType>\n         <RelatedRelease>\n            <ReleaseRelationshipType></ReleaseRelationshipType>\n            <ReleaseId>\n               <ICPN></ICPN>\n            </ReleaseId>\n         </RelatedRelease>\n         <IsMultiArtistCompilation></IsMultiArtistCompilation>\n         <ResourceGroup>\n            <AdditionalTitle>\n               <TitleText></TitleText>\n            </AdditionalTitle>\n            <SequenceNumber>1</SequenceNumber>\n            <ResourceGroupContentItem>\n               <SequenceNumber>1</SequenceNumber>\n               <ReleaseResourceReference>A1</ReleaseResourceReference>\n            </ResourceGroupContentItem>\n         </ResourceGroup>\n      </Release>\n      <TrackRelease>\n         <ReleaseReference>R1</ReleaseReference>\n         <ReleaseId>\n            <ProprietaryId Namespace=\"\"></ProprietaryId>\n         </ReleaseId>         <ReleaseResourceReference>A1</ReleaseResourceReference>\n         <ReleaseLabelReference ApplicableTerritoryCode=\"\"></ReleaseLabelReference>\n         <Genre ApplicableTerritoryCode=\"\">\n            <GenreText></GenreText>\n         </Genre>\n      </TrackRelease>\n   </ReleaseList>\n   <DealList>\n      <ReleaseDeal>\n         <DealReleaseReference>R1</DealReleaseReference>\n         <Deal>\n            <DealTerms>\n               <TerritoryCode></TerritoryCode>\n               <ValidityPeriod>\n                  <StartDate></StartDate>\n               </ValidityPeriod>\n               <CommercialModelType></CommercialModelType>\n               <UseType></UseType>\n               <PriceInformation>\n                  <PriceCode Namespace=\"\"></PriceCode>\n               </PriceInformation>\n            </DealTerms>\n         </Deal>\n      </ReleaseDeal>\n   </DealList>\n</ern:NewReleaseMessage>'])"
+                                    },
+                                    {
+                                      "type": "switch",
+                                      "valueGetter": "context.file.details.UPC",
+                                      "cases": [
+                                        {
+                                          "value": null,
+                                          "blocks": []
+                                        }
+                                      ],
+                                      "default": {
+                                        "blocks": [
+                                          {
+                                            "type": "http",
+                                            "method": "put",
+                                            "useProxy": true,
+                                            "responseType": "text",
+                                            "endpoint": {
+                                              "valueGetter": "join('', [context.api.endpoint, context.file.details.UPC, '/', context.file.details.UPC, '.xml'])"
+                                            },
+                                            "authentication": {
+                                              "type": "aws-sigv4",
+                                              "secretKeyGetter": "context.api.secretKey",
+                                              "accessKeyIdGetter": "context.api.accessKeyId"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              ],
+                              "default": {
+                                "blocks": [
+                                  {
+                                    "type": "context",
+                                    "contextPath": "endpoints",
+                                    "contextBlocks": [
+                                      {
+                                        "type": "mapping",
+                                        "mapping": "{get: data.source, put: data.endpoint}"
+                                      },
+                                      {
+                                        "type": "context-save",
+                                        "key": "endpoints"
+                                      }
+                                    ],
+                                    "blocks": [
+                                      {
+                                        "type": "gosub",
+                                        "adapterName": "freecords",
+                                        "workflowId": "getandputbinary"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "blockComment": "🔀 Guard: Show Failure / Retry"
+              }
+            ]
+          }
+        }
+      ],
+      "passThrough": false,
+      "firstRowHeaders": false,
+      "blockComment": "✔️ Verification results grid 🌐x1 📤x1"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data[?status != `Success`]",
+      "blockComment": "🧮 Mapping"
+    },
+    {
+      "type": "actions",
+      "buttons": [
+        {
+          "label": "New Retry Upload",
+          "color": "primary",
+          "enabledGetter": "data[0]",
+          "blocks": [
+            {
+              "type": "batch",
+              "blocks": [
+                {
+                  "type": "context",
+                  "contextPath": "file",
+                  "contextBlocks": [
+                    {
+                      "type": "context-save",
+                      "key": "song"
+                    }
+                  ],
+                  "blocks": [
+                    {
+                      "type": "mapping",
+                      "mapping": "data.type == 'Metadata' && {put: data.source, type: 'metadata', UPC: data.UPC, ddex: join('', ['      <SoundRecording>\n         <songName>', data.details.songName, '</songName>\n         <UPC>', data.details.UPC, '</UPC>\n         <genre>', data.details.genre, '</genre>\n         <artistName>', data.details.artistName, '</artistName>\n         <label>', data.details.label, '</label>\n         <ReleaseYear>', data.details.ReleaseYear, '</ReleaseYear>\n         <CandPline>', data.details.CandPline, '</CandPline>\n         <composerFirstName>', data.details.composerFirstName, '</composerFirstName>\n         <composerLastName>', data.details.composerLastName, '</composerLastName>\n         <ResourceReference>A1</ResourceReference>\n         <Type></Type>\n         <ResourceId>\n            <ISRC>', data.ISRC, '</ISRC>\n         </ResourceId>\n         <DisplayTitleText>', data.details.songName, '</DisplayTitleText>\n         <DisplayTitle ApplicableTerritoryCode=\"\" IsDefault=\"true\">\n            <TitleText></TitleText>\n         </DisplayTitle>\n         <DisplayArtistName ApplicableTerritoryCode=\"\" LanguageAndScriptCode=\"\" IsDefault=\"\"></DisplayArtistName>\n         <DisplayArtist SequenceNumber=\"1\">\n            <ArtistPartyReference></ArtistPartyReference>\n            <DisplayArtistRole></DisplayArtistRole>\n         </DisplayArtist>\n         <Contributor SequenceNumber=\"1\">\n            <ContributorPartyReference></ContributorPartyReference>\n            <Role></Role>\n         </Contributor>\n         <PLine>\n            <Year></Year>\n            <PLineText></PLineText>\n         </PLine>\n         <Duration></Duration>\n         <CreationDate IsApproximate=\"\"></CreationDate>\n         <ParentalWarningType></ParentalWarningType>\n         <IsInstrumental></IsInstrumental>\n         <LanguageOfPerformance></LanguageOfPerformance>\n         <TechnicalDetails>\n            <TechnicalResourceDetailsReference>T1</TechnicalResourceDetailsReference>\n            <PreviewDetails>\n               <StartPoint></StartPoint>\n               <ExpressionType></ExpressionType>\n            </PreviewDetails>\n            <File>\n               <URI></URI>\n            </File>\n         </TechnicalDetails>\n      </SoundRecording>\n'])} || {get: data.source, put: data.endpoint, type: 'binary'}"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "enabled": null
+        }
+      ],
+      "blockComment": "NEW RETRY UPLOAD"
+    },
+    {
+      "type": "debug",
+      "open": 1,
+      "showData": true,
+      "showContext": true,
+      "showState": false,
+      "blockComment": "🐛 Debug viewer"
+    },
+    {
+      "type": "context-save",
+      "key": "retryFileData",
+      "blockComment": "💾 Save 'retryFileData' to context"
+    },
+    {
+      "type": "batch",
+      "blocks": [
+        {
+          "type": "mapping",
+          "mapping": "data.type == 'metadata' && data.merge(@, { ddex: join('', ['<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ern:NewReleaseMessage xmlns:avs=\"http://ddex.net/xml/avs/avs\"\n   xmlns:ern=\"http://ddex.net/xml/ern/42\"\n   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n   xsi:schemaLocation=\"http://ddex.net/xml/ern/42 http://ddex.net/xml/ern/42/release-notification.xsd\"\n   ReleaseProfileVersionId=\"Audio\" LanguageAndScriptCode=\"en\">\n   <MessageHeader>\n      <MessageThreadId></MessageThreadId>\n      <MessageId></MessageId>\n      <MessageSender>\n         <PartyId></PartyId>\n         <PartyName>\n            <FullName></FullName>\n         </PartyName>\n      </MessageSender>\n      <MessageRecipient>\n         <PartyId></PartyId>\n         <PartyName>\n            <FullName></FullName>\n         </PartyName>\n      </MessageRecipient>\n      <MessageCreatedDateTime></MessageCreatedDateTime>\n   </MessageHeader>\n   <PartyList>\n      <Party>\n         <PartyReference></PartyReference>\n         <PartyName LanguageAndScriptCode=\"\">\n            <FullName></FullName>\n            <FullNameIndexed></FullNameIndexed>\n         </PartyName>\n      </Party>\n   </PartyList>\n   <ResourceList>\n', join('', groupByKeys($.context.retryFileData[?UPC == $.data.UPC]).ddex), '      <Image>\n         <ResourceReference></ResourceReference>\n         <Type></Type>\n         <ResourceId>\n            <ProprietaryId Namespace=\"\"></ProprietaryId>\n         </ResourceId>\n         <ParentalWarningType></ParentalWarningType>\n         <TechnicalDetails>\n            <TechnicalResourceDetailsReference></TechnicalResourceDetailsReference>\n            <File>\n               <URI></URI>\n            </File>\n         </TechnicalDetails>\n      </Image>\n   </ResourceList>\n   <ReleaseList>\n      <Release>\n         <ReleaseReference></ReleaseReference>\n         <ReleaseType></ReleaseType>\n         <ReleaseId>\n            <ICPN></ICPN>\n         </ReleaseId>\n         <DisplayTitleText></DisplayTitleText>\n         <DisplayTitle ApplicableTerritoryCode=\"\" IsDefault=\"\">\n            <TitleText></TitleText>\n         </DisplayTitle>\n         <DisplayArtistName ApplicableTerritoryCode=\"\" LanguageAndScriptCode=\"\" IsDefault=\"\"></DisplayArtistName>\n         <DisplayArtist SequenceNumber=\"1\">\n            <ArtistPartyReference></ArtistPartyReference>\n            <DisplayArtistRole></DisplayArtistRole>\n         </DisplayArtist>\n         <ReleaseLabelReference ApplicableTerritoryCode=\"\"></ReleaseLabelReference>\n         <Duration></Duration>\n         <Genre ApplicableTerritoryCode=\"\">\n            <GenreText></GenreText>\n         </Genre>\n         <ParentalWarningType></ParentalWarningType>\n         <RelatedRelease>\n            <ReleaseRelationshipType></ReleaseRelationshipType>\n            <ReleaseId>\n               <ICPN></ICPN>\n            </ReleaseId>\n         </RelatedRelease>\n         <IsMultiArtistCompilation></IsMultiArtistCompilation>\n         <ResourceGroup>\n            <AdditionalTitle>\n               <TitleText></TitleText>\n            </AdditionalTitle>\n            <SequenceNumber>1</SequenceNumber>\n            <ResourceGroupContentItem>\n               <SequenceNumber>1</SequenceNumber>\n               <ReleaseResourceReference>A1</ReleaseResourceReference>\n            </ResourceGroupContentItem>\n         </ResourceGroup>\n      </Release>\n      <TrackRelease>\n         <ReleaseReference>R1</ReleaseReference>\n         <ReleaseId>\n            <ProprietaryId Namespace=\"\"></ProprietaryId>\n         </ReleaseId>         <ReleaseResourceReference>A1</ReleaseResourceReference>\n         <ReleaseLabelReference ApplicableTerritoryCode=\"\"></ReleaseLabelReference>\n         <Genre ApplicableTerritoryCode=\"\">\n            <GenreText></GenreText>\n         </Genre>\n      </TrackRelease>\n   </ReleaseList>\n   <DealList>\n      <ReleaseDeal>\n         <DealReleaseReference>R1</DealReleaseReference>\n         <Deal>\n            <DealTerms>\n               <TerritoryCode></TerritoryCode>\n               <ValidityPeriod>\n                  <StartDate></StartDate>\n               </ValidityPeriod>\n               <CommercialModelType></CommercialModelType>\n               <UseType></UseType>\n               <PriceInformation>\n                  <PriceCode Namespace=\"\"></PriceCode>\n               </PriceInformation>\n            </DealTerms>\n         </Deal>\n      </ReleaseDeal>\n   </DealList>\n</ern:NewReleaseMessage>'])}) || data"
+        }
+      ],
+      "blockComment": "🏗️ Creates DDEX XML by grouping by UPC"
+    },
+    {
+      "type": "context-save",
+      "key": "retryFileData",
+      "blockComment": "💾 Save 'retryFileData' to context"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data && uniq(data[*].UPC[])",
+      "blockComment": "🆔 Get unique list of UPCs"
+    },
+    {
+      "type": "batch",
+      "blocks": [
+        {
+          "type": "mapping",
+          "mapping": "data && find(context.retryFileData[? type == 'metadata'], 'UPC', data)"
+        }
+      ],
+      "blockComment": "🔍 Get DDEX metadata XML for each UPC"
+    },
+    {
+      "type": "mapping",
+      "mapping": "data && [data, context.retryFileData[? type == 'binary']][]",
+      "blockComment": "🧬 Merge metadata and binary files into upload queue"
+    },
+    {
+      "type": "batch",
+      "blocks": [
+        {
+          "type": "switch",
+          "valueGetter": "data.type",
+          "cases": [
+            {
+              "value": "binary",
+              "blocks": [
+                {
+                  "type": "context",
+                  "contextPath": "endpoints",
+                  "blockComment": "🔗 Context: Binary retry upload scope",
+                  "contextBlocks": [
+                    {
+                      "type": "context-save",
+                      "key": "endpoints",
+                      "blockComment": "💾 Save upload endpoints to context"
+                    }
+                  ],
+                  "blocks": [
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.endpoints.get",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "get",
+                            "useProxy": true,
+                            "endpoint": {
+                              "valueGetter": "context.endpoints.get"
+                            },
+                            "responseType": "arraybuffer",
+                            "headers": {},
+                            "skipInit": true,
+                            "blockComment": "📥 Download binary asset (ArrayBuffer)"
+                          }
+                        ]
+                      },
+                      "blockComment": "🛡️ Guard: Only fetch if GET endpoint exists"
+                    },
+                    {
+                      "type": "context-save",
+                      "key": "response",
+                      "blockComment": "💾 Bridge: Save binary response"
+                    },
+                    {
+                      "type": "mapping",
+                      "mapping": "{ content: context.response }",
+                      "blockComment": "👉 Map ArrayBuffer to 'content' field"
+                    },
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.endpoints.put",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "bput",
+                            "useProxy": true,
+                            "endpoint": {
+                              "valueGetter": "context.endpoints.put"
+                            },
+                            "authentication": {
+                              "type": "aws-sigv4",
+                              "secretKeyGetter": "context.api.secretKey",
+                              "accessKeyIdGetter": "context.api.accessKeyId"
+                            },
+                            "skipInit": true,
+                            "blockComment": "☁️ BPUT: Upload binary asset to bucket"
+                          }
+                        ]
+                      },
+                      "blockComment": "🛡️ Guard: Only upload if PUT endpoint exists"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "value": "metadata",
+              "blocks": [
+                {
+                  "type": "context",
+                  "contextPath": "endpoints",
+                  "contextBlocks": [
+                    {
+                      "type": "context-save",
+                      "key": "endpoints",
+                      "blockComment": "💾 Save metadata endpoints to context"
+                    }
+                  ],
+                  "blocks": [
+                    {
+                      "type": "mapping",
+                      "mapping": "data.ddex",
+                      "blockComment": "👉 Extract DDEX XML content"
+                    },
+                    {
+                      "type": "switch",
+                      "valueGetter": "context.endpoints.put",
+                      "cases": [
+                        {
+                          "value": null,
+                          "blocks": []
+                        }
+                      ],
+                      "default": {
+                        "blocks": [
+                          {
+                            "type": "http",
+                            "method": "put",
+                            "useProxy": true,
+                            "responseType": "text",
+                            "endpoint": {
+                              "valueGetter": "context.endpoints.put"
+                            },
+                            "authentication": {
+                              "type": "aws-sigv4",
+                              "secretKeyGetter": "context.api.secretKey",
+                              "accessKeyIdGetter": "context.api.accessKeyId"
+                            },
+                            "skipInit": true,
+                            "blockComment": "☁️ PUT: Upload DDEX XML metadata"
+                          }
+                        ]
+                      },
+                      "blockComment": "🛡️ Guard: Only upload if PUT endpoint exists"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "blockComment": "🔁 Batch over items 🌐x3 📤x2"
+    }
+  ],
+  "id": "dashboard7",
+  "workflowId": "dashboard7",
+  "adapterName": "freecords",
+  "created": "2026-01-14T11:40:33.816Z",
+  "tags": [],
+  "updated": "2026-01-14T11:40:33.816Z",
+  "modified": "2026-01-14T11:40:33.816Z",
+  "title": "Freecords Dashboard"
+}
